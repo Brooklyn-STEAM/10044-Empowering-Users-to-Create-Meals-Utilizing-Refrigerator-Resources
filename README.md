@@ -1,1 +1,1 @@
-# 10044-Empowering-Users-to-Create-Meals-Utilizing-Refrigerator-Resources
+# Empowering Users to Create Meals Utilizing Refrigerator Resources
