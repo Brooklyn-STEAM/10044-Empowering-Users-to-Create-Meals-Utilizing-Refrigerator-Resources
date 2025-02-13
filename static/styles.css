@@ -1,0 +1,15 @@
+
+.libre-caslon-display-regular {
+  font-family: "Libre Caslon Display", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.nav {
+  background-color: #1A0029;
+  color: #54beff;
+  font-family: "Libre Caslon Display", serif;
+  font-weight: 400;
+  font-style: normal;
+   align-items: center;
+  }
