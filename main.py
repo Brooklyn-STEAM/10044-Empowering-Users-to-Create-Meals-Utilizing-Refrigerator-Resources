@@ -49,14 +49,12 @@ def load_user(user_id):
 
 def connect_db ():
     conn =pymysql.connect(
-        host="10.100.34.80",
-        database="ldore_buy_a_rock",
+        host= "db.steamcenter.tech",
+        name= "pantryfy",
         user = "ldore",
         password = conf.password,
         autocommit= True,
-        cursorclass= pymysql.cursors.DictCursor,
-
-    )
+        cursorclass= pymysql.cursors.DictCursor, )
     return conn
 
 
@@ -65,3 +63,21 @@ def connect_db ():
 @app.route("/")
 def index():
     return render_template("homepage.html.jinja")
+
+
+
+
+@app.route("/search")
+def search_page():
+    return render_template("searchpage.html.jinja")
+
+
+@app.route("/catolog")
+def catolog_page():
+    return render_template("catalog.html.jinja")
+
+@app.route("/settings")
+def setting_page():
+    return render_template("settings.html.jinja")
+
+
