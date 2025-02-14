@@ -81,3 +81,6 @@ def setting_page():
     return render_template("settings.html.jinja")
 
 
+@app.route("/addingredient")
+def addingredient_page():
+    return render_template("addingredient.html.jinja")
