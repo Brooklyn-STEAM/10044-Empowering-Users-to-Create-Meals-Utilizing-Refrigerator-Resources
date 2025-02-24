@@ -63,3 +63,10 @@
     font-size: 12px; 
     text-align: center; 
 } 
+
+.cuisine-centered { 
+    text-align: center; 
+    padding-left: 40%; 
+    align-items: center;
+
+}
