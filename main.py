@@ -84,3 +84,11 @@ def setting_page():
 @app.route("/addingredient")
 def addingredient_page():
     return render_template("addingredient.html.jinja")
+
+@app.route("/mexican")
+def mexican_recipes():
+    return render_template("mexican_recipes.html.jinja")
+
+@app.route("/individual_ingrediant")
+def individual_ingrediant_page():
+    return render_template("individual_ingredient.html.jinja")
