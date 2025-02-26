@@ -1,8 +1,6 @@
-
-.libre-caslon-display-regular {
-  font-family: "Libre Caslon Display", serif;
-  font-weight: 400;
-  font-style: normal;
+/* Global Styles */
+html, body {
+  height: 100%;
 }
 
 .nav {
@@ -11,8 +9,97 @@
   font-family: "Libre Caslon Display", serif;
   font-weight: 400;
   font-style: normal;
-   align-items: center;
-  }
+
+  align-items: center;
+}
+
+.xyz {
+  background-size: auto;
+  text-align: center;
+  padding-top: 100px;
+}
+
+.btn-circle {
+  border-radius: 50%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-circle.btn-sm {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0;
+  font-size: 8px;
+}
+
+.btn-circle.btn-md {
+  width: 50px;
+  height: 50px;
+  padding: 7px 10px;
+  font-size: 10px;
+}
+
+.btn-circle.btn-xl {
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.scrollmenu {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 10px;
+  white-space: nowrap;
+}
+
+footer {
+  position: static;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  background-color: #f8f9fa;
+}
+
+.dot {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Media Queries (Only Override Necessary Styles) */
+@media (max-width: 600px) {
+  .dot { max-width: 300px; }
+}
+
+@media (max-width: 768px) {
+  .dot { max-width: 400px; }
+}
+
+@media (max-width: 992px) {
+  .dot { max-width: 500px; }
+}
+
+@media (max-width: 1200px) {
+  .dot { max-width: 600px; }
+}
+
+@media (max-width: 412px) {
+  .dot { max-width: 400px; }
+}
+
+@media (max-width: 344px) {
+  .dot { max-width: 300px; }
+}
+
+ 
 
 
 
