@@ -9,6 +9,7 @@ html, body {
   font-family: "Libre Caslon Display", serif;
   font-weight: 400;
   font-style: normal;
+
   align-items: center;
 }
 
@@ -97,3 +98,12 @@ footer {
 @media (max-width: 344px) {
   .dot { max-width: 300px; }
 }
+
+ 
+
+
+
+
+
+
+
