@@ -1,3 +1,11 @@
+/* Define CSS Variables for the Color Scheme */
+:root {
+  --dark-purple: #1a0029ff;
+  --grape: #6930c3ff;
+  --medium-slate-blue: #7374d4ff;
+  --alice-blue: #eef4fbff;
+  --maya-blue: #54beffff;
+}
 /* Global Styles */
 html, body {
   height: 100%;
@@ -74,6 +82,58 @@ footer {
   display: inline-block;
 }
 
+
+/* Apply the Color Scheme */
+body {
+  background-color: var(--alice-blue);
+  color: var(--dark-purple);
+}
+
+.navbar {
+  background-color: var(--grape);
+}
+
+.nav-link {
+  color: var(--alice-blue);
+}
+
+.nav-link:hover {
+  color: var(--maya-blue);
+}
+
+footer {
+  background-color: var(--medium-slate-blue);
+  color: var(--alice-blue);
+}
+
+.dot {
+  background-color: var(--grape);
+}
+
+.catbox {
+  border-color: var(--dark-purple);
+  background-color: var(--alice-blue);
+}
+.navbar-brand {
+  color: var(--alice-blue);
+}
+.navbar-brand:hover {
+  color: var(--alice-blue);
+}
+
+.search {
+ 
+  color: var(--grape);
+}
+/* Media Queries (Only Override Necessary Styles) */
+@media (max-width: 600px) {
+  .dot { max-width: 300px; }
+}
+
+@media (max-width: 768px) {
+  .dot { max-width: 400px; }
+}
+
 /* Media Queries (Only Override Necessary Styles) */
 @media (max-width: 600px) {
   .dot { max-width: 300px; }
@@ -98,12 +158,3 @@ footer {
 @media (max-width: 344px) {
   .dot { max-width: 300px; }
 }
-
- 
-
-
-
-
-
-
-

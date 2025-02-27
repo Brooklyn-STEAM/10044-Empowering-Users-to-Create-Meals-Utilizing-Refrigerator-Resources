@@ -156,7 +156,7 @@ def search_page():
     return render_template("searchpage.html.jinja")
 
 
-@app.route("/catolog")
+@app.route("/catalog")
 def catolog_page():
     return render_template("catalog.html.jinja")
 
