@@ -17,6 +17,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
   <style>
     body {
       background-color: #f8f9fa;
@@ -89,12 +93,19 @@
     .tinder--card.removed {
       display: none;
     }
+    .swipepad{
+      margin-trim: 7;
+
+    }
   </style>
 </head>
 <body>
+
 <div class="bg-body-tertiary">
     {% include "components/navbar.html.jinja" %}
 </div>
+
+<h1 class="text-center title "> Find New Recipes </h1>
   <div class="tinder">
     <div class="tinder--cards">
       <div class="tinder--card">
@@ -118,6 +129,12 @@
       <button id="love"><i class="fa fa-heart"></i></button>
     </div>
   </div>
+
+ <footer>
+        <p>© 2025 Pantryfy</p>
+    </footer>
+
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>

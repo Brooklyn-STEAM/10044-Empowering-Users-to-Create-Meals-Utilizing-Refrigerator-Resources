@@ -10,7 +10,17 @@
 html, body {
   height: 100%;
 }
-
+p {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.quicksand-400 {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 .nav {
   background-color: #1A0029;
   color: #54beff;
@@ -132,7 +142,18 @@ footer {
 .search {
  
   color: var(--grape);
+
+
 }
+
+.title {
+  color: var(--grape);
+  font-family: "Quicksand", sans-serif;
+  font-weight: 1000;
+  font-style: initial;
+
+}
+
 /* Media Queries (Only Override Necessary Styles) */
 @media (max-width: 600px) {
   .dot { max-width: 300px; }
