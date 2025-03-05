@@ -6,6 +6,10 @@ from werkzeug.security import generate_password_hash
 
 
 
+
+
+
+
 app = Flask(__name__)
 
 conf = Dynaconf(
@@ -156,7 +160,7 @@ def search_page():
     return render_template("searchpage.html.jinja")
 
 
-@app.route("/catolog")
+@app.route("/catalog")
 def catolog_page():
     return render_template("catalog.html.jinja")
 
@@ -176,3 +180,7 @@ def mexican_recipes():
 @app.route("/individual_ingrediant")
 def individual_ingrediant_page():
     return render_template("individual_ingredient.html.jinja")
+
+@app.route("/swiper")
+def swiper_page():
+    return render_template("swiper.html.jinja")
