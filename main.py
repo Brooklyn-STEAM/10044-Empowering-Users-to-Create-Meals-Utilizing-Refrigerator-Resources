@@ -184,3 +184,7 @@ def individual_ingrediant_page():
 @app.route("/swiper")
 def swiper_page():
     return render_template("swiper.html.jinja")
+
+@app.route("/savedrecipes")
+def savedrecipes_page():
+    return render_template("savedrecipes.html.jinja")
