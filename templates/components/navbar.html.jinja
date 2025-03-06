@@ -57,6 +57,12 @@
             <li><a class="dropdown-item" href="/settings/preferences">Preferences</a></li>
           </ul>
         </li>
+         {%  if current_user.is_authenticated%}
+  hi {{current_user.username}}
+  {% else%}
+
+  <a href="/signin" class="btn btn-outline-secondary"> Login</a>
+  {%endif%}
       </ul>
     </div>
   </div>
