@@ -3,6 +3,7 @@ import pymysql
 from dynaconf import Dynaconf
 import flask_login
 from werkzeug.security import generate_password_hash
+from datetime import datetime  
 
 
 app = Flask(__name__)
@@ -138,6 +139,75 @@ def signup():
         return redirect("/signin")
 
     return render_template("signup.html.jinja") 
+
+
+@app.route("/recipe/<recipe_id>/", methods=["GET", "POST"])
+@flask_login.login_required
+def product_detail(recipe_id):
+    conn = connect_db() 
+    cursor = conn.cursor()
+    cursor.execute(f"""
+        SELECT * FROM `Review` WHERE `id` = {recipe_id};
+    """) 
+    product = cursor.fetchone() 
+
+    cursor.execute(f"""
+        SELECT r.rating, r.review, r.timestamp, c.username
+        FROM `Review` r 
+        JOIN `Customer` c ON r.customer_id = c.id
+        WHERE r.recipe_id = {recipe_id}  
+        ORDER BY r.timestamp DESC;    
+    """)                         
+
+    product = cursor.fetchall()     
+
+    if request.method == "POST":      
+       
+        customer_id = flask_login.current_user.id
+        cursor.execute(f"SELECT * FROM `Review` WHERE `recipe_id` = '{recipe_id}' AND `customer_id` = '{customer_id}';")
+        existing_review = cursor.fetchone()           
+
+        if existing_review:
+            flash("You have already submitted a review for this product.", "error")
+        else:
+            rating = request.form["rating"]
+            review = request.form["review"] 
+            timestamp = datetime.now() 
+            
+            cursor.execute(f"""       
+                INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`)
+                VALUES ('{recipe_id}', '{customer_id}', '{rating}', '{review}', '{timestamp}');
+            """)         
+            conn.commit()      
+            
+            flash("Your review has been submitted!", "success")
+            return redirect(f"/product/{recipe_id}") 
+
+    cursor.close()
+    conn.close()
+
+    return render_template(".html.jinja", product = product,) 
+
+
+@app.route("/addreview/<recipe_id>/", methods =["GET", "POST"])
+def addreview(recipe_id): 
+    conn = connect_db()
+    cursor = conn.cursor() 
+    rating = request.form["rating"]
+    review = request.form["review"] 
+    timestamp = datetime.now() 
+    customer_id = flask_login.current_user.id 
+    cursor.execute(f"""
+                INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`)
+                VALUES
+                    ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
+                    ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
+            """,) 
+    conn.close()      
+    cursor.close() 
+
+    return render_template("homepage.html.jinja")    
+
 
 
     
