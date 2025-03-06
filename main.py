@@ -5,11 +5,6 @@ import flask_login
 from werkzeug.security import generate_password_hash
 
 
-
-
-
-
-
 app = Flask(__name__)
 
 conf = Dynaconf(
@@ -60,7 +55,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "rbarry", 
+        user = "ldore", 
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -157,7 +152,20 @@ def index():
 
 @app.route("/search")
 def search_page():
-    return render_template("searchpage.html.jinja")
+    
+    conn = connect_db()
+    cursor = conn.cursor()  
+
+
+    cursor.execute("SELECT * FROM `Recipe`")
+
+
+
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("searchpage.html.jinja", recipe = results)
+   
 
 
 @app.route("/catalog")
@@ -188,3 +196,7 @@ def swiper_page():
 @app.route("/savedrecipes")
 def savedrecipes_page():
     return render_template("savedrecipes.html.jinja")
+
+@app.route("/individual_recipe")
+def individual_recipe_page():
+    return render_template("individual_recipe.html.jinja")
