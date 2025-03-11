@@ -105,24 +105,18 @@
     {% include "components/navbar.html.jinja" %}
 </div>
 
+
+
 <h1 class="text-center title "> Find New Recipes </h1>
   <div class="tinder">
     <div class="tinder--cards">
+    {%for recipe in recipe%}
       <div class="tinder--card">
         <img src="https://placeimg.com/600/300/nature" alt="Nature">
-        <h3>Demo card 1</h3>
+        <h3>{{recipe['name'] }}</h3>
         <p>This is a demo for Tinder like swipe cards</p>
       </div>
-      <div class="tinder--card">
-        <img src="https://placeimg.com/600/300/tech" alt="Tech">
-        <h3>Demo card 2</h3>
-        <p>This is a demo for Tinder like swipe cards</p>
-      </div>
-      <div class="tinder--card">
-        <img src="https://placeimg.com/600/300/arch" alt="Architecture">
-        <h3>Demo card 3</h3>
-        <p>This is a demo for Tinder like swipe cards</p>
-      </div>
+      {%endfor%}
     </div>
     <div class="tinder--buttons">
       <button id="nope"><i class="fa fa-remove"></i></button>

@@ -146,10 +146,12 @@ def signup():
 def recipe_detail(recipe_id):
     conn = connect_db() 
     cursor = conn.cursor()
+
     cursor.execute(f""" 
         SELECT * FROM `Review` WHERE `id` = {recipe_id};
     """)  
     recipe = cursor.fetchone()       
+
 
     cursor.execute(f"""
         SELECT r.rating, r.review, r.timestamp, c.username
@@ -186,7 +188,9 @@ def recipe_detail(recipe_id):
     cursor.close()
     conn.close() 
 
+
     return render_template("individual_recipe.html.jinja", recipe = recipe,) 
+
 
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
@@ -222,13 +226,14 @@ def index():
 
 @app.route("/search")
 def search_page():
-    
+    query = request.args.get('query')
     conn = connect_db()
     cursor = conn.cursor()  
 
-
-    cursor.execute("SELECT * FROM `Recipe`")
-
+    if query is None:
+        cursor.execute("SELECT * FROM `Recipe`")
+    else:
+        cursor.execute(f"SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}% ' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; ")
 
 
     results = cursor.fetchall()
@@ -261,7 +266,17 @@ def individual_ingrediant_page():
 
 @app.route("/swiper")
 def swiper_page():
-    return render_template("swiper.html.jinja")
+    conn = connect_db()
+    cursor = conn.cursor() 
+    cursor.execute("SELECT * FROM `Recipe`")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close
+
+
+
+
+    return render_template("swiper.html.jinja", recipe = results)
 
 @app.route("/savedrecipes")
 def savedrecipes_page():
