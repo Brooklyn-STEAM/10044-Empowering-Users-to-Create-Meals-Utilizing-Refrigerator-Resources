@@ -141,35 +141,31 @@ def signup():
     return render_template("signup.html.jinja") 
 
 
-@app.route("/recipe/<recipe_id>/", methods=["GET", "POST"])
+@app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
 @flask_login.login_required
-def product_detail(recipe_id):
+def recipe_detail(recipe_id):
     conn = connect_db() 
     cursor = conn.cursor()
-    cursor.execute(f"""
-        SELECT * FROM `Recipe` WHERE `id` = {recipe_id};
-    """) 
-    
-    recipe = cursor.fetchone() 
-    
-    cursor.execute(f"""
-        SELECT * FROM `Review` WHERE `id` = {recipe_id};
-    """) 
+
+    cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
+    recipe = cursor.fetchone()    
+
+
     cursor.execute(f"""
         SELECT r.rating, r.review, r.timestamp, c.username
         FROM `Review` r 
         JOIN `Customer` c ON r.customer_id = c.id
         WHERE r.recipe_id = {recipe_id}  
-        ORDER BY r.timestamp DESC;    
+        ORDER BY r.timestamp DESC;      
     """)                         
 
-    product = cursor.fetchall()     
+    review = cursor.fetchall()   
 
     if request.method == "POST":      
        
         customer_id = flask_login.current_user.id
         cursor.execute(f"SELECT * FROM `Review` WHERE `recipe_id` = '{recipe_id}' AND `customer_id` = '{customer_id}';")
-        existing_review = cursor.fetchone()           
+        existing_review = cursor.fetchone()            
 
         if existing_review:
             flash("You have already submitted a review for this product.", "error")
@@ -185,17 +181,21 @@ def product_detail(recipe_id):
             conn.commit()      
             
             flash("Your review has been submitted!", "success")
-            return redirect(f"/product/{recipe_id}") 
+            return redirect("individual_recipe.html.jinja") 
 
     cursor.close()
     conn.close()
 
-    return render_template("individual_recipe.html.jinja", product = product,recipe=recipe) 
+    print(recipe)
 
 
-@app.route("/addreview/<recipe_id>/", methods =["GET", "POST"])
+    return render_template("individual_recipe.html.jinja", recipe = recipe, review = review) 
+
+
+
+@app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
 def addreview(recipe_id): 
-    conn = connect_db()
+    conn = connect_db() 
     cursor = conn.cursor() 
     rating = request.form["rating"]
     review = request.form["review"] 
@@ -208,9 +208,9 @@ def addreview(recipe_id):
                     ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
             """,) 
     conn.close()      
-    cursor.close() 
+    cursor.close()      
 
-    return render_template("homepage.html.jinja")    
+    return redirect(f"/recipe/{recipe_id}")             
 
 
 
@@ -282,6 +282,3 @@ def swiper_page():
 def savedrecipes_page():
     return render_template("savedrecipes.html.jinja")
 
-@app.route("/individual_recipe")
-def individual_recipe_page():
-    return render_template("individual_recipe.html.jinja")
