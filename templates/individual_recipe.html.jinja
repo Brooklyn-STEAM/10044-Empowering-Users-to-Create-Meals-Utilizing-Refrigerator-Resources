@@ -21,6 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
 </head>
 
 <body class="bg-body-tertiary">
@@ -39,7 +40,29 @@
     <div class="card-body">
         <p class="card-text">Here are the details  and detailsof the individual  Re.</p>
     </div>
+
 </div>
+<br> <br> 
+ <div>
+                    <h5 class="mb-3">Add Your Review</h5>
+                    <form action= "/addreview/{{recipe['id']}}" method="POST">
+                        <div class="mb-3"> 
+                            <label for="rating" class="form-label">Rating</label>
+                            <select name="rating" id="rating" class="form-select" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select> 
+                        </div> 
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Leave a review </label> 
+                            <textarea name="review" id="review" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Submit Review</button>
+                    </form>
+                </div> 
 
     <!-- Footer -->
     <footer>
