@@ -147,6 +147,10 @@ def recipe_detail(recipe_id):
     conn = connect_db() 
     cursor = conn.cursor()
 
+
+    cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
+    recipe = cursor.fetchone()    
+
     cursor.execute(f""" 
         SELECT * FROM `Review` WHERE `id` = {recipe_id};
     """)  
@@ -161,7 +165,10 @@ def recipe_detail(recipe_id):
         ORDER BY r.timestamp DESC;      
     """)                         
 
-    recipe = cursor.fetchall()   
+
+    review = cursor.fetchall()   
+  
+
 
     if request.method == "POST":      
        
@@ -188,8 +195,11 @@ def recipe_detail(recipe_id):
     cursor.close()
     conn.close() 
 
+    print(recipe)
 
-    return render_template("individual_recipe.html.jinja", recipe = recipe,) 
+
+    return render_template("individual_recipe.html.jinja", recipe = recipe, review = review) 
+
 
 
 
@@ -282,6 +292,3 @@ def swiper_page():
 def savedrecipes_page():
     return render_template("savedrecipes.html.jinja")
 
-@app.route("/individual_recipe")
-def individual_recipe_page():
-    return render_template("individual_recipe.html.jinja")

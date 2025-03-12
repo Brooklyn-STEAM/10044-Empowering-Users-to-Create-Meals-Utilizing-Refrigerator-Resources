@@ -10,6 +10,9 @@
 html, body {
   height: 100%;
 }
+li {
+  display: inline;
+}
 p {
   font-family: "Quicksand", sans-serif;
   font-weight: 400;
