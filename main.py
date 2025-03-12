@@ -56,7 +56,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "ldore", 
+        user = "rbarry", 
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -147,8 +147,14 @@ def recipe_detail(recipe_id):
     conn = connect_db() 
     cursor = conn.cursor()
 
+
     cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
     recipe = cursor.fetchone()    
+
+    cursor.execute(f""" 
+        SELECT * FROM `Review` WHERE `id` = {recipe_id};
+    """)  
+    recipe = cursor.fetchone()       
 
 
     cursor.execute(f"""
@@ -159,7 +165,10 @@ def recipe_detail(recipe_id):
         ORDER BY r.timestamp DESC;      
     """)                         
 
+
     review = cursor.fetchall()   
+  
+
 
     if request.method == "POST":      
        
@@ -184,12 +193,13 @@ def recipe_detail(recipe_id):
             return redirect("individual_recipe.html.jinja") 
 
     cursor.close()
-    conn.close()
+    conn.close() 
 
     print(recipe)
 
 
     return render_template("individual_recipe.html.jinja", recipe = recipe, review = review) 
+
 
 
 
