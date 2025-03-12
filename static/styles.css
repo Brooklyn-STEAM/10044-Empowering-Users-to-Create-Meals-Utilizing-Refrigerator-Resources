@@ -164,6 +164,8 @@ footer {
   height: 50px;
 }
 
+
+
 /* Media Queries (Only Override Necessary Styles) */
 @media (max-width: 600px) {
   .dot { max-width: 300px; }

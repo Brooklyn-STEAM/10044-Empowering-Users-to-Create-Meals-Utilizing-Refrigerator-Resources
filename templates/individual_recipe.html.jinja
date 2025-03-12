@@ -13,8 +13,12 @@
     
     <style>
        
+.checked {
+  color: orange;
+}
+</style>
 
-    </style>
+    
 
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,7 +56,7 @@
     </div>
 
 </div>
-<br> <br> 
+<br> <br> <br> <br> 
  <div>
                     <h5 class="mb-3">Add Your Review</h5>
                     <form action= "/addreview/{{recipe['id']}}" method="POST">
@@ -64,7 +68,7 @@
                                 <option value="3">3</option>
                                 <option value="4">4</option>
                                 <option value="5">5</option>
-                            </select> 
+                            </select>        
                         </div> 
                         <div class="mb-3">
                             <label for="comment" class="form-label">Leave a review </label> 

@@ -148,19 +148,21 @@ def recipe_detail(recipe_id):
     cursor = conn.cursor()
 
 
+
     cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
     recipe = cursor.fetchone()    
 
+
     cursor.execute(f""" 
-        SELECT * FROM `Review` WHERE `id` = {recipe_id};
+        SELECT * FROM Review WHERE id = {recipe_id};
     """)  
-    recipe = cursor.fetchone()       
+    review = cursor.fetchone()       
 
 
     cursor.execute(f"""
         SELECT r.rating, r.review, r.timestamp, c.username
-        FROM `Review` r 
-        JOIN `Customer` c ON r.customer_id = c.id
+        FROM Review r 
+        JOIN Customer c ON r.customer_id = c.id
         WHERE r.recipe_id = {recipe_id}  
         ORDER BY r.timestamp DESC;      
     """)                         
@@ -173,7 +175,7 @@ def recipe_detail(recipe_id):
     if request.method == "POST":      
        
         customer_id = flask_login.current_user.id
-        cursor.execute(f"SELECT * FROM `Review` WHERE `recipe_id` = '{recipe_id}' AND `customer_id` = '{customer_id}';")
+        cursor.execute(f"SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';")
         existing_review = cursor.fetchone()            
 
         if existing_review:
@@ -184,7 +186,7 @@ def recipe_detail(recipe_id):
             timestamp = datetime.now() 
             
             cursor.execute(f"""       
-                INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`)
+                INSERT INTO Review (recipe_id, customer_id, rating, review, timestamp)
                 VALUES ('{recipe_id}', '{customer_id}', '{rating}', '{review}', '{timestamp}');
             """)         
             conn.commit()      
@@ -199,6 +201,8 @@ def recipe_detail(recipe_id):
 
 
     return render_template("individual_recipe.html.jinja", recipe = recipe, review = review) 
+    
+    
 
 
 
