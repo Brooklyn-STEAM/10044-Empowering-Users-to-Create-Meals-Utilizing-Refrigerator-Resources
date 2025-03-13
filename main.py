@@ -56,7 +56,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "rbarry", 
+        user = "ldore", 
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -247,7 +247,7 @@ def search_page():
     if query is None:
         cursor.execute("SELECT * FROM `Recipe`")
     else:
-        cursor.execute(f"SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}% ' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; ")
+        cursor.execute(f"SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}%' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; ")
 
 
     results = cursor.fetchall()
@@ -292,7 +292,46 @@ def swiper_page():
 
     return render_template("swiper.html.jinja", recipe = results)
 
-@app.route("/savedrecipes")
+@app.route("/savedrecipes" ,methods=["POST", "GET"])
 def savedrecipes_page():
-    return render_template("savedrecipes.html.jinja")
+    conn=connect_db()
+    cursor= conn.cursor()
 
+    customer_id = flask_login.current_user.user_id
+    cursor.execute(f"""
+                SELECT 
+                    `image`,
+                    `recipe_id`,
+                    `name`,
+                    `description`,
+                   
+                `SavedRecipe`.`id`
+                FROM `SavedRecipe` 
+                JOIN `Recipe` ON `recipe_id` = `Recipe`.`id` 
+                WHERE `customer_id` =  {customer_id};""")
+    
+
+    results = cursor.fetchall()
+
+    return render_template("savedrecipes.html.jinja" , recipe = results)
+
+
+@app.route("/recipe/<recipe_id>/save" ,methods =['POST'])
+@flask_login.login_required
+def add_to_saved(recipe_id):
+    if request.method == "POST":
+        customer_id = flask_login.current_user.user_id    
+
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        cursor.execute(f"""
+                        INSERT INTO `SavedRecipe`
+                        ( `customer_id`, `recipe_id`)
+                        VALUES
+                        ({customer_id},{recipe_id})
+                       
+                  ;""" )  
+        cursor.close()
+        conn.close()
+        return "ok"

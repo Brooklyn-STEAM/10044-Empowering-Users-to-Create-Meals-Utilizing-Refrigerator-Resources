@@ -41,10 +41,15 @@
         <h1>{{recipe['name']}}</h1>
         <img src="{{recipe['image']}}" class="card-img-top ingred-pics" alt="{{recipe['name']}}" style="height: 200px; width: 200px;">
     </div>
+
     <div class="card-body">
         <p class="card-text">
         {{recipe['description']}}
         </p>
+        <form action="">
+        <button type="submit" id="love" class="btn btn-primary"> <i class="fa fa-heart"></i>Add to Saved</button>
+        </form>
+
         <hr>
         <h3>Ingredients</h3>
         TBA
