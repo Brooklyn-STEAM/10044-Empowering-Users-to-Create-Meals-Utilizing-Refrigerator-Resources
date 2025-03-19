@@ -12,9 +12,6 @@ conf = Dynaconf(
     settings_file = ['settings.toml']
 )
 
-
-
-
 app.secret_key = conf.secret_key 
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
@@ -202,9 +199,6 @@ def recipe_detail(recipe_id):
 
     return render_template("individual_recipe.html.jinja", recipe = recipe, review = review) 
     
-    
-
-
 
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
@@ -225,11 +219,6 @@ def addreview(recipe_id):
     cursor.close()      
 
     return redirect(f"/recipe/{recipe_id}")             
-
-
-
-    
-
 
 @app.route("/")
 def index():
@@ -349,7 +338,49 @@ def add_to_saved(recipe_id):
     cursor.close()
     conn.close()
 
-    return {"message": message, "status": status}, 200
+    flash('Recipe saved successfully!')
+
+    return redirect(url_for('swiper_page'))
+
+
+
+@app.route("/individual/recipe/<recipe_id>/save", methods=['POST'])
+@flask_login.login_required
+def save_recipe(recipe_id):
+    customer_id = flask_login.current_user.user_id
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    if request.method == "POST":
+        
+        customer_id = flask_login.current_user.user_id
+
+    # Check if the recipe is already saved
+    cursor.execute(f"""
+        SELECT * FROM `SavedRecipe`
+        WHERE `customer_id` = {customer_id} AND `recipe_id` = {recipe_id}
+    """)
+    existing_recipe = cursor.fetchone()
+
+    if existing_recipe:
+        cursor.execute(f"""
+        DELETE FROM `SavedRecipe`       
+        WHERE `customer_id` = {customer_id} AND `recipe_id` = {recipe_id}
+        """)
+        conn.commit()
+        flash("Recipe removed from saved recipes.")
+    else:
+        # Save the recipe
+        cursor.execute(f"""
+            INSERT INTO `SavedRecipe` (`customer_id`, `recipe_id`)
+            VALUES ({customer_id}, {recipe_id})
+        """)
+        conn.commit()
+        flash("Recipe saved successfully!")
+
+    return redirect(url_for('recipe_detail', recipe_id=recipe_id))
+
+
 
 @app.route("/recipe/<recipe_id>/delete" ,methods =['POST'])
 @flask_login.login_required
@@ -367,4 +398,8 @@ def delete_saved(recipe_id):
         cursor.close()
         conn.close()
         flash("Recipe deleted successfully!")
-        return redirect(url_for('savedrecipes_page'))
+        if request.method == "POST":
+            return redirect(url_for('savedrecipes_page'))
+        else:
+            # Redirect to the recipe detail page
+            return redirect(url_for('recipe_detail', recipe_id=recipe_id))
