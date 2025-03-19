@@ -21,36 +21,70 @@
     {% include "components/navbar.html.jinja" %}
 </div>
 <h1 class="title"> Saved Recipes</h1>
-{%for message in get_flashed_messages() %}
 
-<div class="alert alert-primary" role="alert">
- {{message}}
-</div>
+  
+    <div class="container my-4">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+            
+           
+            <div class="col">
+                <div class="card">
+                    <img src="static/images/saved_recipes.png" class="card-img-top" alt="Saved Recipes">
+                    <div class="card-body">
+                        <p class="card-title">Saved Recipe 1</p>
+                    </div>
+                </div>
+            </div>
 
-{%endfor%}
+            
+            <div class="col">
+                <div class="card">
+                    <img src="" class="card-img-top" alt="Mexican Cuisine">
+                    <div class="card-body">
+                        <p class="card-text">Saved Recipe 2</p>
+                    </div>
+                </div>
+            </div>
 
+            
+            <div class="col">
+                <div class="card">
+                    <img src="" class="card-img-top" alt="Korean Cuisine">
+                    <div class="card-body">
+                        <p class="card-text">Saved Recipe 3</p>
+                    </div>
+                </div>
+            </div>
 
+            
+            <div class="col">
+                <div class="card">
+                    <img src="" class="card-img-top" alt="Italian Cuisine">
+                    <div class="card-body">
+                        <p class="card-text"> Saved Recipe 4</p>
+                    </div>
+                </div>
+            </div>
 
-     <div class="container my-4">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
-      {% for recipe in recipe %}
-      <div class="col">
-        <div class="card text-center">
-          <div class="card-header">
-            <img src="{{ recipe['image'] }}" class="card-img-top" alt="Recipe image">
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">{{ recipe['name'] }}</h5>
-            <p class="card-text">{{ recipe['description'] }}</p>
-            <a href="/recipe/{{recipe['recipe_id']}}"class="btn btn-primary" >Go To Recipe</a>
-          </div>
-          <div class="card-footer text-body-secondary">
-            <form action="/recipe/{{recipe['recipe_id']}}/delete" method="post">
-              <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove from Saved</button>
-            </form> 
-          </div>
+            
+            <div class="col">
+                <div class="card">
+                    <img src="" class="card-img-top" alt="Japanese Cuisine">
+                    <div class="card-body">
+                        <p class="card-text">Saved Recipe 5</p>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col">
+                <div class="card">
+                    <img src="" class="card-img-top" alt="Indian Cuisine">
+                    <div class="card-body">
+                        <p class="card-text"> Saved Recipe 6</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
-      {% endfor %}
     </div>
-  </div>
