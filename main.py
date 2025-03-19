@@ -283,6 +283,9 @@ def swiper_page():
     conn = connect_db()
     cursor = conn.cursor() 
     cursor.execute("SELECT * FROM `Recipe`")
+
+    #flash a message when the  the recipe is succesfully  saved
+   
     results = cursor.fetchall()
     cursor.close()
     conn.close
@@ -316,9 +319,41 @@ def savedrecipes_page():
     return render_template("savedrecipes.html.jinja" , recipe = results)
 
 
-@app.route("/recipe/<recipe_id>/save" ,methods =['POST'])
+@app.route("/recipe/<recipe_id>/save", methods=['POST'])
 @flask_login.login_required
 def add_to_saved(recipe_id):
+    customer_id = flask_login.current_user.user_id
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    # Check if the recipe is already saved
+    cursor.execute("""
+        SELECT * FROM `SavedRecipe`
+        WHERE `customer_id` = %s AND `recipe_id` = %s
+    """, (customer_id, recipe_id))
+    existing_recipe = cursor.fetchone()
+
+    if existing_recipe:
+        message = "Recipe is already saved!"
+        status = "warning"
+    else:
+        # Save the recipe
+        cursor.execute("""
+            INSERT INTO `SavedRecipe` (`customer_id`, `recipe_id`)
+            VALUES (%s, %s)
+        """, (customer_id, recipe_id))
+        conn.commit()
+        message = "Recipe saved successfully!"
+        status = "success"
+
+    cursor.close()
+    conn.close()
+
+    return {"message": message, "status": status}, 200
+
+@app.route("/recipe/<recipe_id>/delete" ,methods =['POST'])
+@flask_login.login_required
+def delete_saved(recipe_id):
     if request.method == "POST":
         customer_id = flask_login.current_user.user_id    
 
@@ -326,12 +361,10 @@ def add_to_saved(recipe_id):
         cursor = conn.cursor()
 
         cursor.execute(f"""
-                        INSERT INTO `SavedRecipe`
-                        ( `customer_id`, `recipe_id`)
-                        VALUES
-                        ({customer_id},{recipe_id})
-                       
+                        DELETE FROM `SavedRecipe`
+                        WHERE `customer_id` = {customer_id} AND `recipe_id` = {recipe_id}
                   ;""" )  
         cursor.close()
         conn.close()
-        return "ok"
+        flash("Recipe deleted successfully!")
+        return redirect(url_for('savedrecipes_page'))

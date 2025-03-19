@@ -9,157 +9,58 @@
   <link rel="stylesheet" href="/static/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
-    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="/static/styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Arial', sans-serif;
-    }
-
-    .tinder {
-      position: relative;
-      width: 100%;
-      max-width: 400px;
-      margin: 50px auto;
-    }
-
-    .tinder--cards {
-      position: relative;
-      width: 100%;
-      height: 500px;
-    }
-
-    .tinder--card {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden;
-    }
-
-    .tinder--card img {
-      width: 100%;
-      height: auto;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-
-    .tinder--card h3 {
-      margin: 20px;
-      font-size: 1.5rem;
-      color: #333;
-    }
-
-    .tinder--card p {
-      margin: 20px;
-      font-size: 1rem;
-      color: #666;
-    }
-
-    .tinder--buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-
-    .tinder--buttons button {
-      background-color: #fff;
-      border: none;
-      border-radius: 50%;
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-      width: 60px;
-      height: 60px;
-      font-size: 1.5rem;
-      color: #333;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .tinder--buttons button:hover {
-      background-color: #f1f1f1;
-      transform: scale(1.1);
-    }
-
-    .tinder--card.moving {
-      transition: none;
-    }
-
-    .tinder--card.removed {
-      display: none;
-    }
-
-    .swipepad {
-      margin-trim: 7;
-
-    }
-  </style>
+footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 10px 0;
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+</style>
 </head>
 
 <body>
+  <!-- Flash Message Container -->
+  <div id="flash-messages" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1050;"></div>
 
   <div class="bg-body-tertiary">
     {% include "components/navbar.html.jinja" %}
   </div>
 
+  <h1 class="text-center title">Find New Recipes</h1>
 
-
-  <h1 class="text-center title "> Find New Recipes </h1>
   <div class="tinder">
     <div class="tinder--cards">
-      {%for recipe in recipe%}
-      <div class="tinder--card" data-id="{{recipe['id']}}">
-        <img src="https://placeimg.com/600/300/nature" alt="Nature">
-        <h3>{{recipe['name'] }}</h3>
-        <p>This is a demo for Tinder like swipe cards</p>
+      {% for recipe in recipe %}
+      <div class="tinder--card" data-id="{{ recipe['id'] }}">
+        <img src="{{ recipe['image'] }}" alt="{{ recipe['name'] }}">
+        <h3>{{ recipe['name'] }}</h3>
+        <p>{{ recipe['description'] }}</p>
       </div>
-      {%endfor%}
+      {% endfor %}
     </div>
-
-
     <div class="tinder--buttons">
       <button id="nope"><i class="fa fa-remove"></i></button>
       <button id="love"><i class="fa fa-heart"></i></button>
     </div>
   </div>
-
-
-
-
-
-  <div class="container">
-    <div class="row">
-      <div class="col  text-center">
-        <a href="/savedrecipes" class="btn our-nav" style="font-size: larger;">See Saved Recipes</a>
-      </div>
-    </div>
-  </div>
   <footer>
-    <p>© 2025 Pantryfy</p>
+  hbhub
   </footer>
-
-
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
@@ -217,6 +118,21 @@
           var rotate = xMulti * yMulti;
 
           el.style.transform = 'translate(' + toX + 'px, ' + (toY + event.deltaY) + 'px) rotate(' + rotate + 'deg)';
+
+          // Trigger flash messages based on swipe direction
+          if (event.deltaX > 0) {
+            // Swiped right (save the recipe)
+            let recipe_id = el.getAttribute('data-id');
+            fetch('/recipe/' + recipe_id + '/save', { method: 'POST' })
+              .then(response => response.json())
+              .then(data => {
+                showFlashMessage(data.message, data.status);
+              });
+          } else {
+            // Swiped left (skip the recipe)
+            showFlashMessage("Recipe skipped!", "info");
+          }
+
           initCards();
         }
       });
@@ -224,6 +140,8 @@
 
     function createButtonListener(love) {
       return function (event) {
+        event.preventDefault(); // Prevent page refresh on button click
+
         var cards = document.querySelectorAll('.tinder--card:not(.removed)');
         var moveOutWidth = document.body.clientWidth * 1.5;
 
@@ -235,15 +153,46 @@
 
         if (love) {
           card.style.transform = 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)';
-          let recipe_id = card.attributes['data-id'].value
-          fetch('/recipe/'+recipe_id+'/save', { method: 'POST' }) 
+          let recipe_id = card.getAttribute('data-id');
+
+          // Send a POST request to save the recipe
+          fetch('/recipe/' + recipe_id + '/save', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+              showFlashMessage(data.message, data.status);
+            });
         } else {
           card.style.transform = 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)';
+          showFlashMessage("Recipe skipped!", "info");
         }
 
         initCards();
-        event.preventDefault();
       };
+    }
+
+    // Function to display flash messages dynamically
+    function showFlashMessage(message, status) {
+      const flashMessagesContainer = document.getElementById('flash-messages');
+      if (!flashMessagesContainer) {
+        console.error('Flash messages container not found in the DOM.');
+        return;
+      }
+
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${status} alert-dismissible fade show`;
+      alertDiv.role = 'alert';
+      alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      flashMessagesContainer.appendChild(alertDiv);
+
+      // Automatically remove the message after 3 seconds
+      setTimeout(() => {
+        alertDiv.classList.remove('show');
+        alertDiv.classList.add('hide');
+        setTimeout(() => alertDiv.remove(), 500);
+      }, 3000);
     }
 
     var nopeListener = createButtonListener(false);
