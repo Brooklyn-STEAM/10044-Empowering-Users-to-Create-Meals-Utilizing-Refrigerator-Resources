@@ -265,16 +265,17 @@ footer {
   display: flex; 
   align-items: center;
   justify-content: center;
-  flex-direction: column
+  flex-direction: column;
+  margin: auto;
 
 }
-.container .text{ 
+.my-container .text{ 
   font-size: 25px;
   color: #666;
   font-weight: 500;
 }
 
-.container .edit{ 
+.my-container .edit{ 
   position: absolute; 
   right: 10px;
   top: 5px; 
@@ -282,16 +283,16 @@ footer {
   color: #666;
   font-weight: 500;
 }
-.container .post{ 
+.my-container .post{ 
   display: none; 
 
 }
-.container .edit:hover{ 
+.my-container .edit:hover{ 
  text-decoration: underline; 
 
 }
 
-.container .star-widget input { 
+.my-container .star-widget input { 
 
   display: none;
 
@@ -346,7 +347,7 @@ input#rate-5:checked ~  header::before{
   content: "It was awesome 😜"; 
 }
 
-.container form{ 
+.my- container form{ 
   display: none; 
 
 }
@@ -369,13 +370,13 @@ input:checked ~ form{
 
 
 
-form .textarea{ 
+.my-form .textarea{ 
   height: 100px;
   width: 100%; 
   overflow: hidden;
 }
 
-form .textarea textarea{ 
+.my-form .textarea textarea{ 
   height: 100%;
   width: 100%; 
   outline: none;
@@ -387,14 +388,14 @@ form .textarea textarea{
 
 }
 
-form .btn{ 
+.my-form .btn{ 
   height: 45px;
   width: 100%;
   margin: 15px 0; 
 
 }
 
-form .btn button{ 
+.my-form .btn button{ 
   height: 50px;
   width: 100%; 
   border: 1px solid #dc81ed; 
@@ -406,7 +407,7 @@ form .btn button{
   text-transform: uppercase;
   cursor: pointer; 
 }
-form .btn button:hover{
+.my-form .btn button:hover{
   background: #1b1b1b;
 } 
 
