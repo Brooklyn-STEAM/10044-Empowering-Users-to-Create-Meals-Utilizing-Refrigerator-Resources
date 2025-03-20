@@ -142,7 +142,7 @@ def signup():
 @flask_login.login_required
 def recipe_detail(recipe_id):
     conn = connect_db() 
-    cursor = conn.cursor()
+    cursor = conn.cursor()     
 
 
 
@@ -151,9 +151,9 @@ def recipe_detail(recipe_id):
 
 
     cursor.execute(f""" 
-        SELECT * FROM Review WHERE id = {recipe_id};
+        SELECT * FROM Review WHERE `recipe_id` = {recipe_id};
     """)  
-    review = cursor.fetchone()       
+    reviews = cursor.fetchall()          
 
 
     cursor.execute(f"""
@@ -165,13 +165,9 @@ def recipe_detail(recipe_id):
     """)                         
 
 
-    review = cursor.fetchall()   
-  
-
-
     if request.method == "POST":      
        
-        customer_id = flask_login.current_user.id
+        customer_id = flask_login.current_user.user_id
         cursor.execute(f"SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';")
         existing_review = cursor.fetchone()            
 
@@ -189,34 +185,35 @@ def recipe_detail(recipe_id):
             conn.commit()      
             
             flash("Your review has been submitted!", "success")
-            return redirect("individual_recipe.html.jinja") 
+            return redirect(f"/recipe/{recipe_id}")
 
     cursor.close()
     conn.close() 
 
-    print(recipe)
+    print(recipe) 
 
 
-    return render_template("individual_recipe.html.jinja", recipe = recipe, review = review) 
+    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews) 
     
 
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
 def addreview(recipe_id): 
     conn = connect_db() 
-    cursor = conn.cursor() 
-    rating = request.form["rating"]
-    review = request.form["review"] 
-    timestamp = datetime.now() 
-    customer_id = flask_login.current_user.id 
-    cursor.execute(f"""
-                INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`)
-                VALUES
-                    ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
-                    ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
-            """,) 
-    conn.close()      
-    cursor.close()      
+    cursor = conn.cursor()
+    if request.method == "POST":
+        rating = request.form["rating"]
+        review = request.form["review"] 
+        timestamp = datetime.now() 
+        customer_id = flask_login.current_user.user_id 
+        cursor.execute(f""" 
+                    INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`)
+                    VALUES 
+                        ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
+                        ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
+                """,) 
+        conn.close()      
+        cursor.close()      
 
     return redirect(f"/recipe/{recipe_id}")             
 
@@ -278,7 +275,7 @@ def swiper_page():
     results = cursor.fetchall()
     cursor.close()
     conn.close
-
+ 
 
 
 
