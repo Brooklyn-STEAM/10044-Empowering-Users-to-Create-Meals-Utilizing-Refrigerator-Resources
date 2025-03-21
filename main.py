@@ -168,7 +168,7 @@ def recipe_detail(recipe_id):
     if request.method == "POST":      
        
         customer_id = flask_login.current_user.user_id
-        cursor.execute(f"SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';")
+        cursor.execute(f"""SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';""")
         existing_review = cursor.fetchone()            
 
         if existing_review:
@@ -233,7 +233,7 @@ def search_page():
     if query is None:
         cursor.execute("SELECT * FROM `Recipe`")
     else:
-        cursor.execute(f"SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}%' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; ")
+        cursor.execute(f"""SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}%' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; """)
 
 
     results = cursor.fetchall()
@@ -245,7 +245,20 @@ def search_page():
 
 @app.route("/catalog")
 def catolog_page():
-    return render_template("catalog.html.jinja")
+    conn = connect_db()
+    cursor = conn.cursor()
+    customer_id = flask_login.current_user.user_id
+    cursor.execute(f"""
+        SELECT *
+        FROM `CustomerIngredients` 
+        JOIN `Ingredients`  ON `Ingredients`.`id` = `CustomerIngredients`.`ingredient_id`
+        WHERE `CustomerIngredients`.`customer_id` = {customer_id};
+    """)
+    
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("catalog.html.jinja", ingredients = results)
 
 @app.route("/settings")
 def setting_page():
