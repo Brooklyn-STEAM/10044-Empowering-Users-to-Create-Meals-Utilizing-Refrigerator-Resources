@@ -73,12 +73,12 @@
 
 
 
-    <form action="/addreview/{{recipe['id']}}" method="POST">
-        <div class="container">
+    <form action="/addreview/{{recipe['id']}} " method="POST" class="my-form my-container">
+        <div class=" my-form">
             <h2 class="form-header">Rating</h2>
-            <div class="post">
-                <div class="text">Thanks for the rating</div>
-                <div class="edit">EDIT</div>
+            <div class="post my-form"></div>
+                <div class="text my-form">Thanks for the rating</div>
+                
             </div>
 
 
@@ -134,51 +134,6 @@
                 <button type="submit">Post</button>
             </div>
 
- <div id="flash-messages" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1050;"></div>
-   <div style="text-align:center">
-  
-  <span class="dot"></span>
-  <div id="flash-messages" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1050;"></div>
-</div>
-<div class="card text-center">
-    <div class="card-title">
-        <h1>{{recipe['name']}}</h1>
-        <img src="{{recipe['image']}}" class="card-img-top ingred-pics" alt="{{recipe['name']}}" style="height: 200px; width: 200px;">
-    </div>
-
-{%for message in get_flashed_messages() %}
-
-<div class="alert alert-primary" role="alert">
- {{message}}
-</div>
-
-{%endfor%}
-
-
-
-    <div class="card-body">
-        <p class="card-text">
-        {{recipe['description']}}
-        </p>
-      
-        <form action="/individual/recipe/{{recipe['id']}}/save" method="post">
-        <button type="submit" id="love" class="btn btn-primary"> <i class="fa fa-heart"></i>Add to Saved</button>
-        </form>
-
-        <form action="/recipe/{{recipe['id']}}/delete" method="post">
-        <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove from Saved</button>
-        </form>
-        <hr>
-      
-
-        <hr>
-        <h3>Ingredients</h3>
-        TBA
-        <hr>
-        <h3>Instructions</h3>
-        <div class="card-text text-wrap" style="font-size:40px;">{{recipe['directions'] | replace('\\', '')| replace('\n', '<br>') | safe}}
-
-        </div>
     </form>
 
 
@@ -188,22 +143,7 @@
 
 
 
-    <script>
-        const btn = document.querySelector("button");
-        const post = document.querySelector(".post");
-        const widget = document.querySelector(".star-widget");
-        const editBtn = document.querySelector(".edit");
-        btn.onclick = () => {
-            widget.style.display = "none";
-            post.style.display = "block";
-
-            editBtn.onclick = () => {
-                widget.style.display = "block";
-                post.style.display = "none";
-            }
-            return false;
-        } 
-    </script>
+   
 
     <br> <br> <br>
     <h3 class="card-title text-center mb-4">Customer Reviews</h3>
