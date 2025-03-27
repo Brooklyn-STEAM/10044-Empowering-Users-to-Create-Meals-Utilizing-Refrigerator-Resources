@@ -12,9 +12,6 @@ conf = Dynaconf(
     settings_file = ['settings.toml']
 )
 
-
-
-
 app.secret_key = conf.secret_key 
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
@@ -56,7 +53,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "spowell", 
+        user = "ldore", 
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -144,7 +141,7 @@ def signup():
 @flask_login.login_required
 def recipe_detail(recipe_id):
     conn = connect_db() 
-    cursor = conn.cursor()
+    cursor = conn.cursor()     
 
 
 
@@ -153,9 +150,9 @@ def recipe_detail(recipe_id):
 
 
     cursor.execute(f""" 
-        SELECT * FROM Review WHERE id = {recipe_id};
+        SELECT * FROM Review WHERE `recipe_id` = {recipe_id};
     """)  
-    review = cursor.fetchone()       
+    reviews = cursor.fetchall()          
 
 
     cursor.execute(f"""
@@ -167,13 +164,9 @@ def recipe_detail(recipe_id):
     """)                         
 
 
-    review = cursor.fetchall()   
-  
-
-
     if request.method == "POST":      
        
-        customer_id = flask_login.current_user.id
+        customer_id = flask_login.current_user.user_id
         cursor.execute(f"SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';")
         existing_review = cursor.fetchone()            
 
@@ -191,44 +184,37 @@ def recipe_detail(recipe_id):
             conn.commit()      
             
             flash("Your review has been submitted!", "success")
-            return redirect("individual_recipe.html.jinja") 
+            return redirect(f"/recipe/{recipe_id}")
 
     cursor.close()
     conn.close() 
 
-    print(recipe)
+    print(recipe) 
 
 
-    return render_template("individual_recipe.html.jinja", recipe = recipe, review = review) 
+    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews) 
     
-    
-
-
 
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
 def addreview(recipe_id): 
     conn = connect_db() 
-    cursor = conn.cursor() 
-    rating = request.form["rating"]
-    review = request.form["review"] 
-    timestamp = datetime.now() 
-    customer_id = flask_login.current_user.id 
-    cursor.execute(f"""
-                INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`)
-                VALUES
-                    ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
-                    ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
-            """,) 
-    conn.close()      
-    cursor.close()      
+    cursor = conn.cursor()
+    if request.method == "POST":
+        rating = request.form["rating"]
+        review = request.form["review"] 
+        timestamp = datetime.now() 
+        customer_id = flask_login.current_user.user_id 
+        cursor.execute(f""" 
+                    INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`)
+                    VALUES 
+                        ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
+                        ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
+                """,) 
+        conn.close()      
+        cursor.close()      
 
     return redirect(f"/recipe/{recipe_id}")             
-
-
-
-    
-
 
 @app.route("/")
 def index():
@@ -246,7 +232,7 @@ def search_page():
     if query is None:
         cursor.execute("SELECT * FROM `Recipe`")
     else:
-        cursor.execute(f"SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}% ' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; ")
+        cursor.execute(f"SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}%' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; ")
 
 
     results = cursor.fetchall()
@@ -315,16 +301,134 @@ def swiper_page():
     conn = connect_db()
     cursor = conn.cursor() 
     cursor.execute("SELECT * FROM `Recipe`")
+
+    #flash a message when the  the recipe is succesfully  saved
+   
     results = cursor.fetchall()
     cursor.close()
     conn.close
-
+ 
 
 
 
     return render_template("swiper.html.jinja", recipe = results)
 
-@app.route("/savedrecipes")
+@app.route("/savedrecipes" ,methods=["POST", "GET"])
 def savedrecipes_page():
-    return render_template("savedrecipes.html.jinja")
+    conn=connect_db()
+    cursor= conn.cursor()
 
+    customer_id = flask_login.current_user.user_id
+    cursor.execute(f"""
+                SELECT 
+                    `image`,
+                    `recipe_id`,
+                    `name`,
+                    `description`,
+                   
+                `SavedRecipe`.`id`
+                FROM `SavedRecipe` 
+                JOIN `Recipe` ON `recipe_id` = `Recipe`.`id` 
+                WHERE `customer_id` =  {customer_id};""")
+    
+
+    results = cursor.fetchall()
+
+    return render_template("savedrecipes.html.jinja" , recipe = results)
+
+
+@app.route("/recipe/<recipe_id>/save", methods=['POST'])
+@flask_login.login_required
+def add_to_saved(recipe_id):
+    customer_id = flask_login.current_user.user_id
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    # Check if the recipe is already saved
+    cursor.execute("""
+        SELECT * FROM `SavedRecipe`
+        WHERE `customer_id` = %s AND `recipe_id` = %s
+    """, (customer_id, recipe_id))
+    existing_recipe = cursor.fetchone()
+
+    if existing_recipe:
+        message = "Recipe is already saved!"
+        status = "warning"
+    else:
+        # Save the recipe
+        cursor.execute("""
+            INSERT INTO `SavedRecipe` (`customer_id`, `recipe_id`)
+            VALUES (%s, %s)
+        """, (customer_id, recipe_id))
+        conn.commit()
+        message = "Recipe saved successfully!"
+        status = "success"
+
+    cursor.close()
+    conn.close()
+
+    flash('Recipe saved successfully!')
+
+    return redirect(url_for('swiper_page'))
+
+
+
+@app.route("/individual/recipe/<recipe_id>/save", methods=['POST'])
+@flask_login.login_required
+def save_recipe(recipe_id):
+    customer_id = flask_login.current_user.user_id
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    if request.method == "POST":
+        
+        customer_id = flask_login.current_user.user_id
+
+    # Check if the recipe is already saved
+    cursor.execute(f"""
+        SELECT * FROM `SavedRecipe`
+        WHERE `customer_id` = {customer_id} AND `recipe_id` = {recipe_id}
+    """)
+    existing_recipe = cursor.fetchone()
+
+    if existing_recipe:
+        cursor.execute(f"""
+        DELETE FROM `SavedRecipe`       
+        WHERE `customer_id` = {customer_id} AND `recipe_id` = {recipe_id}
+        """)
+        conn.commit()
+        flash("Recipe removed from saved recipes.")
+    else:
+        # Save the recipe
+        cursor.execute(f"""
+            INSERT INTO `SavedRecipe` (`customer_id`, `recipe_id`)
+            VALUES ({customer_id}, {recipe_id})
+        """)
+        conn.commit()
+        flash("Recipe saved successfully!")
+
+    return redirect(url_for('recipe_detail', recipe_id=recipe_id))
+
+
+
+@app.route("/recipe/<recipe_id>/delete" ,methods =['POST'])
+@flask_login.login_required
+def delete_saved(recipe_id):
+    if request.method == "POST":
+        customer_id = flask_login.current_user.user_id    
+
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        cursor.execute(f"""
+                        DELETE FROM `SavedRecipe`
+                        WHERE `customer_id` = {customer_id} AND `recipe_id` = {recipe_id}
+                  ;""" )  
+        cursor.close()
+        conn.close()
+        flash("Recipe deleted successfully!")
+        if request.method == "POST":
+            return redirect(url_for('savedrecipes_page'))
+        else:
+            # Redirect to the recipe detail page
+            return redirect(url_for('recipe_detail', recipe_id=recipe_id))
