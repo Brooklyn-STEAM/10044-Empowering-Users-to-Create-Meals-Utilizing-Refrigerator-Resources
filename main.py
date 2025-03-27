@@ -264,6 +264,7 @@ def search_page():
    
 
 
+
 @app.route("/catalog")
 def catolog_page():
     conn = connect_db()
