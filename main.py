@@ -58,7 +58,6 @@ def connect_db ():
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
         )       
-
     return conn       
 
 
@@ -252,9 +251,42 @@ def setting_page():
     return render_template("settings.html.jinja")
 
 
-@app.route("/addingredient")
-def addingredient_page():
-    return render_template("addingredient.html.jinja")
+@app.route("/add_ingredient", methods = ["POST","GET"])
+def add_ingredient_page():
+    customer_id = flask_login
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM `Ingredients`")
+    ing_results = cursor.fetchall()
+
+   
+
+    is_item_checked = []
+    if request.method == "POST":
+        for item in ing_results:
+            if request.form.get[item["id"]]:
+                cursor.execute(f"""INSERT INTO `CustomerIngredients` 
+                               (`customer_id`, `ingredient_id`)
+                               VALUES 
+                                ('{customer_id}','{item["id"]}');
+                               """)
+                
+        redirect("/add_ingredient")       
+
+
+    cursor.close()
+    conn.close
+
+        
+        
+
+    return render_template("add_ingredient.html.jinja", ing_results = ing_results, is_item_checked = is_item_checked)
+
+
+
+   
+
 
 @app.route("/mexican")
 def mexican_recipes():
