@@ -219,7 +219,29 @@ def addreview(recipe_id):
 
 @app.route("/")
 def index():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    # Check if the user is logged in
+    if flask_login.current_user.is_authenticated:
+        customer_id = flask_login.current_user.user_id
+        cursor.execute("""
+            SELECT * 
+            FROM `CustomerIngredients`
+            JOIN `Ingredients` ON `CustomerIngredients`.`ingredient_id` = `Ingredients`.`id`
+            WHERE `CustomerIngredients`.`customer_id` = %s;
+        """, (customer_id,))
+        
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return render_template("homepage.html.jinja", ingredients=results)
+    
+    # If the user is not logged in
+    cursor.close()
+    conn.close()
     return render_template("homepage.html.jinja")
+@app.route
 
 
 
@@ -271,7 +293,32 @@ def addingredient_page():
 
 @app.route("/mexican")
 def mexican_recipes():
-    return render_template("mexican_recipes.html.jinja")
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Mexican';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()    
+    return render_template("mexican_recipes.html.jinja" , recipe = results)
+@app.route("/korean")
+def korean_recipes():
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Korean';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()    
+    return render_template("korean_recipes.html.jinja" , recipe = results)
+
+@app.route("/italian")  
+def italian_recipes():
+    conn = connect_db()         
+    cursor = conn.cursor()  
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Italian';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("italian_recipes.html.jinja", recipe = results)  
 
 @app.route("/individual_ingrediant")
 def individual_ingrediant_page():

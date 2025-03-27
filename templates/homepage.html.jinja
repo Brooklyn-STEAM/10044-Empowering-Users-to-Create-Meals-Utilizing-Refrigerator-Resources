@@ -25,63 +25,14 @@
 
    
     <div class="scrollmenu">
+    {% for ingredient in ingredients %}
         <button type="button" class="btn-circle ingred-pics">
         <img src="static/images/mexican_cuisine.png" class="ingred-pics" alt="Mexican Cuisine">
                     <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/korean_cuisine.png" class="ingred-pics" alt="Korean Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <img src="static/images/italian_cuisine.png" class="ingred-pics" alt="Italian Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img
-            src="static/images/japenese_cuisine.png" class="ingred-pics" alt="Japanese Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/mexican_cuisine.png" class="ingred-pics" alt="Mexican Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/korean_cuisine.png" class="ingred-pics" alt="Korean Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <img src="static/images/italian_cuisine.png" class="ingred-pics" alt="Italian Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img
-            src="static/images/japenese_cuisine.png" class="ingred-pics" alt="Japanese Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">  
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/mexican_cuisine.png" class="ingred-pics" alt="Mexican Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/korean_cuisine.png" class="ingred-pics" alt="Korean Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <img src="static/images/italian_cuisine.png" class="ingred-pics" alt="Italian Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img
-            src="static/images/japenese_cuisine.png" class="ingred-pics"  aria-label=" test"  alt="Japanese Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">  
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/mexican_cuisine.png" class="ingred-pics" alt="Mexican Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/korean_cuisine.png" class="ingred-pics" alt="Korean Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <img src="static/images/italian_cuisine.png" class="ingred-pics" alt="Italian Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img
-            src="static/images/japenese_cuisine.png" class="ingred-pics" alt="Japanese Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">  
 
+    {% endfor %}
+
+  
     
     
     </div>
@@ -129,7 +80,7 @@
                 <div class="card">
                     <img src="static/images/italian_cuisine.png" class="card-img-top" alt="Italian Cuisine">
                     <div class="card-body">
-                        <p class="card-text">Italian</p>
+                        <a href="/italian" class="card-text"> Italian</a>
                     </div>
                 </div>
             </div>
