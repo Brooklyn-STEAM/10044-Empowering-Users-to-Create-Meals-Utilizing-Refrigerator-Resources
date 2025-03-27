@@ -167,7 +167,7 @@ def recipe_detail(recipe_id):
     if request.method == "POST":      
        
         customer_id = flask_login.current_user.user_id
-        cursor.execute(f"SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';")
+        cursor.execute(f"""SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';""")
         existing_review = cursor.fetchone()            
 
         if existing_review:
@@ -218,7 +218,29 @@ def addreview(recipe_id):
 
 @app.route("/")
 def index():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    # Check if the user is logged in
+    if flask_login.current_user.is_authenticated:
+        customer_id = flask_login.current_user.user_id
+        cursor.execute("""
+            SELECT * 
+            FROM `CustomerIngredients`
+            JOIN `Ingredients` ON `CustomerIngredients`.`ingredient_id` = `Ingredients`.`id`
+            WHERE `CustomerIngredients`.`customer_id` = %s;
+        """, (customer_id,))
+        
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return render_template("homepage.html.jinja", ingredients=results)
+    
+    # If the user is not logged in
+    cursor.close()
+    conn.close()
     return render_template("homepage.html.jinja")
+@app.route
 
 
 
@@ -232,7 +254,7 @@ def search_page():
     if query is None:
         cursor.execute("SELECT * FROM `Recipe`")
     else:
-        cursor.execute(f"SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}%' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; ")
+        cursor.execute(f"""SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}%' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; """)
 
 
     results = cursor.fetchall()
@@ -244,7 +266,20 @@ def search_page():
 
 @app.route("/catalog")
 def catolog_page():
-    return render_template("catalog.html.jinja")
+    conn = connect_db()
+    cursor = conn.cursor()
+    customer_id = flask_login.current_user.user_id
+    cursor.execute(f"""
+        SELECT *
+        FROM `CustomerIngredients` 
+        JOIN `Ingredients`  ON `Ingredients`.`id` = `CustomerIngredients`.`ingredient_id`
+        WHERE `CustomerIngredients`.`customer_id` = {customer_id};
+    """)
+    
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("catalog.html.jinja", ingredients = results)
 
 @app.route("/settings")
 def setting_page():
@@ -290,7 +325,32 @@ def add_ingredient_page():
 
 @app.route("/mexican")
 def mexican_recipes():
-    return render_template("mexican_recipes.html.jinja")
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Mexican';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()    
+    return render_template("mexican_recipes.html.jinja" , recipe = results)
+@app.route("/korean")
+def korean_recipes():
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Korean';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()    
+    return render_template("korean_recipes.html.jinja" , recipe = results)
+
+@app.route("/italian")  
+def italian_recipes():
+    conn = connect_db()         
+    cursor = conn.cursor()  
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Italian';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("italian_recipes.html.jinja", recipe = results)  
 
 @app.route("/individual_ingrediant")
 def individual_ingrediant_page():
