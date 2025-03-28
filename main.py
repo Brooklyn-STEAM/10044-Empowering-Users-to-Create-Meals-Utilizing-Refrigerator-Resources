@@ -245,23 +245,61 @@ def index():
 
 
 
-@app.route("/search")
+@app.route("/search", methods=["GET"])
 def search_page():
-    query = request.args.get('query')
+    query = request.args.get('query', '')  # Get the search query (default to an empty string)
+    cuisine = request.args.get('cuisine', '')  # Get the selected cuisine (default to an empty string)
+
     conn = connect_db()
-    cursor = conn.cursor()  
+    cursor = conn.cursor()
 
-    if query is None:
-        cursor.execute("SELECT * FROM `Recipe`")
-    else:
-        cursor.execute(f"""SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}%' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; """)
+    # Base SQL query
+    sql_query = "SELECT * FROM `Recipe` WHERE 1=1"
+    params = []
 
+    # Add search query filter
+    if query:
+        sql_query += " AND (`name` LIKE %s OR `description` LIKE %s)"
+        params.extend([f"%{query}%", f"%{query}%"])
 
+    # Add cuisine filter
+    if cuisine:
+        sql_query += " AND `cuisine` = %s"
+        params.append(cuisine)
+
+    # Execute the query with parameters
+    cursor.execute(sql_query, params)
     results = cursor.fetchall()
+
     cursor.close()
     conn.close()
-    return render_template("searchpage.html.jinja", recipe = results)
-   
+
+    return render_template("searchpage.html.jinja", recipe=results, query=query, cuisine=cuisine)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
