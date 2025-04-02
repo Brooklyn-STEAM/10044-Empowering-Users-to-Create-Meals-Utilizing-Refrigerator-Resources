@@ -20,6 +20,13 @@
 <body class="bg-body-tertiary">
   {% include "components/navbar.html.jinja" %}
   <div class="container row  d-flex justify-content-center align-items-center" >
+{%for message in get_flashed_messages() %}
+
+<div class="alert alert-primary" role="alert">
+ {{message}}
+</div>
+{%endfor%}
+
 
 <h1 class="text-center"  style="text-align:center">User Ingredient Catalog</h1>
   {% for ingredient in ingredients %}
@@ -33,6 +40,9 @@
     <p class="card-text">{{ingredient['category']}}</p>
     <a href="#" class="btn btn-primary">Go somewhere</a>
   </div>
+  <form action="/ingredient/{{ingredient['ingredient_id']}}/delete" method="post">
+              <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove from Saved</button>
+            </form> 
 </div>
   
   {% endfor %}

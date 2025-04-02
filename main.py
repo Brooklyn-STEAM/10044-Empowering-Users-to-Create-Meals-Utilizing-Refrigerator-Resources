@@ -236,7 +236,8 @@ def index():
         conn.close()
         return render_template("homepage.html.jinja", ingredients=results)
     
-    # If the user is not logged in
+    if flask_login.current_user.is_authenticated == False:
+        return render_template("homepage.html.jinja")
     cursor.close()
     conn.close()
     return render_template("homepage.html.jinja")
@@ -305,6 +306,10 @@ def search_page():
 
 @app.route("/catalog")
 def catolog_page():
+    
+    if flask_login.current_user.is_authenticated == False:
+        return redirect("/signin")
+    
     conn = connect_db()
     cursor = conn.cursor()
     customer_id = flask_login.current_user.user_id
@@ -318,6 +323,9 @@ def catolog_page():
     results = cursor.fetchall()
     cursor.close()
     conn.close()
+    if flask_login.current_user.is_authenticated == False:
+        return redirect("/signin")
+    
     return render_template("catalog.html.jinja", ingredients = results)
 
 @app.route("/settings")
@@ -531,3 +539,24 @@ def delete_saved(recipe_id):
         else:
             # Redirect to the recipe detail page
             return redirect(url_for('recipe_detail', recipe_id=recipe_id))
+        
+
+@app.route("/ingredient/<ingredient_id>/delete", methods=['POST'])
+@flask_login.login_required
+def delete_ingredient(ingredient_id):
+    if request.method == "POST":
+        customer_id = flask_login.current_user.user_id
+
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        cursor.execute(f"""
+            DELETE FROM `CustomerIngredients`
+            WHERE `customer_id` = {customer_id} AND `ingredient_id` = {ingredient_id}
+        """)
+        cursor.close()
+        conn.close()
+
+        flash("Ingredient deleted successfully!")
+
+    return redirect(url_for('catolog_page'))
