@@ -53,7 +53,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "ldore", 
+        user = "spowell", 
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -252,36 +252,38 @@ def setting_page():
 
 
 @app.route("/add_ingredient", methods = ["POST","GET"])
+@flask_login.login_required
 def add_ingredient_page():
-    customer_id = flask_login
-    conn = connect_db()
-    cursor = conn.cursor()
+    
+    if flask_login.current_user.is_authenticated:
 
-    cursor.execute("SELECT * FROM `Ingredients`")
-    ing_results = cursor.fetchall()
+        customer_id = flask_login.current_user.user_id
+        conn = connect_db()
+        cursor = conn.cursor()
 
-   
+        if request.method == "GET":
 
-    is_item_checked = []
-    if request.method == "POST":
-        for item in ing_results:
-            if request.form.get[item["id"]]:
-                cursor.execute(f"""INSERT INTO `CustomerIngredients` 
-                               (`customer_id`, `ingredient_id`)
-                               VALUES 
-                                ('{customer_id}','{item["id"]}');
-                               """)
-                
-        redirect("/add_ingredient")       
+            cursor.execute("SELECT * FROM `Ingredients`")
+            ing_results = cursor.fetchall()
 
 
-    cursor.close()
-    conn.close
+        if request.method == 'POST':
+            is_checked = request.form.getlist('ing_check')
+
+            for ing_id in is_checked:
+                cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
+
+
+        cursor.close()
+        conn.close
+    else:
+        redirect("/login")
+
 
         
         
 
-    return render_template("add_ingredient.html.jinja", ing_results = ing_results, is_item_checked = is_item_checked)
+    return render_template("add_ingredient.html.jinja", ing_results = ing_results)
 
 
 

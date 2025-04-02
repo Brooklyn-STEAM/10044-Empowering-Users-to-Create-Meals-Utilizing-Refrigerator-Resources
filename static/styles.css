@@ -105,7 +105,7 @@ footer {
   font-weight: 400;
   font-style: normal;
 }
-<style>
+
     body {
       background-color: #f8f9fa;
       font-family: 'Arial', sans-serif;
@@ -195,7 +195,6 @@ footer {
       margin-trim: 7;
 
     }
-  </style>
 /* Apply the Color Scheme */
 body {
   background-color: var(--alice-blue);
@@ -444,4 +443,8 @@ input:checked ~ form{
 
 @media (max-width: 344px) {
   .dot { max-width: 300px; }
+}
+.smaller-label{
+  font-size: 10px;
+
 }
