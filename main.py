@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request,redirect,flash,abort,url_for
+from flask import Flask, render_template, request,redirect,flash,abort,url_for, session 
 import pymysql
 from dynaconf import Dynaconf
 import flask_login
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime  
 
 
@@ -11,6 +11,7 @@ app = Flask(__name__)
 conf = Dynaconf(
     settings_file = ['settings.toml']
 )
+
 
 app.secret_key = conf.secret_key 
 login_manager = flask_login.LoginManager()
@@ -40,26 +41,28 @@ class User:
 @login_manager.user_loader    
 def load_user(user_id):
     conn = connect_db() 
-    cursor =conn.cursor()
-    cursor.execute(f"SELECT * FROM `Customer` WHERE `id` = {user_id};")   
+    cursor =conn.cursor() 
+    cursor.execute(f"SELECT * FROM `Customer` WHERE `id` = {user_id};")      
     result = cursor.fetchone() 
-    cursor.close   
-    conn.close    
+    cursor.close           
+    conn.close       
 
-    if result is not None:
+    if result is not None: 
+
         return User(result['id'], result['username'], result['email'],result['first_name'],result['last_name'], result['phone']) 
 
 def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "ldore", 
+        user = "rbarry", 
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
         )       
 
-    return conn       
+    return conn     
+    
 
 
 @app.route("/signin", methods=["POST", "GET"])
@@ -82,12 +85,21 @@ def signin():
             flash("Your username/password is incorrect")   
         else:
             user = User(result["id"], result["username"], result["email"], result["first_name"], result["last_name"], result["phone"])  
-            flask_login.login_user(user) 
+            
+
+    
+   
+       
+            session["username"] = username
+            return redirect("/settings") 
+
+        flash("Invalid credentials", "danger")
 
         
         
-        conn.close() 
-        cursor.close()
+        conn.close()
+
+        cursor.close()  
            
         
     return render_template("signin.html.jinja")
@@ -96,7 +108,7 @@ def signin():
 @app.route('/logout') 
 def logout():
     flask_login.logout_user()  
-    return redirect('/')      
+    return redirect('/')           
 
 
 @app.route("/signup", methods=["POST", "GET"])
@@ -109,9 +121,11 @@ def signup():
         last_name = request.form["last_name"] 
         email = request.form["email"]
         password = request.form["password"]
-        username = request.form["username"]
-        phone = request.form["phone"]   
+        username = request.form["username"]  
+        phone = request.form["phone"] 
         confirm_password = request.form["confirm_password"]
+        
+
 
         if password != confirm_password:
             flash("Password does not match the confirmation.")
@@ -119,23 +133,23 @@ def signup():
 
         conn = connect_db() 
         cursor = conn.cursor() 
-
+        
         try:
             cursor.execute(f"""
                 INSERT INTO `Customer` (`username`, `phone`, `password`, `first_name`, `last_name`, `email`)
-                VALUES ('{username}', '{phone}', '{password}', '{first_name}','{last_name}', '{email}');
+                VALUES ('{username}', '{phone}', '{password}', '{first_name}','{last_name}', '{email}', );
             """) 
             conn.commit()
         except pymysql.err.IntegrityError:
             flash("Sorry, that username/email is already in use.")
-            return render_template("signup.html.jinja")
+            return render_template("signup.html.jinja") 
         finally:
             cursor.close()
-            conn.close()
+            conn.close()  
 
-        return redirect("/signin")
+        return redirect("/signin")      
 
-    return render_template("signup.html.jinja") 
+    return render_template("signup.html.jinja")  
 
 
 @app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
@@ -182,7 +196,7 @@ def recipe_detail(recipe_id):
                 INSERT INTO Review (recipe_id, customer_id, rating, review, timestamp)
                 VALUES ('{recipe_id}', '{customer_id}', '{rating}', '{review}', '{timestamp}');
             """)         
-            conn.commit()      
+            conn.commit()         
             
             flash("Your review has been submitted!", "success")
             return redirect(f"/recipe/{recipe_id}")
@@ -247,9 +261,39 @@ def search_page():
 def catolog_page():
     return render_template("catalog.html.jinja")
 
-@app.route("/settings")
-def setting_page():
-    return render_template("settings.html.jinja")
+
+@app.route("/settings", methods =["GET", "POST"]) 
+def settings():
+
+      return render_template("settings.html.jinja") 
+
+
+@app.route("/delete_account", methods= ["GET","POST"]) 
+@flask_login.login_required 
+def delete_account():
+    if "username" not in session: 
+        flash("you must be logged in to delete account")
+        return redirect("/signin")  
+
+    current_password = request.form.get("current_password")  
+    username = request.form.get("username")
+    password = request.form.get("password")
+    if not check_password_hash(User["username"]["password"], current_password):
+        flash("Incorrect password. Account deletion failed.", "danger")
+        return redirect("/settings") 
+   
+    User.pop(username, None) 
+    
+
+    session.pop("username", None)
+    
+    flash("Your account has been deleted successfully.", "success")           
+    return redirect("\signin")    
+
+                           
+
+
+
 
 
 @app.route("/addingredient")
@@ -269,6 +313,7 @@ def swiper_page():
     conn = connect_db()
     cursor = conn.cursor() 
     cursor.execute("SELECT * FROM `Recipe`")
+
 
     #flash a message when the  the recipe is succesfully  saved
    
