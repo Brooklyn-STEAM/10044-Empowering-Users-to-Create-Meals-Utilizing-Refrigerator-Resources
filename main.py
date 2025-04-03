@@ -53,7 +53,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "ldore", 
+        user = "ldore",  
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
