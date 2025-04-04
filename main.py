@@ -268,27 +268,67 @@ def settings():
       return render_template("settings.html.jinja") 
 
 
-@app.route("/delete_account", methods= ["GET","POST"]) 
-@flask_login.login_required 
-def delete_account():
-    if "username" not in session: 
-        flash("you must be logged in to delete account")
-        return redirect("/signin")  
+@app.route("/update_settings", methods=["POST"])
+def update_settings():
+    conn = connect_db() 
+    cursor = conn.cursor()   
 
-    current_password = request.form.get("current_password")  
-    username = request.form.get("username")
-    password = request.form.get("password")
-    if not check_password_hash(User["username"]["password"], current_password):
-        flash("Incorrect password. Account deletion failed.", "danger")
-        return redirect("/settings") 
+    if "user_id" not in session:
+        flash("Please log in first!", "danger")
+        return redirect(url_for("login"))
+
+    new_username = request.form.get("new_username")
+    new_password = request.form.get("new_password")  
+
+    hashed_password = generate_password_hash(new_password) 
+
+    with get_db_connection() as conn:  
+        try:
+            conn.execute(
+                "UPDATE users SET username = ?, password = ? WHERE id = ?",
+                (new_username, hashed_password, session["user_id"]),
+            )
+            conn.commit()
+            session["username"] = new_username
+            flash("Account updated successfully!", "success")
+        except sqlite3.IntegrityError:
+            flash("Username already taken!", "danger")
+
+    conn.close()
+    cursor.close() 
+
+    return redirect(url_for("settings"))
+
+
+@app.route("/update_account", methods=["POST"])
+def update_account():
+    conn = connect_db() 
+    cursor = conn.cursor()   
+    if "user_id" not in session:
+        flash("Please log in first!", "danger")
+        return redirect(url_for("/signin")) 
+
+    two_factor = request.form.get("two_factor")
+
+    
+    conn.execute(
+            "UPDATE users SET two_factor = ? WHERE id = ?",
+            (two_factor, session["user_id"]),
+        )
+    conn.commit()
+
+    flash("Two-factor authentication updated!", "success")
+    return redirect(url_for("/settings"))
+
+
+@app.route("/delete_account", methods=["POST"])
+def delete_account(user_id):
+    conn = connect_db() 
+    cursor = conn.cursor() 
+    
    
-    User.pop(username, None) 
-    
 
-    session.pop("username", None)
-    
-    flash("Your account has been deleted successfully.", "success")           
-    return redirect("\signin")    
+    return redirect(url_for("/signup")) 
 
                            
 
