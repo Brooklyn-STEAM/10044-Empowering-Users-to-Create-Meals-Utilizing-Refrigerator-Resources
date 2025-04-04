@@ -29,10 +29,10 @@
       <img src="static/images/carousel_logo.png" class="d-block w-100" alt="..." style="height:400px; width:100%;">
     </div>
     <div class="carousel-item">
-      <img src="static/images/mexican_cuisine.png" class="d-block w-100" alt="..." style="height:300px;">
+      <img src="static/images/mexican_cuisine.png" class="d-block w-100" alt="..." style="height:400px; width:100%;">
     </div>
     <div class="carousel-item">
-      <img src="static/images/italian_cuisine.png" class="d-block w-100" alt="..." style="height:300px ;">
+      <img src="static/images/italian_cuisine.png" class="d-block w-100" alt="..." style="height:400px; width:100%;">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
@@ -45,14 +45,16 @@
   </button>
 </div>
    
+  
     <div class="scrollmenu">
+     
     {% for ingredient in ingredients %}
         <button type="button" class="btn-circle ingred-pics">
         <img src="{{ingredient['image']}}" class="ingred-pics" alt="{{ingredient['name']}}">
                     <div class="card-body"></button>
 
     {% endfor %}
-
+   
   
     
     
@@ -93,7 +95,7 @@
                 <div class="card">
                     <img src="static/images/korean_cuisine.png" class="card-img-top" alt="Korean Cuisine">
                     <div class="card-body">
-                        <p class="card-text">Korean</p>
+                    <a href="/british " class="card-text"> British</a>
                     </div>
                 </div>
             </div>

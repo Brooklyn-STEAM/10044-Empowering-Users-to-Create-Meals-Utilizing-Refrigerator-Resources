@@ -53,7 +53,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "spowell", 
+        user = "ldore",  
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -149,9 +149,18 @@ def recipe_detail(recipe_id):
     recipe = cursor.fetchone()    
 
 
+    cursor.execute(f""" SELECT * FROM 	`RecipeIngredients` JOIN `Recipe` ON`Recipe`.`id`= `RecipeIngredients`.`recipe_id`
+                    JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
+                    WHERE `recipe_id` = {recipe_id}
+                   ;""")
+    ingredients = cursor.fetchall()
+
+    
+
     cursor.execute(f""" 
         SELECT * FROM Review WHERE `recipe_id` = {recipe_id};
     """)  
+
     reviews = cursor.fetchall()          
 
 
@@ -192,7 +201,7 @@ def recipe_detail(recipe_id):
     print(recipe) 
 
 
-    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews) 
+    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients) 
     
 
 
@@ -308,7 +317,9 @@ def search_page():
 def catolog_page():
     
     if flask_login.current_user.is_authenticated == False:
+        flash("Please log in to view your ingredients.")
         return redirect("/signin")
+        
     
     conn = connect_db()
     cursor = conn.cursor()
@@ -345,8 +356,15 @@ def add_ingredient_page():
     ing_results = cursor.fetchall()
 
 
+
     if request.method == 'POST':
         is_checked = request.form.getlist('ing_check')
+#         cursor.close()
+#         conn.close
+#     else:
+#         redirect("/login")
+#         flash("Please log in to add ingredients.")
+
 
         for ing_id in is_checked:
             cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
@@ -371,11 +389,11 @@ def mexican_recipes():
     cursor.close()
     conn.close()    
     return render_template("mexican_recipes.html.jinja" , recipe = results)
-@app.route("/korean")
+@app.route("/british")
 def korean_recipes():
     conn = connect_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Korean';")
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'British';")
     results = cursor.fetchall()
     cursor.close()
     conn.close()    
