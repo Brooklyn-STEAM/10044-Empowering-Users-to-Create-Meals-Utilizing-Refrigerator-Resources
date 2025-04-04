@@ -336,34 +336,24 @@ def setting_page():
 @app.route("/add_ingredient", methods = ["POST","GET"])
 @flask_login.login_required
 def add_ingredient_page():
-    
-    if flask_login.current_user.is_authenticated:
-
-        customer_id = flask_login.current_user.user_id
-        conn = connect_db()
-        cursor = conn.cursor()
-
-        if request.method == "GET":
-
-            cursor.execute("SELECT * FROM `Ingredients`")
-            ing_results = cursor.fetchall()
+    customer_id = flask_login.current_user.user_id
+    conn = connect_db()
+    cursor = conn.cursor()
 
 
-        if request.method == 'POST':
-            is_checked = request.form.getlist('ing_check')
-
-            for ing_id in is_checked:
-                cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
+    cursor.execute("SELECT * FROM `Ingredients`")
+    ing_results = cursor.fetchall()
 
 
-        cursor.close()
-        conn.close
-    else:
-        redirect("/login")
+    if request.method == 'POST':
+        is_checked = request.form.getlist('ing_check')
 
+        for ing_id in is_checked:
+            cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
+            return redirect ("/swiper")
 
-        
-        
+    cursor.close()
+    conn.close
 
     return render_template("add_ingredient.html.jinja", ing_results = ing_results)
 
@@ -411,13 +401,27 @@ def swiper_page():
     cursor = conn.cursor() 
     cursor.execute("SELECT * FROM `Recipe`")
 
+    # cursor.execute("""
+    #                SELECT * 
+    #                FROM `CustomerIngredients` 
+    #                JOIN `RecipeIngredients` ON `recipe_id`               
+    #              """)
+
+
+    # cursor.execute("""
+    #                
+    # """)
+    # 
+    
+
+    # for x in results 
+        # if results_category = American, British, Canidian, Chinese, Dutch, Egyptian, Filipino, French
+
     #flash a message when the  the recipe is succesfully  saved
    
     results = cursor.fetchall()
     cursor.close()
     conn.close
- 
-
 
 
     return render_template("swiper.html.jinja", recipe = results)
