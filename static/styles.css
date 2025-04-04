@@ -41,6 +41,15 @@ p {
   padding-top: 100px;
 }
 
+.btn-primary {
+  background-color:  #54beff;
+  border-color: #deeff8;
+  color: #e6f5ff;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .btn-circle {
   border-radius: 50%;
   border: #1A0029;

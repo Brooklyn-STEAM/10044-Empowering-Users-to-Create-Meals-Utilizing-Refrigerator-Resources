@@ -317,7 +317,9 @@ def search_page():
 def catolog_page():
     
     if flask_login.current_user.is_authenticated == False:
+        flash("Please log in to view your ingredients.")
         return redirect("/signin")
+        
     
     conn = connect_db()
     cursor = conn.cursor()
@@ -369,6 +371,8 @@ def add_ingredient_page():
         conn.close
     else:
         redirect("/login")
+        flash("Please log in to add ingredients.")
+        
 
 
         
@@ -390,11 +394,11 @@ def mexican_recipes():
     cursor.close()
     conn.close()    
     return render_template("mexican_recipes.html.jinja" , recipe = results)
-@app.route("/korean")
+@app.route("/british")
 def korean_recipes():
     conn = connect_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Korean';")
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'British';")
     results = cursor.fetchall()
     cursor.close()
     conn.close()    
