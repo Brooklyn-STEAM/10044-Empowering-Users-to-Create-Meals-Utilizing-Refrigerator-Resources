@@ -294,7 +294,9 @@ def delete_account():
 
 
 
-
+@app.route("/profile")
+def profile_page(): 
+    return render_template("profile.html.jinja") 
 
 @app.route("/addingredient")
 def addingredient_page():
