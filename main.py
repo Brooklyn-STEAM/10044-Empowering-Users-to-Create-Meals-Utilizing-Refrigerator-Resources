@@ -275,29 +275,29 @@ def update_settings():
 
     if "user_id" not in session:
         flash("Please log in first!", "danger")
-        return redirect(url_for("login"))
+        return redirect("/signin") 
 
     new_username = request.form.get("new_username")
     new_password = request.form.get("new_password")  
 
     hashed_password = generate_password_hash(new_password) 
 
-    with get_db_connection() as conn:  
-        try:
+      
+    try:
             conn.execute(
                 "UPDATE users SET username = ?, password = ? WHERE id = ?",
                 (new_username, hashed_password, session["user_id"]),
             )
             conn.commit()
-            session["username"] = new_username
+            session["username"] = new_username    
             flash("Account updated successfully!", "success")
-        except sqlite3.IntegrityError:
+    except:       
             flash("Username already taken!", "danger")
 
-    conn.close()
+    conn.close()    
     cursor.close() 
 
-    return redirect(url_for("settings"))
+    return redirect("/settings") 
 
 
 @app.route("/update_account", methods=["POST"])
@@ -308,7 +308,7 @@ def update_account():
         flash("Please log in first!", "danger")
         return redirect(url_for("/signin")) 
 
-    two_factor = request.form.get("two_factor")
+    two_factor = request.form.get("two_factor") 
 
     
     conn.execute(
@@ -316,6 +316,8 @@ def update_account():
             (two_factor, session["user_id"]),
         )
     conn.commit()
+    conn.close() 
+    cursor.close()  
 
     flash("Two-factor authentication updated!", "success")
     return redirect(url_for("/settings"))
@@ -323,12 +325,20 @@ def update_account():
 
 @app.route("/delete_account", methods=["POST"])
 def delete_account(user_id):
-    conn = connect_db() 
-    cursor = conn.cursor() 
-    
+    conn = connect_db()  
+    cursor = conn.cursor()   
+
+    try:
+        cursor.execute("DELETE FROM users WHERE user_id = ?", (user_id,))
+        conn.commit()
+        print(f"User with ID {user_id} deleted successfully.")
+    except Exception as e:
+        print(f"Error deleting user: {e}")
+    finally:
+        conn.close() 
    
 
-    return redirect(url_for("/signup")) 
+    return redirect("/signup") 
 
                            
 
