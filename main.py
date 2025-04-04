@@ -53,7 +53,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "ldore",  
+        user = "spowell",  
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -445,6 +445,7 @@ def swiper_page():
     return render_template("swiper.html.jinja", recipe = results)
 
 @app.route("/savedrecipes" ,methods=["POST", "GET"])
+@flask_login.login_required
 def savedrecipes_page():
     conn=connect_db()
     cursor= conn.cursor()
