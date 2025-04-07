@@ -86,21 +86,7 @@ def signin():
         else:
             user = User(result["id"], result["username"], result["email"], result["first_name"], result["last_name"], result["phone"])  
             
-
-    
-   
        
-            session["username"] = username
-            return redirect("/settings") 
-
-        flash("Invalid credentials", "danger")
-
-        
-        
-        conn.close()
-
-        cursor.close()  
-           
         
     return render_template("signin.html.jinja")
            
@@ -268,10 +254,10 @@ def settings():
       return render_template("settings.html.jinja") 
 
 
-@app.route("/update_settings", methods=["POST"])
+@app.route("/update_settings", methods=["POST","GET"]) 
 def update_settings():
     conn = connect_db() 
-    cursor = conn.cursor()   
+    cursor = conn.cursor()    
 
     if "user_id" not in session:
         flash("Please log in first!", "danger")
@@ -292,23 +278,23 @@ def update_settings():
             session["username"] = new_username    
             flash("Account updated successfully!", "success")
     except:       
-            flash("Username already taken!", "danger")
+            flash("Username already taken!", "danger") 
 
     conn.close()    
     cursor.close() 
 
-    return redirect("/settings") 
+    return redirect("/settings")  
 
 
-@app.route("/update_account", methods=["POST"])
-def update_account():
-    conn = connect_db() 
+@app.route("/update_account", methods=["POST"]) 
+def update_account(): 
+    conn = connect_db()  
     cursor = conn.cursor()   
     if "user_id" not in session:
         flash("Please log in first!", "danger")
-        return redirect(url_for("/signin")) 
+        return redirect("/signin")      
 
-    two_factor = request.form.get("two_factor") 
+    two_factor = request.form.get("two_factor")  
 
     
     conn.execute(
