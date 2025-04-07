@@ -24,17 +24,7 @@ body {
   overflow: hidden;
 }
 
-footer {
-  margin-top: auto;
-  text-align: center;
-  padding: 10px 0;
-  background-color: #f8f9fa;
-  color: #6c757d;
 
-  
-
-  align-items: center;
-}
 
 </style>
 </head>
@@ -43,7 +33,7 @@ footer {
   <!-- Flash Message Container -->
   <div id="flash-messages" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1050;"></div>
 
-  
+  {% include "components/navbar.html.jinja" %}
 
   <h1 class="text-center title">Find New Recipes For You !!!</h1>
 
@@ -63,11 +53,9 @@ footer {
     </div>
   </div>
   <div class="">
-  <a href="/" class="btn btn-primary d-flex justify-content-center align-items-center" style="margin: 20px;">Back to Home</a>
-  </div>
-  <footer>
   
-  </footer>
+  </div>
+  
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
