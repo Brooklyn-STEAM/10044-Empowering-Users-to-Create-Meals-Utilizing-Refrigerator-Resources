@@ -84,7 +84,7 @@ def signin():
         elif password != result["password"]:                 
             flash("Your username/password is incorrect")   
         else:
-            user = User(result["id"], result["username"], result["email"], result["first_name"], result["last_name"], result["phone"])  
+            User = User(result["id"], result["username"], result["email"], result["first_name"], result["last_name"], result["phone"])  
             
        
         
@@ -254,79 +254,27 @@ def settings():
       return render_template("settings.html.jinja") 
 
 
-@app.route("/update_settings", methods=["POST","GET"]) 
-def update_settings():
-    conn = connect_db() 
-    cursor = conn.cursor()    
-
+@app.route("/delete_account", methods=["POST","GET"])
+def delete_account(): 
     if "user_id" not in session:
-        flash("Please log in first!", "danger")
-        return redirect("/signin") 
+        return redirect("/signin")
 
-    new_username = request.form.get("new_username")
-    new_password = request.form.get("new_password")  
-
-    hashed_password = generate_password_hash(new_password) 
-
-      
+    conn = connect_db()
+    cursor = conn.cursor()
     try:
-            conn.execute(
-                "UPDATE users SET username = ?, password = ? WHERE id = ?",
-                (new_username, hashed_password, session["user_id"]),
-            )
-            conn.commit()
-            session["username"] = new_username    
-            flash("Account updated successfully!", "success")
-    except:       
-            flash("Username already taken!", "danger") 
-
-    conn.close()    
-    cursor.close() 
-
-    return redirect("/settings")  
-
-
-@app.route("/update_account", methods=["POST"]) 
-def update_account(): 
-    conn = connect_db()  
-    cursor = conn.cursor()   
-    if "user_id" not in session:
-        flash("Please log in first!", "danger")
-        return redirect("/signin")      
-
-    two_factor = request.form.get("two_factor")  
-
-    
-    conn.execute(
-            "UPDATE users SET two_factor = ? WHERE id = ?",
-            (two_factor, session["user_id"]),
-        )
-    conn.commit()
-    conn.close() 
-    cursor.close()  
-
-    flash("Two-factor authentication updated!", "success")
-    return redirect(url_for("/settings"))
-
-
-@app.route("/delete_account", methods=["POST"])
-def delete_account(user_id):
-    conn = connect_db()  
-    cursor = conn.cursor()   
-
-    try:
-        cursor.execute("DELETE FROM users WHERE user_id = ?", (user_id,))
+        cursor.execute("DELETE FROM Customer WHERE id = %s", (session["user_id"],))
         conn.commit()
-        print(f"User with ID {user_id} deleted successfully.")
+        session.clear()
+        flash("Account deleted successfully.")
     except Exception as e:
-        print(f"Error deleting user: {e}")
+        flash("An error occurred while deleting the account.")
+        print("Delete Error:", e)
     finally:
-        conn.close() 
-   
+        cursor.close()
+        conn.close()
 
-    return redirect("/signup") 
+    return redirect("/") 
 
-                           
 
 
 
