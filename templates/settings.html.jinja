@@ -43,7 +43,7 @@
     
             <div class="tab-pane fade show active" id="account">
                 <h4>Account Settings</h4>
-                <form>
+                <form> 
                     <div class="mb-3">
                         <label class="form-label">Enable Two-Factor Authentication</label> 
                         <select class="form-select">
@@ -69,11 +69,11 @@
                     <div class="mb-3">
                         <label class="form-label">New Password</label> 
                         <input type="password" class="form-control" name = "new_password" placeholder="new password">
-                    </div>
+                    </div> 
                   
                     <button type="submit" class="btn btn-primary">Save Changes</button>        
                 </form>       
-            </div>
+            </div> 
             
          
             <div class="tab-pane fade" id="preferences">
@@ -87,7 +87,7 @@
             </div>
             
            
-            <form class="container" action="/delete_account" method="POST">  
+            <form class="container" action="/customer/{{customer[id]}}/delete" method="POST">  
             <div class="tab-pane fade" id="advanced">
                 <h4>Advanced Settings</h4>
                 <p>Warning: These actions cannot be undone.</p>
