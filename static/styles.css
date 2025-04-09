@@ -260,6 +260,14 @@ footer {
   text-align: center;
 
 }
+
+.sub-title {
+  color: var(--medium-slate-blue);
+  font-family: "Quicksand", sans-serif;
+  font-weight: 1000;
+  font-style: initial;
+}
+
 .ingred-pics{
   border-radius: 50%;
   width: 50px;
