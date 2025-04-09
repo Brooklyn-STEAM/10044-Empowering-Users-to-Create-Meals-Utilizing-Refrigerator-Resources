@@ -341,7 +341,14 @@ def catolog_page():
 
 @app.route("/settings")
 def setting_page():
-    return render_template("settings.html.jinja")
+    customer_id = flask_login.current_user.user_id
+    conn =connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute(f"SELECT `email`,`username`, `picture` FROM `Customer` WHERE `id` = '{customer_id}'")
+    customer_details = cursor.fetchall()
+
+    return render_template("settings.html.jinja", customer_details = customer_details)
 
 
 @app.route("/add_ingredient", methods = ["GET","POST"])
@@ -580,10 +587,3 @@ def delete_ingredient(ingredient_id):
         flash("Ingredient deleted successfully!")
 
     return redirect(url_for('catolog_page'))
-
-
-
-@app.route("/profile")
-@flask_login.login_required
-def profile():
-    return render_template("profile.html.jinja")
