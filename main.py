@@ -344,7 +344,7 @@ def setting_page():
     return render_template("settings.html.jinja")
 
 
-@app.route("/add_ingredient", methods = ["POST","GET"])
+@app.route("/add_ingredient", methods = ["GET","POST"])
 @flask_login.login_required
 def add_ingredient_page():
     customer_id = flask_login.current_user.user_id
@@ -357,18 +357,13 @@ def add_ingredient_page():
 
 
 
-    if request.method == 'POST':
+    if request.method == "POST":
         is_checked = request.form.getlist('ing_check')
-#         cursor.close()
-#         conn.close
-#     else:
-#         redirect("/login")
-#         flash("Please log in to add ingredients.")
 
 
         for ing_id in is_checked:
             cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
-            return redirect ("/swiper")
+        return redirect ("/swiper")
 
     cursor.close()
     conn.close
@@ -585,3 +580,10 @@ def delete_ingredient(ingredient_id):
         flash("Ingredient deleted successfully!")
 
     return redirect(url_for('catolog_page'))
+
+
+
+@app.route("/profile")
+@flask_login.login_required
+def profile():
+    return render_template("profile.html.jinja")
