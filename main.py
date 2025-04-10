@@ -340,15 +340,22 @@ def catolog_page():
     return render_template("catalog.html.jinja", ingredients = results)
 
 @app.route("/settings")
+@flask_login.login_required
 def setting_page():
-    customer_id = flask_login.current_user.user_id
-    conn =connect_db()
-    cursor = conn.cursor()
+    # customer_id = flask_login.current_user.user_id
+    # conn =connect_db()
+    # cursor = conn.cursor()
 
-    cursor.execute(f"SELECT `email`,`username`, `picture` FROM `Customer` WHERE `id` = '{customer_id}'")
-    customer_details = cursor.fetchall()
+    # cursor.execute(f"SELECT `email`,`username`, `picture` FROM `Customer` WHERE `id` = '{customer_id}'")
+    # customer_details = cursor.fetchall()
 
-    return render_template("settings.html.jinja", customer_details = customer_details)
+    # cursor.close()
+    # conn.close
+
+
+    #, customer_details = customer_details
+
+    return render_template("settings.html.jinja")
 
 
 @app.route("/add_ingredient", methods = ["GET","POST"])
