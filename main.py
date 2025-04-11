@@ -588,4 +588,35 @@ def delete_ingredient(ingredient_id):
 
 @app.route("/fake")
 def fake_page():
-    return render_template("fake.html.jinja")
+    customer_id = flask_login.current_user.user_id
+    conn = connect_db()
+    cursor = conn.cursor()
+
+
+    cursor.execute("SELECT * FROM `Ingredients`")
+    ingredients = cursor.fetchall()
+
+
+
+    if request.method == 'POST':
+        is_checked = request.form.getlist('ing_check')
+#         cursor.close()
+#         conn.close
+#     else:
+#         redirect("/login")
+#         flash("Please log in to add ingredients.")
+
+
+        for ing_id in is_checked:
+            cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
+            return redirect ("/swiper")
+
+    cursor.close()
+    conn.close
+    return render_template("fake.html.jinja", ingredients = ingredients  )
+
+
+
+
+
+

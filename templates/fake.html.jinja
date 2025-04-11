@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Ingredients</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+    {% include "components/navbar.html.jinja" %}
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        .tab.active {
+            font-weight: bold;
+            border: 2px solid #000;
+            background-color: #d1d5db;
+        }
+
+        .fruit-tab {
+            background-color: #ffcccb;
+            /* Light red for Fruit */
+            color: #000;
+        }
+
+        .herbs-tab {
+            background-color: #98fb98;
+            /* Light green for Herbs */
+            color: #000;
+        }
+
+        .grain-tab {
+            background-color: #f5deb3;
+            /* Wheat color for Grain */
+            color: #000;
+        }
+
+        /* Tags */
+        .tags {
+            text-align: center;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 5px;
+            background-color: #e5e7eb;
+            transition: background-color 0.3s ease;
+        }
+
+        .tag:hover {
+            background-color: #d1d5db;
+        }
+
+        .fruit-tag {
+            border: 1px solid #ff6347;
+            /* Tomato color for Fruit tags */
+            background-color: #ffe4e1;
+        }
+
+        .herbs-tag {
+            border: 1px solid #32cd32;
+            /* Lime green for Herbs tags */
+            background-color: #f0fff0;
+        }
+
+        .grain-tag {
+            border: 1px solid #daa520;
+            /* Goldenrod for Grain tags */
+            background-color: #fffaf0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer .btn {
+            border-radius: 8px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            transition: background-color 0.3s ease;
+        }
+
+        .footer .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-outline-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #5a6268;
+
+        }
+
+        body {
+            font-family: 'Libre Caslon Text', serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: white;
+            max-width: 960px;
+            margin: 50px auto;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #d69eb0;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background-color: #f0dbe7;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #4b3b59;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .tab.active {
+            background-color: #4b3b59;
+            color: white;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .tag {
+            background-color: #e5e7eb;
+            padding: 10px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .tag:hover {
+            background-color: #d1d5db;
+        }
+
+        .tab.active {
+            background-color: #4b3b59;
+            color: white;
+        }
+        .footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer .btn {
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 5px;
+            background-color: #e5e7eb;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tag:hover {
+            background-color: #d1d5db;
+        }
+
+        .fruit-tag {
+            border: 1px solid #ff6347;
+            /* Tomato color for Fruit tags */
+            background-color: #ffe4e1;
+        }
+
+        .herbs-tag {
+            border: 1px solid #32cd32;
+            /* Lime green for Herbs tags */
+            background-color: #f0fff0;
+        }
+
+        .grain-tag {
+            border: 1px solid #daa520;
+            /* Goldenrod for Grain tags */
+            background-color: #fffaf0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Select Your Ingredients</h2>
+            <p>Choose Ingredients In Your Kitchen Right Now!</p>
+        </div>
+        <form class="container" method="post" action="/add_ingredient"></form>
+        <!-- Tabs for Categories -->
+        <div class="tabs">
+            <div class="tabs">
+                {% for category in ['Fruit', 'Herbs', 'Grain', 'Alternative', 'Baking', 'Dairy', 'Liquor'] %}
+                <div class="tab {% if loop.first %}active{% endif %}" onclick="switchTab('{{ category }}')"
+                    id="tab-{{ category }}">
+                    {{ category }}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="tags">
+                {% for category in ['Fruit', 'Herbs', 'Grain', 'Alternative', 'Baking', 'Dairy', 'Liquor'] %}
+                <div class="tag-list {% if not loop.first %}hidden{% endif %}" id="tags-{{ category }}">
+                    <h3>{{ category }}</h3>
+                    {% for ingredient in ingredients %}
+                    {% if ingredient['category'] == category %}
+                    <label class="tag {{ category | lower }}-tag">
+                        <input type="checkbox" name="ingredients" value="{{ ingredient['name'] }}"
+                            style="display: none;">
+                        {{ ingredient['name'] }}
+                    </label>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="footer">
+            <a href="/" class="btn btn-outline-secondary">Back</a>
+            <button type="submit" class="btn btn-primary">Add Ingredients</button>
+        </div>
+        </form>
+        <script>
+            function switchTab(category) {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+
+                // Add active class to the clicked tab
+                document.getElementById(`tab-${category}`).classList.add('active');
+
+                // Hide all tag lists
+                document.querySelectorAll('.tag-list').forEach(tagList => tagList.classList.add('hidden'));
+
+                // Show the tag list for the selected category
+                document.getElementById(`tags-${category}`).classList.remove('hidden');
+            }
+        </script>
+
+
+
+</body>
+
+</html>
