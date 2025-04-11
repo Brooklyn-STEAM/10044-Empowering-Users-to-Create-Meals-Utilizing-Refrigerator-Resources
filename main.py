@@ -53,7 +53,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "spowell",  
+        user = "ldore",  
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -585,3 +585,7 @@ def delete_ingredient(ingredient_id):
         flash("Ingredient deleted successfully!")
 
     return redirect(url_for('catolog_page'))
+
+@app.route("/fake")
+def fake_page():
+    return render_template("fake.html.jinja")
