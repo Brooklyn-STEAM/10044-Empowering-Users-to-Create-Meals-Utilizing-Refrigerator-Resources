@@ -4,6 +4,7 @@ from dynaconf import Dynaconf
 import flask_login
 from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime  
+from flask_login import logout_user
 
 
 app = Flask(__name__)
@@ -252,99 +253,79 @@ def catolog_page():
     return render_template("catalog.html.jinja")
 
 
-@app.route("/settings", methods =["GET", "POST"]) 
+@app.route("/settings", methods=["GET", "POST"])
+@flask_login.login_required
 def settings():
+    customer_id = flask_login.current_user.user_id
+    return render_template("settings.html.jinja", customer=customer_id)
 
-      return render_template("settings.html.jinja") 
 
-app.route("/update_settings", methods=["POST","GET"])
+
+
+
+
+@app.route("/update_settings", methods=["POST", "GET"])
 @flask_login.login_required
 def update_settings():
-  conn = connect_db()
-  cursor = conn.cursor() 
-
-
-
-
-  new_username = request.form.get("new_username")
-  new_password = request.form.get("new_password")
-
-
-  hashed_password = generate_password_hash(new_password)
-  
-  try:
-          conn.execute(
-   "UPDATE users SET username = ?, password = ? WHERE id = ?",
-   (new_username, hashed_password, flask_login.current_user.id),
-)
-
-
-          conn.commit()
-          session["username"] = new_username  
-          flash("Account updated successfully!", "success")
-  except:     
-          flash("Username already taken!", "danger")
-
-
-
-
-  conn.close()  
-  cursor.close()
-
-
-
-
-  return redirect("/signin") 
-
-
-
-
-
-
-@app.route("/update_account", methods=["POST", "GET"])
-def update_account():
-   conn = connect_db() 
-   cursor = conn.cursor()  
-       
-
-
-   two_factor = request.form.get("two_factor")  
-
-
-  
-   conn.execute(
-           "UPDATE users SET two_factor = ? WHERE id = ?",
-           (two_factor, session["user_id"]),
-       )
-   conn.commit()
-   conn.close()
-   cursor.close() 
-
-
-   flash("Two-factor authentication updated!", "success")
-   return redirect("/settings")
-
-
-
-@app.route("/customer/<customer_id>/delete", methods=["POST","GET"])
-def delete_account(customer_id): 
-
     conn = connect_db()
     cursor = conn.cursor()
-    try:
-        cursor.execute(f"""DELETE FROM `Customer` WHERE `id` = {customer_id};""")     
-        conn.commit() 
-        session.clear() 
-        flash("Account deleted successfully.")
-    except Exception as e:
-        flash("An error occurred while deleting the account.")
-        print("Delete Error:", e) 
-    finally:
-        cursor.close()
-        conn.close()
 
-    return redirect("/")  
+    customer_id = flask_login.current_user.user_id
 
+    new_username = request.form.get("new_username")
+    new_password = request.form.get("new_password")
+
+    
+    if new_username and new_password:
+        cursor.execute(
+            "UPDATE Customer SET username = %s, password = %s WHERE id = %s",
+            (new_username, new_password, customer_id)
+        )
+    elif new_username:
+        cursor.execute(
+            "UPDATE Customer SET username = %s WHERE id = %s",
+            (new_username, customer_id)
+        )
+    elif new_password:
+        cursor.execute(
+            "UPDATE Customer SET password = %s WHERE id = %s",
+            (new_password, customer_id)
+        )
+
+    conn.commit()
+    flash("Account updated successfully!", "success")
+
+    cursor.close() 
+    conn.close()
+
+    return redirect("/signin") 
+
+
+
+@app.route("/settings/delete", methods=["POST", "GET"])
+@flask_login.login_required
+def delete_account():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    customer_id = flask_login.current_user.user_id
+
+   
+    cursor.execute("DELETE FROM Review WHERE customer_id = %s;", (customer_id,))
+    cursor.execute("DELETE FROM SavedRecipe WHERE customer_id = %s;", (customer_id,))
+    cursor.execute("DELETE FROM CustomerIngredients WHERE customer_id = %s;", (customer_id,))
+
+   
+    cursor.execute("DELETE FROM Customer WHERE id = %s;", (customer_id,))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+   
+    logout_user()
+
+    return redirect("/signup")
 
 
 
