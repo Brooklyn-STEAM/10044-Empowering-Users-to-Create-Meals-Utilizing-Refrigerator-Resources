@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request,redirect,flash,abort,url_for
+from flask import Flask, render_template, request,redirect,flash,abort,url_for, session 
 import pymysql
 from dynaconf import Dynaconf
 import flask_login
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime  
+from flask_login import logout_user
 
 
 app = Flask(__name__)
@@ -11,6 +12,7 @@ app = Flask(__name__)
 conf = Dynaconf(
     settings_file = ['settings.toml']
 )
+
 
 app.secret_key = conf.secret_key 
 login_manager = flask_login.LoginManager()
@@ -40,25 +42,31 @@ class User:
 @login_manager.user_loader    
 def load_user(user_id):
     conn = connect_db() 
-    cursor =conn.cursor()
-    cursor.execute(f"SELECT * FROM `Customer` WHERE `id` = {user_id};")   
+    cursor =conn.cursor() 
+    cursor.execute(f"SELECT * FROM `Customer` WHERE `id` = {user_id};")      
     result = cursor.fetchone() 
-    cursor.close   
-    conn.close    
+    cursor.close           
+    conn.close       
 
-    if result is not None:
+    if result is not None: 
+
         return User(result['id'], result['username'], result['email'],result['first_name'],result['last_name'], result['phone']) 
 
 def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "ldore",  
+
+        user = "rbarry", 
+
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
         )       
-    return conn       
+
+
+    return conn     
+    
 
 
 @app.route("/signin", methods=["POST", "GET"])
@@ -81,13 +89,12 @@ def signin():
             flash("Your username/password is incorrect")   
         else:
             user = User(result["id"], result["username"], result["email"], result["first_name"], result["last_name"], result["phone"])  
-            flask_login.login_user(user) 
+            flask_login.login_user(user)
 
-        
-        
-        conn.close() 
-        cursor.close()
-           
+
+            conn.close() 
+            cursor.close() 
+       
         
     return render_template("signin.html.jinja")
            
@@ -95,7 +102,7 @@ def signin():
 @app.route('/logout') 
 def logout():
     flask_login.logout_user()  
-    return redirect('/')      
+    return redirect('/')           
 
 
 @app.route("/signup", methods=["POST", "GET"])
@@ -108,9 +115,11 @@ def signup():
         last_name = request.form["last_name"] 
         email = request.form["email"]
         password = request.form["password"]
-        username = request.form["username"]
-        phone = request.form["phone"]   
+        username = request.form["username"]  
+        phone = request.form["phone"] 
         confirm_password = request.form["confirm_password"]
+        
+
 
         if password != confirm_password:
             flash("Password does not match the confirmation.")
@@ -118,23 +127,23 @@ def signup():
 
         conn = connect_db() 
         cursor = conn.cursor() 
-
+        
         try:
             cursor.execute(f"""
                 INSERT INTO `Customer` (`username`, `phone`, `password`, `first_name`, `last_name`, `email`)
-                VALUES ('{username}', '{phone}', '{password}', '{first_name}','{last_name}', '{email}');
+                VALUES ('{username}', '{phone}', '{password}', '{first_name}','{last_name}', '{email}', );
             """) 
             conn.commit()
         except pymysql.err.IntegrityError:
             flash("Sorry, that username/email is already in use.")
-            return render_template("signup.html.jinja")
+            return render_template("signup.html.jinja") 
         finally:
             cursor.close()
-            conn.close()
+            conn.close()  
 
-        return redirect("/signin")
+        return redirect("/signin")      
 
-    return render_template("signup.html.jinja") 
+    return render_template("signup.html.jinja")  
 
 @app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
 @flask_login.login_required
@@ -183,31 +192,53 @@ def recipe_detail(recipe_id):
         existing_review = database_cursor.fetchone()
 
         if existing_review:
-            flash("You have already submitted a review for this recipe.", "error")
 
-    database_cursor.execute("""
-        SELECT rating 
-        FROM `Review` 
-        WHERE `recipe_id` = %s;
-    """, (recipe_id,))
-    ratings = database_cursor.fetchall()        
+            flash("You have already submitted a review for this product.", "error")
+        else:
+            rating = request.form["rating"]
+            review = request.form["review"] 
+            timestamp = datetime.now() 
+            
+            cursor.execute(f"""       
+                INSERT INTO Review (recipe_id, customer_id, rating, review, timestamp)
+                VALUES ('{recipe_id}', '{customer_id}', '{rating}', '{review}', '{timestamp}');
+            """)         
+            conn.commit()         
+            
+            flash("Your review has been submitted!", "success")
+            return redirect(f"/recipe/{recipe_id}")
 
-    if ratings:
-        total_ratings = sum(rating['rating'] for rating in ratings)
-        average_rating = total_ratings / len(ratings)
-    else:
-        average_rating = 0  # No ratings yet     
+    cursor.close()
+    conn.close() 
 
-    database_cursor.close()
-    database_connection.close()
+    print(recipe) 
 
-    return render_template(
-        "individual_recipe.html.jinja", 
-        recipe=recipe_details, 
-        ingredients=recipe_ingredients, 
-        reviews=recipe_reviews,
-        average_rating=average_rating
-    )
+#             flash("You have already submitted a review for this recipe.", "error")
+
+#     database_cursor.execute("""
+#         SELECT rating 
+#         FROM `Review` 
+#         WHERE `recipe_id` = %s;
+#     """, (recipe_id,))
+#     ratings = database_cursor.fetchall()        
+
+#     if ratings:
+#         total_ratings = sum(rating['rating'] for rating in ratings)
+#         average_rating = total_ratings / len(ratings)
+#     else:
+#         average_rating = 0  # No ratings yet     
+
+
+#     database_cursor.close()
+#     database_connection.close()
+
+#     return render_template(
+#         "individual_recipe.html.jinja", 
+#         recipe=recipe_details, 
+#         ingredients=recipe_ingredients, 
+#         reviews=recipe_reviews,
+#         average_rating=average_rating
+#     )
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
 def addreview(recipe_id): 
@@ -343,10 +374,86 @@ def catolog_page():
     
     return render_template("catalog.html.jinja", ingredients = results)
 
-@app.route("/settings")
-def setting_page():
-    return render_template("settings.html.jinja")
 
+@app.route("/settings", methods=["GET", "POST"])
+@flask_login.login_required
+def settings():
+    customer_id = flask_login.current_user.user_id
+    return render_template("settings.html.jinja", customer=customer_id)
+
+
+
+
+
+
+@app.route("/update_settings", methods=["POST", "GET"])
+@flask_login.login_required
+def update_settings():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    customer_id = flask_login.current_user.user_id
+
+    new_username = request.form.get("new_username")
+    new_password = request.form.get("new_password")
+
+    
+    if new_username and new_password:
+        cursor.execute(
+            "UPDATE Customer SET username = %s, password = %s WHERE id = %s",
+            (new_username, new_password, customer_id)
+        )
+    elif new_username:
+        cursor.execute(
+            "UPDATE Customer SET username = %s WHERE id = %s",
+            (new_username, customer_id)
+        )
+    elif new_password:
+        cursor.execute(
+            "UPDATE Customer SET password = %s WHERE id = %s",
+            (new_password, customer_id)
+        )
+
+    conn.commit()
+    flash("Account updated successfully!", "success")
+
+    cursor.close() 
+    conn.close()
+
+    return redirect("/signin") 
+
+
+
+@app.route("/settings/delete", methods=["POST", "GET"])
+@flask_login.login_required
+def delete_account():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    customer_id = flask_login.current_user.user_id
+
+   
+    cursor.execute("DELETE FROM Review WHERE customer_id = %s;", (customer_id,))
+    cursor.execute("DELETE FROM SavedRecipe WHERE customer_id = %s;", (customer_id,))
+    cursor.execute("DELETE FROM CustomerIngredients WHERE customer_id = %s;", (customer_id,))
+
+   
+    cursor.execute("DELETE FROM Customer WHERE id = %s;", (customer_id,))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+   
+    logout_user()
+
+    return redirect("/signup")
+
+
+
+@app.route("/profile")
+def profile_page(): 
+    return render_template("profile.html.jinja") 
 
 @app.route("/add_ingredient", methods = ["GET","POST"])
 @flask_login.login_required
@@ -373,11 +480,6 @@ def add_ingredient_page():
     conn.close
 
     return render_template("add_ingredient.html.jinja", ing_results = ing_results)
-
-
-
-   
-
 
 @app.route("/mexican")
 def mexican_recipes():
@@ -418,21 +520,6 @@ def swiper_page():
     cursor = conn.cursor() 
     cursor.execute("SELECT * FROM `Recipe`")
 
-    # cursor.execute("""
-    #                SELECT * 
-    #                FROM `CustomerIngredients` 
-    #                JOIN `RecipeIngredients` ON `recipe_id`               
-    #              """)
-
-
-    # cursor.execute("""
-    #                
-    # """)
-    # 
-    
-
-    # for x in results 
-        # if results_category = American, British, Canidian, Chinese, Dutch, Egyptian, Filipino, French
 
     #flash a message when the  the recipe is succesfully  saved
    

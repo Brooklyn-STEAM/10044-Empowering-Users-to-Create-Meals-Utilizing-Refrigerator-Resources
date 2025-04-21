@@ -1,123 +1,120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pantryfy</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="/static/styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantryfy settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle("dark-mode");
+            localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("theme") === "dark") {
+                document.body.classList.add("dark-mode");
+            }
+        });
+    </script>
+    <style>
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+    </style>
+    {% include "components/navbar.html.jinja" %}
+
 </head>
-<body class="bg-body-tertiary">
-  {% include "components/navbar.html.jinja" %}
-  <div class="">
 
+<body>
 
-<div class="container">
-<div class="row gutters">
-	<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-		<div class="card h-100">
-			<div class="card-body">
-				<div class="account-settings">
-					<div class="user-profile">
-						<div class="user-avatar">
-							<img src="...." alt="....">
-						</div>
-						<h5 class="user-name">User</h5>
-						<h6 class="user-email"> User@ User.com</h6>
-					</div>
-					<div class="about">
-						<h5 class="mb-2 text-primary">About</h5>
-						<p>User Details</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-		<div class="card h-100">
-			<div class="card-body">
-				<div class="row gutters">
-					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-						<h6 class="mb-3 text-primary dropdown-toggle" data-toggle="dropdown-toggle">Personal Details</h6>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-						<div class="form-group">
-							<label for="fullName">Full Name</label>
-							<input type="text" class="form-control" id="fullName" placeholder="Enter full name">
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-						<div class="form-group">
-							<label for="eMail">Email</label>
-							<input type="email" class="form-control" id="eMail" placeholder="Enter email ID">
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-						<div class="form-group">
-							<label for="phone">Phone</label>
-							<input type="text" class="form-control" id="phone" placeholder="Enter phone number">
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-						<div class="form-group">
-							<label for="website">Website URL</label>
-							<input type="url" class="form-control" id="website" placeholder="Website url">
-						</div>
-					</div>
-				</div>
-				<div class="row gutters">
-					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-						<h6 class="mb-3 text-primary">Address</h6>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-						<div class="form-group">
-							<label for="Street">Street</label>
-							<input type="name" class="form-control" id="Street" placeholder="Enter Street">
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-						<div class="form-group">
-							<label for="ciTy">City</label>
-							<input type="name" class="form-control" id="ciTy" placeholder="Enter City">
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-						<div class="form-group">
-							<label for="sTate">State</label>
-							<input type="text" class="form-control" id="sTate" placeholder="Enter State">
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-						<div class="form-group">
-							<label for="zIp">Zip Code</label>
-							<input type="text" class="form-control" id="zIp" placeholder="Zip Code">
-						</div>
-					</div>
-				</div>
-				<div class="row gutters">
-					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-						<div class="text-right">
-							<button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
-							<button type="button" id="submit" name="submit" class="btn btn-primary">Update</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+    <div class="container mt-5">
+    <h2 class="mb-4">Settings</h2>
+
+    <!-- Nav Tabs -->
+    <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="user-tab" data-bs-toggle="tab" href="#user" role="tab">User Setting</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="general-tab" data-bs-toggle="tab" href="#settings" role="tab">General Setting</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="preferences-tab" data-bs-toggle="tab" href="#preferences" role="tab">Preferences</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="advanced-tab" data-bs-toggle="tab" href="#advanced" role="tab">Advanced</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-3" id="settingsTabsContent">
+
+        <!-- User Setting Tab -->
+        <div class="tab-pane fade show active" id="user" role="tabpanel">
+            <h4>User Setting</h4>
+            <form action="/settings/user" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Enable Two-Factor Authentication</label>
+                    <select class="form-select" name="two_factor">
+                        <option value="none">None</option>
+                        <option value="email">Email</option>
+                        <option value="sms">SMS</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- General Setting Tab -->
+        <div class="tab-pane fade" id="settings" role="tabpanel">
+            <h4>General Setting</h4>
+            <form action="/update_settings" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Change Username</label>
+                    <input type="text" class="form-control" name="new_username" placeholder="New username">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-control" name="new_password" placeholder="New password">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Preferences Tab -->
+        <div class="tab-pane fade" id="preferences" role="tabpanel">
+            <h4>Preferences</h4>
+            <form action="/settings/preferences" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Theme</label>
+                    <select class="form-select" name="theme" onchange="toggleTheme()">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Advanced Tab -->
+        <div class="tab-pane fade" id="advanced" role="tabpanel">
+            <h4>Advanced Settings</h4>
+            <p class="text-danger">Warning: These actions cannot be undone.</p>
+            <form action="/settings/delete" method="POST">
+                <button type="submit" class="btn btn-danger">Delete Account</button>
+            </form>
+        </div>
+    </div>
 </div>
 
-
-
-
-
-
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    function toggleTheme() {
+        const theme = document.querySelector('select[name="theme"]').value;
+        document.body.className = theme === 'dark' ? 'bg-dark text-white' : '';
+    }
+</script>
+</body> 
