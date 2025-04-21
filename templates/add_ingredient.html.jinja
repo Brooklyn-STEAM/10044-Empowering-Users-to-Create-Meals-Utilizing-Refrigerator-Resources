@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pantryfy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <style>
+    input:checked ~ label {
+      color: mediumslateblue !important;
+    }
+  </style>
+</head>
+
+
+
+<body class="bg-body-tertiary">
+  {% include "components/navbar.html.jinja" %}
+  {# <form action="/action_page.php">
+    <input type="file" id="myFile" name="filename">
+    <input type="submit">
+  </form> #}
+
+  <h1 class="title"> Check off the Ingredients You Have</h1>
+
+
+
+
+
+  <form class="container" method="post" action="/add_ingredient">
+    <div class="row">
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Alternative:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('alt')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Alternative' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input alt" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Baking:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('baking')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Baking' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input baking" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Dairy:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('dairy')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Dairy' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input dairy" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Fruit:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('fruit')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Fruit' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input fruit" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Grain:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('grain')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Grain' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input grain" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Herb:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('herb')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Herb' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input herb" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Legume:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('legume')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Legume' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input legume" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Liquor:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('liquor')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Liquor' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input liquor" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Meat:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('meat')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Meat' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input meat" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Nut:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('nut')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Nut' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input nut" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Oil:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('oil')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Oil' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input oil" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Pasta:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('pasta')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Pasta' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input pasta" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Premade:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('premade')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Premade' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input premade" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Root:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('root')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Root' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input root" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Sauce:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('sauce')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Sauce' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input sauce" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Seafood:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('seafood')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Seafood' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input seafood" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+
+      <div class="col-md-3">
+        <h4 class="p-3 sub-title">Spice:</h4>
+        <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('spice')">
+        <label class="smaller-label">Check All</label>
+        {%for item in ing_results%}
+        {%if item['category'] == 'Spice' %}
+        <div class="container form-check">
+          <div class="container list_ing">
+            <input class="form-check-input spice" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+              name="ing_check">
+            <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+          </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+      </div>
+      
+      <h4 class = "title" >Find Recipes with your ingredients</h4>
+      <button type="submit" class="m-3 btn btn-primary">Submit</button>
+
+    </div>
+
+  </form>
+
+
+
+
+
+
+
+
+  <script src="/static/allChecked.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+</html>

@@ -23,73 +23,55 @@
     {% include "components/navbar.html.jinja" %}
 </div>
 
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="static/images/carousel_logo.png" class="d-block w-100" alt="..." style="height:400px; width:100%;">
+    </div>
+    <div class="carousel-item">
+      <img src="static/images/mexican_cuisine.png" class="d-block w-100" alt="..." style="height:400px; width:100%;">
+    </div>
+    <div class="carousel-item">
+      <img src="static/images/italian_cuisine.png" class="d-block w-100" alt="..." style="height:400px; width:100%;">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
    
+  
     <div class="scrollmenu">
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/mexican_cuisine.png" class="ingred-pics" alt="Mexican Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/korean_cuisine.png" class="ingred-pics" alt="Korean Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <img src="static/images/italian_cuisine.png" class="ingred-pics" alt="Italian Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img
-            src="static/images/japenese_cuisine.png" class="ingred-pics" alt="Japanese Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/mexican_cuisine.png" class="ingred-pics" alt="Mexican Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/korean_cuisine.png" class="ingred-pics" alt="Korean Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <img src="static/images/italian_cuisine.png" class="ingred-pics" alt="Italian Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img
-            src="static/images/japenese_cuisine.png" class="ingred-pics" alt="Japanese Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">  
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/mexican_cuisine.png" class="ingred-pics" alt="Mexican Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/korean_cuisine.png" class="ingred-pics" alt="Korean Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <img src="static/images/italian_cuisine.png" class="ingred-pics" alt="Italian Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img
-            src="static/images/japenese_cuisine.png" class="ingred-pics"  aria-label=" test"  alt="Japanese Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">  
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/mexican_cuisine.png" class="ingred-pics" alt="Mexican Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="static/images/korean_cuisine.png" class="ingred-pics" alt="Korean Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">       
-        <img src="static/images/italian_cuisine.png" class="ingred-pics" alt="Italian Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">
-        <img
-            src="static/images/japenese_cuisine.png" class="ingred-pics" alt="Japanese Cuisine">
-                    <div class="card-body"></button>
-        <button type="button" class="btn-circle ingred-pics">  
+    {%if ingredients|length == 0%}
+        <p class="title">You have no saved ingredients</p>
+    {%else%}
+        {% for ingredient in ingredients %}
+                <button type="button" class="btn-circle ingred-pics">
+                <img src="{{ingredient['image']}}" class="ingred-pics" alt="{{ingredient['name']}}">
+                            <div class="card-body"></button>
+
+        {% endfor %}
+
+    {%endif%}
+     
+    
+   
 
     
     
     </div>
-  
-<p>  customer ingredients will be implemented here later</p>
+
+
+
   <hr>
-  
-    
+<div class="d-flex justify-content-center my-4">
+    <a href="/add_ingredient" class="btn btn-primary">Find Recipes For You</a>
+</div>
     <div class="container my-4">
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
         
@@ -119,7 +101,7 @@
                 <div class="card">
                     <img src="static/images/korean_cuisine.png" class="card-img-top" alt="Korean Cuisine">
                     <div class="card-body">
-                        <p class="card-text">Korean</p>
+                    <a href="/british " class="card-text"> British</a>
                     </div>
                 </div>
             </div>
@@ -129,7 +111,7 @@
                 <div class="card">
                     <img src="static/images/italian_cuisine.png" class="card-img-top" alt="Italian Cuisine">
                     <div class="card-body">
-                        <p class="card-text">Italian</p>
+                        <a href="/italian" class="card-text"> Italian</a>
                     </div>
                 </div>
             </div>

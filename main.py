@@ -56,11 +56,14 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
+
         user = "rbarry", 
+
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
         )       
+
 
     return conn     
     
@@ -142,41 +145,54 @@ def signup():
 
     return render_template("signup.html.jinja")  
 
-
 @app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
 @flask_login.login_required
 def recipe_detail(recipe_id):
-    conn = connect_db() 
-    cursor = conn.cursor()     
+    database_connection = connect_db() 
+    database_cursor = database_connection.cursor()     
 
+    # Fetch recipe details
+    database_cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
+    recipe_details = database_cursor.fetchone()    
 
+    # Fetch ingredients with amounts
+    database_cursor.execute(f""" 
+        SELECT `Ingredients`.`name`, `RecipeIngredients`.`amount`
+        FROM `RecipeIngredients` 
+        JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
+        WHERE `RecipeIngredients`.`recipe_id` = %s;
+    """, (recipe_id,))
+    recipe_ingredients = database_cursor.fetchall()
 
-    cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
-    recipe = cursor.fetchone()    
-
-
-    cursor.execute(f""" 
-        SELECT * FROM Review WHERE `recipe_id` = {recipe_id};
+    # Fetch all reviews for the recipe
+    database_cursor.execute(f""" 
+        SELECT * 
+        FROM `Review` 
+        WHERE `recipe_id` = {recipe_id};
     """)  
-    reviews = cursor.fetchall()          
+    recipe_reviews = database_cursor.fetchall()          
+    
+    # Fetch detailed reviews with customer information
+    database_cursor.execute(f"""
+        SELECT review_table.rating, review_table.review, review_table.timestamp, customer_table.username
+        FROM `Review` review_table
+        JOIN `Customer` customer_table ON review_table.customer_id = customer_table.id
+        WHERE review_table.recipe_id = {recipe_id}  
+        ORDER BY review_table.timestamp DESC;      
+    """)
 
-
-    cursor.execute(f"""
-        SELECT r.rating, r.review, r.timestamp, c.username
-        FROM Review r 
-        JOIN Customer c ON r.customer_id = c.id
-        WHERE r.recipe_id = {recipe_id}  
-        ORDER BY r.timestamp DESC;      
-    """)                         
-
-
+    # Handle POST request for submitting a review
     if request.method == "POST":      
-       
         customer_id = flask_login.current_user.user_id
-        cursor.execute(f"SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';")
-        existing_review = cursor.fetchone()            
+        database_cursor.execute(f"""
+            SELECT * 
+            FROM `Review` 
+            WHERE `recipe_id` = '{recipe_id}' AND `customer_id` = '{customer_id}';
+        """)
+        existing_review = database_cursor.fetchone()
 
         if existing_review:
+
             flash("You have already submitted a review for this product.", "error")
         else:
             rating = request.form["rating"]
@@ -197,10 +213,32 @@ def recipe_detail(recipe_id):
 
     print(recipe) 
 
+#             flash("You have already submitted a review for this recipe.", "error")
 
-    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews) 
-    
+#     database_cursor.execute("""
+#         SELECT rating 
+#         FROM `Review` 
+#         WHERE `recipe_id` = %s;
+#     """, (recipe_id,))
+#     ratings = database_cursor.fetchall()        
 
+#     if ratings:
+#         total_ratings = sum(rating['rating'] for rating in ratings)
+#         average_rating = total_ratings / len(ratings)
+#     else:
+#         average_rating = 0  # No ratings yet     
+
+
+#     database_cursor.close()
+#     database_connection.close()
+
+#     return render_template(
+#         "individual_recipe.html.jinja", 
+#         recipe=recipe_details, 
+#         ingredients=recipe_ingredients, 
+#         reviews=recipe_reviews,
+#         average_rating=average_rating
+#     )
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
 def addreview(recipe_id): 
@@ -224,33 +262,117 @@ def addreview(recipe_id):
 
 @app.route("/")
 def index():
-    return render_template("homepage.html.jinja")
-
-
-
-
-@app.route("/search")
-def search_page():
-    query = request.args.get('query')
     conn = connect_db()
-    cursor = conn.cursor()  
+    cursor = conn.cursor()
 
-    if query is None:
-        cursor.execute("SELECT * FROM `Recipe`")
-    else:
-        cursor.execute(f"SELECT * FROM `Recipe`  WHERE `name` LIKE '%{query}%' OR `id` LIKE '%{query}%' OR `description` LIKE '%{query}%'  ; ")
-
-
-    results = cursor.fetchall()
+    # Check if the user is logged in
+    if flask_login.current_user.is_authenticated:
+        customer_id = flask_login.current_user.user_id
+        cursor.execute("""
+            SELECT * 
+            FROM `CustomerIngredients`
+            JOIN `Ingredients` ON `CustomerIngredients`.`ingredient_id` = `Ingredients`.`id`
+            WHERE `CustomerIngredients`.`customer_id` = %s;
+        """, (customer_id,))
+        
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return render_template("homepage.html.jinja", ingredients=results)
+    
+    if flask_login.current_user.is_authenticated == False:
+        return render_template("homepage.html.jinja")
     cursor.close()
     conn.close()
-    return render_template("searchpage.html.jinja", recipe = results)
-   
+    return render_template("homepage.html.jinja")
+@app.route
+
+
+
+
+@app.route("/search", methods=["GET"])
+def search_page():
+    query = request.args.get('query', '')  # Get the search query (default to an empty string)
+    cuisine = request.args.get('cuisine', '')  # Get the selected cuisine (default to an empty string)
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    # Base SQL query
+    sql_query = "SELECT * FROM `Recipe` WHERE 1=1"
+    params = []
+
+    # Add search query filter
+    if query:
+        sql_query += " AND (`name` LIKE %s OR `description` LIKE %s)"
+        params.extend([f"%{query}%", f"%{query}%"])
+
+    # Add cuisine filter
+    if cuisine:
+        sql_query += " AND `cuisine` = %s"
+        params.append(cuisine)
+
+    # Execute the query with parameters
+    cursor.execute(sql_query, params)
+    results = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("searchpage.html.jinja", recipe=results, query=query, cuisine=cuisine)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route("/catalog")
 def catolog_page():
-    return render_template("catalog.html.jinja")
+    
+    if flask_login.current_user.is_authenticated == False:
+        flash("Please log in to view your ingredients.")
+        return redirect("/signin")
+        
+    
+    conn = connect_db()
+    cursor = conn.cursor()
+    customer_id = flask_login.current_user.user_id
+    cursor.execute(f"""
+        SELECT *
+        FROM `CustomerIngredients` 
+        JOIN `Ingredients`  ON `Ingredients`.`id` = `CustomerIngredients`.`ingredient_id`
+        WHERE `CustomerIngredients`.`customer_id` = {customer_id};
+    """)
+    
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    if flask_login.current_user.is_authenticated == False:
+        return redirect("/signin")
+    
+    return render_template("catalog.html.jinja", ingredients = results)
 
 
 @app.route("/settings", methods=["GET", "POST"])
@@ -333,13 +455,60 @@ def delete_account():
 def profile_page(): 
     return render_template("profile.html.jinja") 
 
-@app.route("/addingredient")
-def addingredient_page():
-    return render_template("addingredient.html.jinja")
+@app.route("/add_ingredient", methods = ["GET","POST"])
+@flask_login.login_required
+def add_ingredient_page():
+    customer_id = flask_login.current_user.user_id
+    conn = connect_db()
+    cursor = conn.cursor()
+
+
+    cursor.execute("SELECT * FROM `Ingredients`")
+    ing_results = cursor.fetchall()
+
+
+
+    if request.method == "POST":
+        is_checked = request.form.getlist('ing_check')
+
+
+        for ing_id in is_checked:
+            cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
+        return redirect ("/swiper")
+
+    cursor.close()
+    conn.close
+
+    return render_template("add_ingredient.html.jinja", ing_results = ing_results)
 
 @app.route("/mexican")
 def mexican_recipes():
-    return render_template("mexican_recipes.html.jinja")
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Mexican';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()    
+    return render_template("mexican_recipes.html.jinja" , recipe = results)
+@app.route("/british")
+def korean_recipes():
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'British';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()    
+    return render_template("korean_recipes.html.jinja" , recipe = results)
+
+@app.route("/italian")  
+def italian_recipes():
+    conn = connect_db()         
+    cursor = conn.cursor()  
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Italian';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("italian_recipes.html.jinja", recipe = results)  
 
 @app.route("/individual_ingrediant")
 def individual_ingrediant_page():
@@ -357,13 +526,12 @@ def swiper_page():
     results = cursor.fetchall()
     cursor.close()
     conn.close
- 
-
 
 
     return render_template("swiper.html.jinja", recipe = results)
 
 @app.route("/savedrecipes" ,methods=["POST", "GET"])
+@flask_login.login_required
 def savedrecipes_page():
     conn=connect_db()
     cursor= conn.cursor()
@@ -482,3 +650,31 @@ def delete_saved(recipe_id):
         else:
             # Redirect to the recipe detail page
             return redirect(url_for('recipe_detail', recipe_id=recipe_id))
+        
+
+@app.route("/ingredient/<ingredient_id>/delete", methods=['POST'])
+@flask_login.login_required
+def delete_ingredient(ingredient_id):
+    if request.method == "POST":
+        customer_id = flask_login.current_user.user_id
+
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        cursor.execute(f"""
+            DELETE FROM `CustomerIngredients`
+            WHERE `customer_id` = {customer_id} AND `ingredient_id` = {ingredient_id}
+        """)
+        cursor.close()
+        conn.close()
+
+        flash("Ingredient deleted successfully!")
+
+    return redirect(url_for('catolog_page'))
+
+
+
+@app.route("/profile")
+@flask_login.login_required
+def profile():
+    return render_template("profile.html.jinja")

@@ -24,20 +24,28 @@
     </div>
   </div>
 
+ <div class="container my-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+      {% for recipe in recipe %}
+      <div class="col">
+        <div class="card text-center">
+          <div class="card-header">
+            <img src="{{ recipe['image'] }}" class="card-img-top" alt="Recipe image">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ recipe['name'] }}</h5>
+            <p class="card-text">{{ recipe['description'] }}</p>
+            <a href="/recipe/{{recipe['id']}}"class="btn btn-primary" >Go To Recipe</a>
+          </div>
+          <div class="card-footer text-body-secondary">
+            {{ recipe.date_posted }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 
-    <div class="card text-center">
-  <div class="card-header">
-    Featured
-  </div>
-  <div class="card-body">
-    <h5 class="card-title"> Recipe title</h5>
-<p class="card-text"> Recipe description</p>
-    <a href="#" class="btn btn-primary">Go To Recipe</a>
-  </div>
-  <div class="card-footer text-body-secondary">
-    2 days ago
-  </div>
-</div>
 </body>
 
 <footer>
