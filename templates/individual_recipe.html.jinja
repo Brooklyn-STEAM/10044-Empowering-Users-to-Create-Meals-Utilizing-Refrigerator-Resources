@@ -12,14 +12,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
         .checked {
             color: orange;
         }
     </style>
+
 
 
 
@@ -58,34 +62,35 @@
             </p>
             <hr>
             <h3>Ingredients</h3>
-            
-            <div class="card-text text-wrap" style="font-size:40px;">
-            
-            {%for ingredient in ingredients%}
-            {{ingredients['name'] | replace('\n', '<br>') |
-                safe}}
-            {%endfor%}
 
-            <hr>
-            <h3>Instructions</h3>
-            <div class="card-text text-wrap" style="font-size:40px;">{{recipe['directions'] | replace('\n', '<br>') |
+            <div class="card-text text-wrap" style="font-size:40px;">
+
+                {%for ingredient in ingredients%}
+                {{ingredients['name'] | replace('\n', '<br>') |
                 safe}}
+                {%endfor%}
+
+                <hr>
+                <h3>Instructions</h3>
+                <div class="card-text text-wrap" style="font-size:40px;">{{recipe['directions'] | replace('\n', '<br>')
+                    |
+                    safe}}
+                </div>
+
             </div>
 
         </div>
-
-    </div>
-    <br> <br> <br> <br>
+        <br> <br> <br> <br>
 
 
 
 
-    <form action="/addreview/{{recipe['id']}} " method="POST" class="my-form my-container">
-        <div class=" my-form">
-            <h2 class="form-header">Rating</h2>
-            <div class="post my-form"></div>
+        <form action="/addreview/{{recipe['id']}} " method="POST" class="my-form my-container">
+            <div class=" my-form">
+                <h2 class="form-header">Rating</h2>
+                <div class="post my-form"></div>
                 <div class="text my-form">Thanks for the rating</div>
-                
+
             </div>
 
 
@@ -141,7 +146,7 @@
                 <button type="submit">Post</button>
             </div>
 
-    </form>
+        </form>
 
 
 
@@ -150,7 +155,7 @@
 
 
 
-   
+
 
     <br> <br> <br>
     <h3 class="card-title text-center mb-4">Customer Reviews</h3>
@@ -162,10 +167,10 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
                         <div class="me-3">
-                            <img src="https://via.placeholder.com/50" alt="User" class="rounded-circle">
+                            <img src="{{review_stuff[0]['picture']}}" alt="User profile picture" class="img-fluid img-thumbnail rounded-5" style="width: 70px; height: 7 0px">
                         </div>
                         <div>
-                            <h5 class="mb-0">{{ review['username'] }}</h5>
+                            <h5 class="mb-0">{{review_stuff[0]['username']}}</h5>
                             <small class="text-muted">{{ review['timestamp'] }}</small>
                         </div>
                     </div>
@@ -219,16 +224,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-  <script>
-    function showFlashMessage(message, status) {
-      const flashMessagesContainer = document.getElementById('flash-messages');
-      if (!flashMessagesContainer) {
-        console.error('Flash messages container not found in the DOM.');
-        return;
-      }
-  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script>
+        function showFlashMessage(message, status) {
+            const flashMessagesContainer = document.getElementById('flash-messages');
+            if (!flashMessagesContainer) {
+                console.error('Flash messages container not found in the DOM.');
+                return;
+            }
+    </script>
 </body>
 
 </html>

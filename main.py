@@ -160,17 +160,21 @@ def recipe_detail(recipe_id):
     cursor.execute(f""" 
         SELECT * FROM Review WHERE `recipe_id` = {recipe_id};
     """)  
+    
+    reviews = cursor.fetchall()        
 
-    reviews = cursor.fetchall()          
-
+    
+    
 
     cursor.execute(f"""
-        SELECT r.rating, r.review, r.timestamp, c.username
+        SELECT r.rating, r.review, r.timestamp, c.username, c.picture
         FROM Review r 
         JOIN Customer c ON r.customer_id = c.id
         WHERE r.recipe_id = {recipe_id}  
         ORDER BY r.timestamp DESC;      
-    """)                         
+    """)         
+
+    review_stuff = cursor.fetchall()                
 
 
     if request.method == "POST":      
@@ -201,7 +205,7 @@ def recipe_detail(recipe_id):
     print(recipe) 
 
 
-    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients) 
+    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients, review_stuff = review_stuff) 
     
 
 
@@ -291,28 +295,6 @@ def search_page():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route("/catalog")
 def catolog_page():
     
@@ -339,23 +321,27 @@ def catolog_page():
     
     return render_template("catalog.html.jinja", ingredients = results)
 
-@app.route("/settings")
+@app.route("/settings", methods = ["GET","POST"])
 @flask_login.login_required
 def setting_page():
-    # customer_id = flask_login.current_user.user_id
-    # conn =connect_db()
-    # cursor = conn.cursor()
+    customer_id = flask_login.current_user.user_id
+    conn =connect_db()
+    cursor = conn.cursor()
 
-    # cursor.execute(f"SELECT `email`,`username`, `picture` FROM `Customer` WHERE `id` = '{customer_id}'")
-    # customer_details = cursor.fetchall()
+    cursor.execute(f"SELECT `email`,`username`, `picture` FROM `Customer` WHERE `id` = '{customer_id}';")
+    customer_details = cursor.fetchall()
 
-    # cursor.close()
-    # conn.close
+    if request.method == "POST":
+        new_photo = request.form['new_photo']
+        cursor.execute(f"UPDATE `Customer` SET `picture` = ('{new_photo}') WHERE `id` = '{customer_id}';")
+        return redirect ("/settings")
+        
 
 
-    #, customer_details = customer_details
+    cursor.close()
+    conn.close
 
-    return render_template("settings.html.jinja")
+    return render_template("settings.html.jinja", customer_details = customer_details)
 
 
 @app.route("/add_ingredient", methods = ["GET","POST"])
@@ -427,24 +413,6 @@ def swiper_page():
     conn = connect_db()
     cursor = conn.cursor() 
     cursor.execute("SELECT * FROM `Recipe`")
-
-    # cursor.execute("""
-    #                SELECT * 
-    #                FROM `CustomerIngredients` 
-    #                JOIN `RecipeIngredients` ON `recipe_id`               
-    #              """)
-
-
-    # cursor.execute("""
-    #                
-    # """)
-    # 
-    
-
-    # for x in results 
-        # if results_category = American, British, Canidian, Chinese, Dutch, Egyptian, Filipino, French
-
-    #flash a message when the  the recipe is succesfully  saved
    
     results = cursor.fetchall()
     cursor.close()
