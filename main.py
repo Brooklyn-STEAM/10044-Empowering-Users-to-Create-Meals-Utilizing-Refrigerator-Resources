@@ -368,12 +368,15 @@ def add_ingredient_page():
 
         for ing_id in is_checked:
             cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
+            
             return redirect ("/swiper")
-
+            
     cursor.close()
     conn.close
 
     return render_template("add_ingredient.html.jinja", ing_results = ing_results)
+#create variable for ingredients selected
+
 
 
 
@@ -413,37 +416,30 @@ def italian_recipes():
 def individual_ingrediant_page():
     return render_template("individual_ingredient.html.jinja")
 
-@app.route("/swiper")
+@app.route("/swiper", methods=["POST", "GET"])
 def swiper_page():
-    conn = connect_db()
-    cursor = conn.cursor() 
-    cursor.execute("SELECT * FROM `Recipe`")
+    conn=connect_db()
+    cursor= conn.cursor()
 
-    # cursor.execute("""
-    #                SELECT * 
-    #                FROM `CustomerIngredients` 
-    #                JOIN `RecipeIngredients` ON `recipe_id`               
-    #              """)
-
-
-    # cursor.execute("""
-    #                
-    # """)
-    # 
+    customer_id = flask_login.current_user.user_id
+    cursor.execute(f"""
+                SELECT * FROM `Recipe`
+                JOIN `RecipeIngredients` ON `Recipe`.`id` = `RecipeIngredients`.`recipe_id`
+                JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
+                JOIN `CustomerIngredients` ON `CustomerIngredients`.`ingredient_id` = `RecipeIngredients`.`ingredient_id`
+                WHERE `Ingredients`.`id` = `CustomerIngredients`.`ingredient_id`
+                AND `CustomerIngredients`.`customer_id` = {customer_id};
+        """)
     
-
-    # for x in results 
-        # if results_category = American, British, Canidian, Chinese, Dutch, Egyptian, Filipino, French
-
-    #flash a message when the  the recipe is succesfully  saved
-   
     results = cursor.fetchall()
+    """if not results:
+        flash("No recipes found for the selected ingredients.")
+        return redirect(url_for('catolog_page'))"""
+    
     cursor.close()
-    conn.close
+    conn.close()
 
-
-    return render_template("swiper.html.jinja", recipe = results)
-
+    return render_template("swiper.html.jinja", recipe=results, )
 @app.route("/savedrecipes" ,methods=["POST", "GET"])
 @flask_login.login_required
 def savedrecipes_page():
@@ -586,7 +582,7 @@ def delete_ingredient(ingredient_id):
 
     return redirect(url_for('catolog_page'))
 
-@app.route("/fake")
+"""@app.route("/fake")
 def fake_page():
     customer_id = flask_login.current_user.user_id
     conn = connect_db()
@@ -614,7 +610,7 @@ def fake_page():
     cursor.close()
     conn.close
     return render_template("fake.html.jinja", ingredients = ingredients  )
-
+"""
 
 
 
