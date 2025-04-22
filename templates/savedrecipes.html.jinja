@@ -14,8 +14,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+{% include "components/java.html.jinja" %} 
 
 </head>
+
 <body class="bg-body-tertiary ">
 <div class="">
     {% include "components/navbar.html.jinja" %}
@@ -30,7 +32,9 @@
 {%endfor%}
 
 
-
+{%if recipe|length == 0%}
+  <p class="title">You have no saved recipes</p>
+{%else%}
      <div class="container my-4">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
       {% for recipe in recipe %}
@@ -54,3 +58,5 @@
       {% endfor %}
     </div>
   </div>
+
+{%endif%}

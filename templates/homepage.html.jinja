@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 
-
+{% include "components/java.html.jinja" %} 
 </head>
 
 <body class="bg-body-tertiary ">
@@ -47,13 +47,19 @@
    
   
     <div class="scrollmenu">
-     
-    {% for ingredient in ingredients %}
-        <button type="button" class="btn-circle ingred-pics">
-        <img src="{{ingredient['image']}}" class="ingred-pics" alt="{{ingredient['name']}}">
-                    <div class="card-body"></button>
+    {%if ingredients|length == 0%}
+        <p class="title">You have no saved ingredients</p>
+    {%else%}
+        {% for ingredient in ingredients %}
+                <button type="button" class="btn-circle ingred-pics">
+                <img src="{{ingredient['image']}}" class="ingred-pics" alt="{{ingredient['name']}}">
+                            <div class="card-body"></button>
 
-    {% endfor %}
+        {% endfor %}
+
+    {%endif%}
+     
+    
    
 
     

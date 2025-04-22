@@ -11,11 +11,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  {% include "components/java.html.jinja" %} 
+
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
   <style>
     .container, .container-lg, .container-md, .container-sm {
         max-width: 110%;
     }
   </style>
+
 </head>
 <body class="bg-body-tertiary">
   {% include "components/navbar.html.jinja" %}
@@ -28,7 +33,10 @@
 {%endfor%}
 
 
-<h1 class="text-center"  style="text-align:center">User Ingredient Catalog</h1>
+<h1 class="text-center title"  style="text-align:center">User Ingredient Catalog</h1>
+{%if ingredients|length == 0%}
+  <p class="title">You have no saved ingredients</p>
+{%else%}
   {% for ingredient in ingredients %}
  
 <div class="card" style="width: 18rem;">
@@ -46,6 +54,7 @@
 </div>
   
   {% endfor %}
+{%endif%}
   
 
 </button>
