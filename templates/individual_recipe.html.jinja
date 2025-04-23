@@ -17,7 +17,7 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+{% include "components/java.html.jinja" %}  
     <style>
         .checked {
             color: orange;
@@ -52,7 +52,15 @@
     <div class="card text-center">
         <div class="card-title">
             <h1>{{recipe['name']}}</h1>
-
+            <!-- Average rating display -->
+            <div class="average-rating">
+         {% if average_rating > 0 %}
+        <h3>Average Rating: {{ average_rating | round(1) }}</h3>
+        {% else %}
+        <h3>Average Rating: No ratings yet</h3>
+        {% endif %}
+        </div>
+            
             <img src="{{recipe['image']}}" class="card-img-top ingred-pics" alt="{{recipe['name']}}"
                 style="height: 200px; width: 200px;">
         </div>
@@ -64,11 +72,12 @@
             <h3>Ingredients</h3>
 
             <div class="card-text text-wrap" style="font-size:40px;">
-
-                {%for ingredient in ingredients%}
-                {{ingredients['name'] | replace('\n', '<br>') |
-                safe}}
-                {%endfor%}
+ 
+            <div class="d-flex flex-wrap justify-content-center">
+                {% for ingredient in ingredients %}
+                 <p class="rounded-pill border" style="margin-left: 2%;"> {{ ingredient['name'] }}: {{ ingredient['amount'] }}</p>
+                {% endfor %}
+            </div>
 
                 <hr>
                 <h3>Instructions</h3>
