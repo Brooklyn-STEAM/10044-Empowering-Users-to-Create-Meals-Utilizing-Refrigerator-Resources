@@ -55,7 +55,7 @@ def load_user(user_id):
 def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
-        database= "pantryfy",
+        database= "pantryfy"
         user = "ldore",  
 
         password = conf.password, 
@@ -169,23 +169,18 @@ def recipe_detail(recipe_id):
         FROM `Review` 
         WHERE `recipe_id` = {recipe_id};
     """)  
+    recipe_reviews = database_cursor.fetchall()          
     
-    reviews = cursor.fetchall()        
+    # Fetch detailed reviews with customer information
+    database_cursor.execute(f"""
+        SELECT review_table.rating, review_table.review, review_table.timestamp, customer_table.username
+        FROM `Review` review_table
+        JOIN `Customer` customer_table ON review_table.customer_id = customer_table.id
+        WHERE review_table.recipe_id = {recipe_id}  
+        ORDER BY review_table.timestamp DESC;      
+    """)
 
-    
-    
-
-    cursor.execute(f"""
-        SELECT r.rating, r.review, r.timestamp, c.username, c.picture
-        FROM Review r 
-        JOIN Customer c ON r.customer_id = c.id
-        WHERE r.recipe_id = {recipe_id}  
-        ORDER BY r.timestamp DESC;      
-    """)         
-
-    review_stuff = cursor.fetchall()                
-
-
+    # Handle POST request for submitting a review
     if request.method == "POST":      
         customer_id = flask_login.current_user.user_id
         database_cursor.execute(f"""
@@ -330,6 +325,28 @@ def search_page():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route("/catalog")
 def catolog_page():
     
@@ -357,27 +374,13 @@ def catolog_page():
     return render_template("catalog.html.jinja", ingredients = results)
 
 
-@app.route("/settings", methods = ["GET","POST"])
+@app.route("/settings", methods=["GET", "POST"])
 @flask_login.login_required
-def setting_page():
+def settings():
     customer_id = flask_login.current_user.user_id
-    conn =connect_db()
-    cursor = conn.cursor()
-
-    cursor.execute(f"SELECT `email`,`username`, `picture` FROM `Customer` WHERE `id` = '{customer_id}';")
-    customer_details = cursor.fetchall()
-
-    if request.method == "POST":
-        new_photo = request.form['new_photo']
-        cursor.execute(f"UPDATE `Customer` SET `picture` = ('{new_photo}') WHERE `id` = '{customer_id}';")
-        return redirect ("/settings")
-        
+    return render_template("settings.html.jinja", customer=customer_id)
 
 
-    cursor.close()
-    conn.close
-
-    return render_template("settings.html.jinja", customer_details = customer_details)
 
 
 
