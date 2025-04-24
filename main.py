@@ -145,34 +145,36 @@ def signup():
     return render_template("signup.html.jinja")  
 
 @app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
+
 @flask_login.login_required
 def recipe_detail(recipe_id):
-    database_connection = connect_db() 
-    database_cursor = database_connection.cursor()     
+    
+    conn = connect_db() 
+    cursor = conn.cursor() 
 
     # Fetch recipe details
-    database_cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
-    recipe_details = database_cursor.fetchone()    
+    cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
+    recipe_details = cursor.fetchone()    
 
     # Fetch ingredients with amounts
-    database_cursor.execute(f""" 
+    cursor.execute(f""" 
         SELECT `Ingredients`.`name`, `RecipeIngredients`.`amount`
         FROM `RecipeIngredients` 
         JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
         WHERE `RecipeIngredients`.`recipe_id` = %s;
     """, (recipe_id,))
-    recipe_ingredients = database_cursor.fetchall()
+    recipe_ingredients = cursor.fetchall()
 
     # Fetch all reviews for the recipe
-    database_cursor.execute(f""" 
-        SELECT * 
+    cursor.execute(f""" 
+        SELECT 
         FROM `Review` 
         WHERE `recipe_id` = {recipe_id};
     """)  
-    recipe_reviews = database_cursor.fetchall()          
+    recipe_reviews = cursor.fetchall()          
     
     # Fetch detailed reviews with customer information
-    database_cursor.execute(f"""
+    cursor.execute(f"""
         SELECT review_table.rating, review_table.review, review_table.timestamp, customer_table.username
         FROM `Review` review_table
         JOIN `Customer` customer_table ON review_table.customer_id = customer_table.id
@@ -183,12 +185,12 @@ def recipe_detail(recipe_id):
     # Handle POST request for submitting a review
     if request.method == "POST":      
         customer_id = flask_login.current_user.user_id
-        database_cursor.execute(f"""
+        cursor.execute(f"""
             SELECT * 
             FROM `Review` 
             WHERE `recipe_id` = '{recipe_id}' AND `customer_id` = '{customer_id}';
         """)
-        existing_review = database_cursor.fetchone()
+        existing_review = cursor.fetchone()
 
         if existing_review:
 
@@ -206,38 +208,42 @@ def recipe_detail(recipe_id):
             
             flash("Your review has been submitted!", "success")
             return redirect(f"/recipe/{recipe_id}")
+    return render_template(
+        "individual_recipe.html.jinja", 
+        recipe=recipe_details, 
+        ingredients=recipe_ingredients, 
+        reviews=recipe_reviews,
+        average_rating=,
+    )
+   
+    
 
-    cursor.close()
-    conn.close() 
+             flash("You have already submitted a review for this recipe.", "error")
 
-    print(recipe) 
+     cursor.execute("""
+         SELECT rating 
+         FROM `Review` 
+         WHERE `recipe_id` = %s;
+     """, (recipe_id,))
+    ratings = database_cursor.fetchall()        
 
-#             flash("You have already submitted a review for this recipe.", "error")
-
-#     database_cursor.execute("""
-#         SELECT rating 
-#         FROM `Review` 
-#         WHERE `recipe_id` = %s;
-#     """, (recipe_id,))
-#     ratings = database_cursor.fetchall()        
-
-#     if ratings:
-#         total_ratings = sum(rating['rating'] for rating in ratings)
-#         average_rating = total_ratings / len(ratings)
-#     else:
-#         average_rating = 0  # No ratings yet     
+    if ratings:
+         total_ratings = sum(rating['rating'] for rating in ratings)
+        average_rating = total_ratings / len(ratings)
+    else:
+         average_rating = 0  # No ratings yet     
 
 
-#     database_cursor.close()
-#     database_connection.close()
+     database_cursor.close()
+     database_connection.close()
 
-#     return render_template(
-#         "individual_recipe.html.jinja", 
-#         recipe=recipe_details, 
-#         ingredients=recipe_ingredients, 
-#         reviews=recipe_reviews,
-#         average_rating=average_rating
-#     )
+     return render_template(
+         "individual_recipe.html.jinja", 
+         recipe=recipe_details, 
+         ingredients=recipe_ingredients, 
+         reviews=recipe_reviews,
+          average_rating=average_rating
+ )
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
 def addreview(recipe_id): 
