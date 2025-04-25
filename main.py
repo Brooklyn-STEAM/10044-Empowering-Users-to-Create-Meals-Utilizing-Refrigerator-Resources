@@ -56,7 +56,7 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "ldore",  
+        user = conf.username,  
 
         password = conf.password, 
         autocommit= True,   
@@ -147,6 +147,10 @@ def signup():
 @app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
 @flask_login.login_required
 def recipe_detail(recipe_id):
+    conn = connect_db() 
+    cursor = conn.cursor() 
+
+
     database_connection = connect_db() 
     database_cursor = database_connection.cursor()     
 
@@ -215,7 +219,7 @@ def recipe_detail(recipe_id):
     cursor.close()
     conn.close() 
 
-    print(recipe) 
+    # print(recipe) 
 
 #             flash("You have already submitted a review for this recipe.", "error")
 
@@ -233,16 +237,17 @@ def recipe_detail(recipe_id):
 #         average_rating = 0  # No ratings yet     
 
 
-#     database_cursor.close()
-#     database_connection.close()
+    # database_cursor.close()
+    # database_connection.close()
 
-#     return render_template(
-#         "individual_recipe.html.jinja", 
-#         recipe=recipe_details, 
-#         ingredients=recipe_ingredients, 
-#         reviews=recipe_reviews,
-#         average_rating=average_rating
-#     )
+    return render_template(
+        "individual_recipe.html.jinja", 
+        recipe=recipe_details, 
+        ingredients=recipe_ingredients,
+        review_stuff= review_stuff,
+        reviews=reviews 
+        
+    )
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
 def addreview(recipe_id): 
@@ -393,7 +398,7 @@ def update_settings():
     new_username = request.form.get("new_username")
     new_password = request.form.get("new_password")
 
-    
+
     if new_username and new_password:
         cursor.execute(
             "UPDATE Customer SET username = %s, password = %s WHERE id = %s",
@@ -428,28 +433,24 @@ def delete_account():
 
     customer_id = flask_login.current_user.user_id
 
-   
+
     cursor.execute("DELETE FROM Review WHERE customer_id = %s;", (customer_id,))
     cursor.execute("DELETE FROM SavedRecipe WHERE customer_id = %s;", (customer_id,))
     cursor.execute("DELETE FROM CustomerIngredients WHERE customer_id = %s;", (customer_id,))
 
-   
+
     cursor.execute("DELETE FROM Customer WHERE id = %s;", (customer_id,))
 
     conn.commit()
     cursor.close()
     conn.close()
 
-   
+
     logout_user()
 
     return redirect("/signup")
 
 
-
-@app.route("/profile")
-def profile_page(): 
-    return render_template("profile.html.jinja") 
 
 @app.route("/add_ingredient", methods = ["GET","POST"])
 @flask_login.login_required

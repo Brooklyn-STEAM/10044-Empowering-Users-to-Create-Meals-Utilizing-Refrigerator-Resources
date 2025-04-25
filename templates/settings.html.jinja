@@ -7,6 +7,7 @@
     <title>Pantryfy settings</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleTheme() {
@@ -31,23 +32,25 @@
 </head>
 
 <body>
-
     <div class="container mt-5">
     <h2 class="mb-4">Settings</h2>
 
     <!-- Nav Tabs -->
-    <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+    <ul class="nav nav-tabs" id="ju/" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="user-tab" data-bs-toggle="tab" href="#user" role="tab">User Setting</a>
+            <a class="nav-link setting-tab active" id="user-tab" data-bs-toggle="tab" href="#user" role="tab">User Setting</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="general-tab" data-bs-toggle="tab" href="#settings" role="tab">General Setting</a>
+            <a class="nav-link setting-tab" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab">Profile Picture</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="preferences-tab" data-bs-toggle="tab" href="#preferences" role="tab">Preferences</a>
+            <a class="nav-link setting-tab" id="general-tab" data-bs-toggle="tab" href="#settings" role="tab">General Setting</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="advanced-tab" data-bs-toggle="tab" href="#advanced" role="tab">Advanced</a>
+            <a class="nav-link setting-tab" id="preferences-tab" data-bs-toggle="tab" href="#preferences" role="tab">Preferences</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link setting-tab" id="advanced-tab" data-bs-toggle="tab" href="#advanced" role="tab">Advanced</a>
         </li>
     </ul>
 
@@ -70,6 +73,16 @@
             </form>
         </div>
 
+        <!-- Profile Picture Setting Tab -->
+        <div class="tab-pane fade show" id="profile" role="tabpanel">
+            <form class="" method="post" action="/settings">
+                <img src="{{customer_details[0]['picture']}}" class="img-thumbnail img-fluid rounded-5" style="height: 100px">
+                <label class="text-center">Paste the Image Address!</label>
+                <input  class ="form-control" type="texts" id="myFile" name="new_photo">
+                <button type="submit" class="m-3 btn btn-primary">Change Your Photo</button>
+            </form> 
+        </div>
+
         <!-- General Setting Tab -->
         <div class="tab-pane fade" id="settings" role="tabpanel">
             <h4>General Setting</h4>
@@ -84,19 +97,15 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </form>
+            
         </div>
 
-		{# <form class="container" method="post" action="/settings">
-											<img src="{{customer_details[0]['picture']}}" class="img-thumbnail img-fluid rounded-5">
-											<label class="sub-title text-center">Paste the Image Address!</label>
-											<input  class ="form-control" type="texts" id="myFile" name="new_photo">
-											<button type="submit" class="m-3 btn btn-primary">Change Your Photo</button>
-										</form>  #}
+		
 
         <!-- Preferences Tab -->
         <div class="tab-pane fade" id="preferences" role="tabpanel">
             <h4>Preferences</h4>
-            <form action="/settings/preferences" method="POST">
+            <form action="/" method="POST">
                 <div class="mb-3">
                     <label class="form-label">Theme</label>
                     <select class="form-select" name="theme" onchange="toggleTheme()">
