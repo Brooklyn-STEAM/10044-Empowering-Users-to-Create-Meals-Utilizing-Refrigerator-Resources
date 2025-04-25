@@ -1,0 +1,17 @@
+<div class="col-md-3">
+    <h4 class="p-3 sub-title">Herb:</h4>
+    <input type="checkbox" id="alt_selectall" name="selectall" autocomplete="off" onclick="checkAll('herb')">
+    <label class="smaller-label">Check All</label>
+    {%for item in ing_results%}
+    {%if item['category'] == 'Herb' %}
+    <div class="container form-check">
+      <div class="container list_ing">
+        <input class="form-check-input herb" type="checkbox" value="{{item['id']}}" id="{{item['id']}}"
+          name="ing_check">
+        <label class="form-check-label" for="{{item['id']}}">{{item['name']}}</label>
+      </div>
+    </div>
+    {%endif%}
+    {%endfor%}
+  </div>
+  

@@ -31,31 +31,43 @@
   <div class="container row  d-flex justify-content-center align-items-center">
     {%for message in get_flashed_messages() %}
 
-    <div class="alert alert-primary" role="alert">
-      {{message}}
-    </div>
-    {%endfor%}
 
 
-    <h1 class="text-center title" style="text-align:center">User Ingredient Catalog</h1>
-    {%if ingredients|length == 0%}
-    <p class="title">You have no saved ingredients</p>
-    {%else%}
-    {% for ingredient in ingredients %}
+<div class="alert alert-primary" role="alert">
+ {{message}}
+</div>
+{%endfor%}
 
-    <div class="card" style="width: 18rem;">
-      <span class="dot">
-        <img src="{{ingredient['image']}}" class="card-img-top" alt="...">
-      </span>
-      <div class="card-body">
-        <h5 class="card-title">{{ingredient['name']}}</h5>
-        <p class="card-text">{{ingredient['category']}}</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-      <form action="/ingredient/{{ingredient['ingredient_id']}}/delete" method="post">
-        <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove from Saved</button>
-      </form>
-    </div>
+
+
+<h1 class="text-center title"  style="text-align:center">User Ingredient Catalog</h1>
+<!--remove all ingredients-->
+<form action="/ingredient/delete_all" method="post">
+  <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove All Ingredients</button>
+</form>
+{%if ingredients|length == 0%}
+  <p class="title">You have no saved ingredients</p>
+{%else%}
+  {% for ingredient in ingredients %}
+ 
+<div class="card" style="width: 18rem;">
+<span class="dot">
+  <img src="{{ingredient['image']}}" class="card-img-top" alt="...">
+  </span>
+  <div class="card-body">
+    <h5 class="card-title">{{ingredient['name']}}</h5>
+    <p class="card-text">{{ingredient['category']}}</p>
+    
+  </div>
+  <form action="/ingredient/{{ingredient['ingredient_id']}}/delete" method="post">
+              <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove from Saved</button>
+            </form> 
+</div>
+  
+  {% endfor %}
+{%endif%}
+  
+
 
     {% endfor %}
     {%endif%}
