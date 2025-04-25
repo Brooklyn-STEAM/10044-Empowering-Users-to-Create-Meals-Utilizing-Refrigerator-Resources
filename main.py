@@ -147,6 +147,7 @@ def signup():
 @app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
 @flask_login.login_required
 def recipe_detail(recipe_id):
+
     conn = connect_db() 
     cursor = conn.cursor()     
     
@@ -178,6 +179,7 @@ def recipe_detail(recipe_id):
         WHERE r.recipe_id = {recipe_id}  
         ORDER BY r.timestamp DESC;      
     """)                         
+
 
 
     if request.method == "POST":      
@@ -312,28 +314,6 @@ def search_page():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route("/catalog")
 def catolog_page():
     
@@ -361,13 +341,27 @@ def catolog_page():
     return render_template("catalog.html.jinja", ingredients = results)
 
 
-@app.route("/settings", methods=["GET", "POST"])
+@app.route("/settings", methods = ["GET","POST"])
 @flask_login.login_required
-def settings():
+def setting_page():
     customer_id = flask_login.current_user.user_id
-    return render_template("settings.html.jinja", customer=customer_id)
+    conn =connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute(f"SELECT `email`,`username`, `picture` FROM `Customer` WHERE `id` = '{customer_id}';")
+    customer_details = cursor.fetchall()
+
+    if request.method == "POST":
+        new_photo = request.form['new_photo']
+        cursor.execute(f"UPDATE `Customer` SET `picture` = ('{new_photo}') WHERE `id` = '{customer_id}';")
+        return redirect ("/settings")
+        
 
 
+    cursor.close()
+    conn.close
+
+    return render_template("settings.html.jinja", customer_details = customer_details)
 
 
 
