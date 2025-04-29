@@ -2,9 +2,9 @@ from flask import Flask, render_template, request,redirect,flash,abort,url_for, 
 import pymysql
 from dynaconf import Dynaconf
 import flask_login
-from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime  
 from flask_login import logout_user
+
 
 
 app = Flask(__name__)
@@ -167,30 +167,12 @@ def recipe_detail(recipe_id):
         JOIN Customer c ON r.customer_id = c.id
         WHERE r.recipe_id = {recipe_id}  
         ORDER BY r.timestamp DESC;      
-    """)                         
+    """)   
+    
+    reviews_stuff = cursor.fetchall()                       
 
 
-    if request.method == "POST":      
-       
-        customer_id = flask_login.current_user.user_id
-        cursor.execute(f"SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';")
-        existing_review = cursor.fetchone()            
-
-        if existing_review:
-            flash("You have already submitted a review for this product.", "error")
-        else:
-            rating = request.form["rating"]
-            review = request.form["review"] 
-            timestamp = datetime.now() 
-            
-            cursor.execute(f"""       
-                INSERT INTO Review (recipe_id, customer_id, rating, review, timestamp)
-                VALUES ('{recipe_id}', '{customer_id}', '{rating}', '{review}', '{timestamp}');
-            """)         
-            conn.commit()         
-            
-            flash("Your review has been submitted!", "success")
-            return redirect(f"/recipe/{recipe_id}")
+    
 
     cursor.close()
     conn.close() 
@@ -198,7 +180,7 @@ def recipe_detail(recipe_id):
     print(recipe) 
 
 
-    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews) 
+    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, reviews_stuff = reviews_stuff) 
     
 
 
@@ -216,11 +198,33 @@ def addreview(recipe_id):
                     VALUES 
                         ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
                         ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
-                """,) 
-        conn.close()      
-        cursor.close()      
+                """,)  
 
-    return redirect(f"/recipe/{recipe_id}")             
+        
+
+        return redirect(f"/recipe/{recipe_id}")
+        
+@app.route('/deletereview/<recipe_id>', methods=['POST', "GET"])
+def delete_review(recipe_id):
+    conn = connect_db()
+    cursor = conn.cursor()
+    customer_id = flask_login.current_user.user_id  
+    cursor.execute("""
+        DELETE FROM Review
+        WHERE recipe_id = %s AND customer_id = %s
+    """, (recipe_id, customer_id))
+
+    conn.commit()
+    conn.close()
+    cursor.close() 
+
+    return redirect(f'/recipe/{recipe_id}')
+
+        
+      
+
+
+@app.route          
 
 @app.route("/")
 def index():
@@ -326,6 +330,16 @@ def delete_account():
     logout_user()
 
     return redirect("/signup")
+
+@app.route("/settings/preferences", methods =["POST"])
+@flask_login.login_required
+def settings_preference(): 
+    selected_preferences = request.form.get("theme") 
+    return redirect("/", selected_preferences = selected_preferences)
+
+
+
+
 
 
 

@@ -356,6 +356,21 @@ input#rate-5:checked ~  header::before{
 
 }
 
+
+.stars {
+  display: inline-block;
+  font-size: 24px;
+  letter-spacing: 2px;
+  background: linear-gradient(
+    90deg,
+    gold calc(var(--rating) / 5 * 100%),
+    lightgray calc(var(--rating) / 5 * 100%)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+   
+
 input:checked ~ form{ 
   display: block; 
 }
@@ -389,7 +404,7 @@ input:checked ~ form{
   padding: 10px; 
   font-size: 17px; 
   resize: none;
-
+  
 }
 
 .my-form .btn{ 

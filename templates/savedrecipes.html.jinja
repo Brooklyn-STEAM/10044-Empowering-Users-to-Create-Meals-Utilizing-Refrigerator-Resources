@@ -14,11 +14,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-{% include "components/java.html.jinja" %} 
+<script src="/static/darkmode.js"></script>   
 
 </head>
 
-<body class="bg-body-tertiary ">
+<body class="bg-dark text-white ">
 <div class="">
     {% include "components/navbar.html.jinja" %}
 </div>
@@ -54,5 +54,8 @@
         </div>
       </div>
       {% endfor %}
+
     </div>
   </div>
+  <script src="/static/darkmode.js"></script>  
+  </body>

@@ -2,119 +2,116 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pantryfy settings</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle("dark-mode");
-            localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
-        }
-        document.addEventListener("DOMContentLoaded", () => {
-            if (localStorage.getItem("theme") === "dark") {
-                document.body.classList.add("dark-mode");
-            }
-        });
-    </script>
-    <style>
-        .dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
-    </style>
-    {% include "components/navbar.html.jinja" %}
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Pantryfy Settings</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+   <style>
+       .navbar-purple {
+           background-color: #6f42c1; 
+       }
+
+       .navbar-purple .nav-link, .navbar-purple .navbar-brand {
+           color: white;
+       }
+
+       .navbar-purple .nav-link:hover {
+           color: #d0bfff; 
+       }
+
+      
+       body {
+           transition: background-color 0.3s, color 0.3s;
+       }
+   </style>
 </head>
 
-<body>
+<body class="bg-dark text-white">
 
-    <div class="container mt-5">
-    <h2 class="mb-4">Settings</h2>
+   <nav class="navbar navbar-expand-lg navbar-purple">
+       {% include "components/navbar.html.jinja" %}
+   </nav>
 
-    <!-- Nav Tabs -->
-    <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="user-tab" data-bs-toggle="tab" href="#user" role="tab">User Setting</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="general-tab" data-bs-toggle="tab" href="#settings" role="tab">General Setting</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="preferences-tab" data-bs-toggle="tab" href="#preferences" role="tab">Preferences</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="advanced-tab" data-bs-toggle="tab" href="#advanced" role="tab">Advanced</a>
-        </li>
-    </ul>
+   <div class="container mt-5">
+       <h2 class="mb-4">Settings</h2>
 
-    <!-- Tab Content -->
-    <div class="tab-content mt-3" id="settingsTabsContent">
+       <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+           <li class="nav-item">
+               <a class="nav-link active" id="user-tab" data-bs-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="true">User Setting</a>
+           </li>
+           <li class="nav-item">
+               <a class="nav-link" id="general-tab" data-bs-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">General Setting</a>
+           </li>
+           <li class="nav-item">
+               <a class="nav-link" id="preferences-tab" data-bs-toggle="tab" href="#preferences" role="tab" aria-controls="preferences" aria-selected="false">Preferences</a>
+           </li>
+           <li class="nav-item">
+               <a class="nav-link" id="advanced-tab" data-bs-toggle="tab" href="#advanced" role="tab" aria-controls="advanced" aria-selected="false">Advanced</a>
+           </li>
+       </ul>
 
-        <!-- User Setting Tab -->
-        <div class="tab-pane fade show active" id="user" role="tabpanel">
-            <h4>User Setting</h4>
-            <form action="/settings/user" method="POST">
-                <div class="mb-3">
-                    <label class="form-label">Enable Two-Factor Authentication</label>
-                    <select class="form-select" name="two_factor">
-                        <option value="none">None</option>
-                        <option value="email">Email</option>
-                        <option value="sms">SMS</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </form>
-        </div>
+       <div class="tab-content mt-3" id="settingsTabsContent">
 
-        <!-- General Setting Tab -->
-        <div class="tab-pane fade" id="settings" role="tabpanel">
-            <h4>General Setting</h4>
-            <form action="/update_settings" method="POST">
-                <div class="mb-3">
-                    <label class="form-label">Change Username</label>
-                    <input type="text" class="form-control" name="new_username" placeholder="New username">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">New Password</label>
-                    <input type="password" class="form-control" name="new_password" placeholder="New password">
-                </div>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </form>
-        </div>
+           <div class="tab-pane fade show active" id="user" role="tabpanel">
+               <h4>User Setting</h4>
+               <form action="/settings/user" method="POST">
+                   <div class="mb-3">
+                       <label class="form-label">Enable Two-Factor Authentication</label>
+                       <select class="form-select" name="two_factor">
+                           <option value="none">None</option>
+                           <option value="email">Email</option>
+                           <option value="sms">SMS</option>
+                       </select>
+                   </div>
+                   <button type="submit" class="btn btn-primary">Save Changes</button>
+               </form>
+           </div>
 
-        <!-- Preferences Tab -->
-        <div class="tab-pane fade" id="preferences" role="tabpanel">
-            <h4>Preferences</h4>
-            <form action="/settings/preferences" method="POST">
-                <div class="mb-3">
-                    <label class="form-label">Theme</label>
-                    <select class="form-select" name="theme" onchange="toggleTheme()">
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </form>
-        </div>
+           <div class="tab-pane fade" id="settings" role="tabpanel">
+               <h4>General Setting</h4>
+               <form action="/update_settings" method="POST">
+                   <div class="mb-3">
+                       <label class="form-label">Change Username</label>
+                       <input type="text" class="form-control" name="new_username" placeholder="New username">
+                   </div>
+                   <div class="mb-3">
+                       <label class="form-label">New Password</label>
+                       <input type="password" class="form-control" name="new_password" placeholder="New password">
+                   </div>
+                   <button type="submit" class="btn btn-primary">Save Changes</button>
+               </form>
+           </div>
 
-        <!-- Advanced Tab -->
-        <div class="tab-pane fade" id="advanced" role="tabpanel">
-            <h4>Advanced Settings</h4>
-            <p class="text-danger">Warning: These actions cannot be undone.</p>
-            <form action="/settings/delete" method="POST">
-                <button type="submit" class="btn btn-danger">Delete Account</button>
-            </form>
-        </div>
-    </div>
-</div>
+           <div class="tab-pane fade" id="preferences" role="tabpanel">
+               <h4>Preferences</h4>
+               <form action="/settings/preferences" method="POST">
+                   <div class="mb-3">
+                       <label class="form-label">Theme</label>
+                       <select class="form-select" name="theme" id="themeSelect">
+                           <option value="light">Light</option>
+                           <option value="dark" selected>Dark</option>
+                       </select>
+                   </div>
+                   
+               </form>
+           </div>
 
-<script>
-    function toggleTheme() {
-        const theme = document.querySelector('select[name="theme"]').value;
-        document.body.className = theme === 'dark' ? 'bg-dark text-white' : '';
-    }
-</script>
-</body> 
+           <div class="tab-pane fade" id="advanced" role="tabpanel">
+               <h4>Advanced Settings</h4>
+               <p class="text-danger">Warning: These actions cannot be undone.</p>
+               <form action="/settings/delete" method="POST">
+                   <button type="submit" class="btn btn-danger">Delete Account</button>
+               </form>
+           </div>
+
+       </div>
+   </div>
+
+   
+      <script src="/static/darkmode.js"></script>
+
+
+</body>
+</html>

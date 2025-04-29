@@ -14,7 +14,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
-{% include "components/java.html.jinja" %}  
     <style>
         .checked {
             color: orange;
@@ -36,7 +35,7 @@
 
 </head>
 
-<body class="bg-body-tertiary">
+<body class="bg-dark text-white">
     {% include "components/navbar.html.jinja" %}
 
 
@@ -154,17 +153,17 @@
             <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
-                        <div class="me-3">
-                            <img src="https://via.placeholder.com/50" alt="User" class="rounded-circle">
-                        </div>
+                   <!--    <div class="me-3">
+                         <img src="https://via.placeholder.com/50" alt="User" class="rounded-circle">
+                        </div> 
+                        --> 
                         <div>
-                            <h5 class="mb-0">{{ review['username'] }}</h5>
+                            <h5 class="mb-0">{{ reviews_stuff[0]['username'] }}</h5>
                             <small class="text-muted">{{ review['timestamp'] }}</small>
                         </div>
                     </div>
 
-
-                    <div class="stars" style="display: inline-block; position: relative;">
+                      <div class="stars" style="display: inline-block; position: relative;">
                         <div style="
               background: linear-gradient(90deg, gold {{ review['rating'] / 5 * 100 }}%, lightgray {{ review['rating'] / 5 * 100 }}%);
               -webkit-background-clip: text;
@@ -172,7 +171,8 @@
               font-size: 24px;
               letter-spacing: 2px;
             ">
-                            ★★★★★
+                   
+                          
                         </div>
                     </div>
 
@@ -181,6 +181,13 @@
             </div>
         </div>
         {% endfor %}
+
+         {% if current_user.user_id  == customer_id %}
+<form action="/deletereview/{{recipe['id']}} "  method="POST">
+    <button type="submit" class="btn btn-danger">Delete Review</button>
+</form>
+{% endif %}
+ <script src="/static/darkmode.js"></script> 
     </div>
 
     </div>
@@ -221,6 +228,8 @@
         console.error('Flash messages container not found in the DOM.');
         return;
       }
+
+       <script src="/static/darkmode.js"></script> 
   </script>
 </body>
 
