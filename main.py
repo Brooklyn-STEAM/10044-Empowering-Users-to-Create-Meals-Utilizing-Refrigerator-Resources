@@ -155,13 +155,20 @@ def recipe_detail(recipe_id):
 
     cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
     recipe = cursor.fetchone()    
-
-
-    cursor.execute(f""" SELECT * FROM 	`RecipeIngredients` JOIN `Recipe` ON`Recipe`.`id`= `RecipeIngredients`.`recipe_id`
-                    JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
-                    WHERE `recipe_id` = {recipe_id}
-                   ;""")
+    # is the code to get the ingredients for the recipe
+    cursor.execute("""
+        SELECT `Ingredients`.`name`, `RecipeIngredients`.`amount`
+        FROM `RecipeIngredients`
+        JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
+        WHERE `RecipeIngredients`.`recipe_id` = %s;
+    """, (recipe_id,))
     ingredients = cursor.fetchall()
+
+  #  cursor.execute(f""" SELECT * FROM 	`RecipeIngredients` JOIN `Recipe` ON`Recipe`.`id`= `RecipeIngredients`.`recipe_id`
+   #                 JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
+    #                WHERE `recipe_id` = {recipe_id}
+   #                ;""")
+    #ingredients = cursor.fetchall()
 
     
 
@@ -180,7 +187,7 @@ def recipe_detail(recipe_id):
         ORDER BY r.timestamp DESC;      
     """)                         
 
-
+    review_stuff = cursor.fetchall()
 
     if request.method == "POST":      
        
@@ -223,7 +230,7 @@ def recipe_detail(recipe_id):
     print(recipe) 
 
 
-    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients, average_rating = average_rating, recipe_id = recipe_id) 
+    return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients, average_rating = average_rating, recipe_id = recipe_id, review_stuff = review_stuff) 
     
 
 
