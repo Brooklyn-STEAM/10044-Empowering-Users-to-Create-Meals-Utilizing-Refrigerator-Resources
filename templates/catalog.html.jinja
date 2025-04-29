@@ -41,15 +41,18 @@
 
 
 <h1 class="text-center title"  style="text-align:center">User Ingredient Catalog</h1>
-<!--remove all ingredients-->
-<form action="/ingredient/delete_all" method="post">
-  <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove All Ingredients</button>
-</form>
+
 {%if ingredients|length == 0%}
   <p class="title">You have no saved ingredients</p>
 {%else%}
+<div class="text-center">
+<form action="/ingredient/delete_all" method="post">
+  <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove All Ingredients</button>
+</form>
+</div>
   {% for ingredient in ingredients %}
- 
+ <!--remove all ingredients-->
+
 <div class="card" style="width: 18rem;">
 <span class="dot">
   <img src="{{ingredient['image']}}" class="card-img-top" alt="...">
@@ -69,9 +72,7 @@
   
 
 
-    {% endfor %}
-    {%endif%}
-
+    
 
     </button>
 
