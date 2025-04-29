@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
  
   <style> 
   
@@ -86,6 +87,7 @@ form {
     
      <form action="/signup" class="col-lg-6 offset-lg-3" method = "post">  
 
+
   <div class="mb-3">
     <label for="exampleInputPassword1" class="form-label">Email</label> 
     <input type="email" class="form-control" id="exampleInputPassword1" name = "email" required value="{{ request.form.get('email')}}">  
@@ -99,6 +101,7 @@ form {
     <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="last_name" required value="{{ request.form.get('last_name')}}">
   </div>
   <div class="mb-3">
+
     <label for="exampleInputEmail1" class="form-label">Phone</label>
     <input type="int" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="phone" required value="{{ request.form.get('phone')}}">
   </div>  

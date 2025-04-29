@@ -19,6 +19,7 @@ p {
   font-weight: 400;
   font-style: normal;
 }
+
 .quicksand-400 {
   font-family: "Quicksand", sans-serif;
   font-optical-sizing: auto;
@@ -39,6 +40,15 @@ p {
   background-size: auto;
   text-align: center;
   padding-top: 100px;
+}
+
+.btn-primary {
+  background-color:  #54beff;
+  border-color: #deeff8;
+  color: #e6f5ff;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .btn-circle {
@@ -105,8 +115,13 @@ footer {
   font-weight: 400;
   font-style: normal;
 }
+
     
-    body {
+
+
+
+
+body {
       background-color: #f8f9fa;
       font-family: 'Arial', sans-serif;
       width: 100%;
@@ -197,7 +212,7 @@ footer {
       margin-trim: 7;
 
     }
-  
+
 /* Apply the Color Scheme */
 body {
   background-color: var(--alice-blue);
@@ -251,10 +266,24 @@ footer {
   text-align: center;
 
 }
+
+.sub-title {
+  color: var(--medium-slate-blue);
+  font-family: "Quicksand", sans-serif;
+  font-weight: 1000;
+  font-style: initial;
+}
+
 .ingred-pics{
   border-radius: 50%;
   width: 50px;
   height: 50px;
+}
+
+.recip-pics{
+  border-radius: 2%;
+  width: 90%;
+  height: 30%;
 }
 
 .my-container{
@@ -467,4 +496,8 @@ input:checked ~ form{
 
 @media (max-width: 344px) {
   .dot { max-width: 300px; }
+}
+.smaller-label{
+  font-size: 10px;
+
 }

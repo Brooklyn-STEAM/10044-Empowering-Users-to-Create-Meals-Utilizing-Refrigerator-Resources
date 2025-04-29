@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -10,32 +10,23 @@
   <link rel="stylesheet" href="/static/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-<script src="/static/darkmode.js"></script>   
-
+  <link
+    href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 </head>
 
-<body class="bg-dark text-white ">
-<div class="">
-    {% include "components/navbar.html.jinja" %}
+<body class="bg-body-tertiary">
+  {% include "components/navbar.html.jinja" %}
+  <div class="card text-center">
+    <div class="card-title">
+      <h1>Italian Recipes</h1>
+    </div>
+    <div class="card-body">
+      <p class="card-text">Here are some of the best Italian recipes that you can make at home.</p>
+    </div>
   </div>
-  <h1 class="title"> Saved Recipes</h1>
-  {%for message in get_flashed_messages() %}
 
-  <div class="alert alert-primary" role="alert">
-    {{message}}
-  </div>
-
-  {%endfor%}
-
-
-  {%if recipe|length == 0%}
-  <p class="title">You have no saved recipes</p>
-  {%else%}
   <div class="container my-4">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
       {% for recipe in recipe %}
@@ -47,24 +38,25 @@
           <div class="card-body">
             <h5 class="card-title">{{ recipe['name'] }}</h5>
             <p class="card-text">{{ recipe['description'] }}</p>
-            <a href="/recipe/{{recipe['recipe_id']}}" class="btn btn-primary">Go To Recipe</a>
+            <a href="/recipe/{{recipe['id']}}" class="btn btn-primary">Go To Recipe</a>
           </div>
           <div class="card-footer text-body-secondary">
-            <form action="/recipe/{{recipe['recipe_id']}}/delete" method="post">
-              <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove from
-                Saved</button>
-            </form>
+            {{ recipe.date_posted }}
           </div>
         </div>
       </div>
       {% endfor %}
-
     </div>
   </div>
 
-  <script src="/static/darkmode.js"></script>  
-  </body>
+</body>
 
+<footer>
 
-  {%endif%}
+  <p class="position-absolute">© 2025 Pantryfy</p>
 
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</html>
