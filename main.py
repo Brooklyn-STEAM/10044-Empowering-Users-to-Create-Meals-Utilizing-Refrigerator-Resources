@@ -2,9 +2,14 @@ from flask import Flask, render_template, request,redirect,flash,abort,url_for, 
 import pymysql
 from dynaconf import Dynaconf
 import flask_login
+
+from datetime import datetime  
+from flask_login import logout_user
+
 from werkzeug.security import generate_password_hash, check_password_hash 
 from datetime import datetime  
 from flask_login import logout_user
+
 
 
 app = Flask(__name__)
@@ -56,7 +61,10 @@ def connect_db ():
     conn = pymysql.connect(            
         host= "db.steamcenter.tech",
         database= "pantryfy",
-        user = "ldore",  
+
+        user = "rbarry", 
+
+
 
         password = conf.password, 
         autocommit= True,   
@@ -140,7 +148,10 @@ def signup():
             cursor.close()
             conn.close()  
 
+
         return redirect("/signin")      
+
+    return render_template("signup.html.jinja")  
 
     return render_template("signup.html.jinja")  
 
@@ -185,9 +196,12 @@ def recipe_detail(recipe_id):
         JOIN Customer c ON r.customer_id = c.id
         WHERE r.recipe_id = {recipe_id}  
         ORDER BY r.timestamp DESC;      
-    """)                         
+    """)   
+    
+    reviews_stuff = cursor.fetchall()                       
 
     review_stuff = cursor.fetchall()
+
 
     if request.method == "POST":      
        
@@ -224,13 +238,16 @@ def recipe_detail(recipe_id):
     else:
         average_rating = 0  # No ratings yet     
 
+
     cursor.close()
     conn.close() 
 
     print(recipe) 
 
 
+
     return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients, average_rating = average_rating, recipe_id = recipe_id, review_stuff = review_stuff) 
+
     
 
 
@@ -249,11 +266,33 @@ def addreview(recipe_id):
                     VALUES 
                         ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
                         ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
-                """,) 
-        conn.close()      
-        cursor.close()      
+                """,)  
 
-    return redirect(f"/recipe/{recipe_id}")             
+        
+
+        return redirect(f"/recipe/{recipe_id}")
+        
+@app.route('/deletereview/<recipe_id>', methods=['POST', "GET"])
+def delete_review(recipe_id):
+    conn = connect_db()
+    cursor = conn.cursor()
+    customer_id = flask_login.current_user.user_id  
+    cursor.execute("""
+        DELETE FROM Review
+        WHERE recipe_id = %s AND customer_id = %s
+    """, (recipe_id, customer_id))
+
+    conn.commit()
+    conn.close()
+    cursor.close() 
+
+    return redirect(f'/recipe/{recipe_id}')
+
+        
+      
+
+
+@app.route          
 
 @app.route("/")
 def index():
@@ -427,6 +466,7 @@ def delete_account():
    
     cursor.execute("DELETE FROM Customer WHERE id = %s;", (customer_id,))
 
+
     conn.commit()
     cursor.close()
     conn.close()
@@ -473,6 +513,91 @@ def add_ingredient_page():
 #create variable for ingredients selected
 
 
+
+@app.route("/update_settings", methods=["POST", "GET"])
+@flask_login.login_required
+def update_settings():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    customer_id = flask_login.current_user.user_id
+
+    new_username = request.form.get("new_username")
+    new_password = request.form.get("new_password")
+
+    
+    if new_username and new_password:
+        cursor.execute(
+            "UPDATE Customer SET username = %s, password = %s WHERE id = %s",
+            (new_username, new_password, customer_id)
+        )
+    elif new_username:
+        cursor.execute(
+            "UPDATE Customer SET username = %s WHERE id = %s",
+            (new_username, customer_id)
+        )
+    elif new_password:
+        cursor.execute(
+            "UPDATE Customer SET password = %s WHERE id = %s",
+            (new_password, customer_id)
+        )
+
+    conn.commit()
+    flash("Account updated successfully!", "success")
+
+    cursor.close() 
+    conn.close()
+
+    return redirect("/signin") 
+
+
+
+@app.route("/settings/delete", methods=["POST", "GET"])
+@flask_login.login_required
+def delete_account():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    customer_id = flask_login.current_user.user_id
+
+   
+    cursor.execute("DELETE FROM Review WHERE customer_id = %s;", (customer_id,))
+    cursor.execute("DELETE FROM SavedRecipe WHERE customer_id = %s;", (customer_id,))
+    cursor.execute("DELETE FROM CustomerIngredients WHERE customer_id = %s;", (customer_id,))
+
+   
+    cursor.execute("DELETE FROM Customer WHERE id = %s;", (customer_id,))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+   
+    logout_user()
+
+    return redirect("/signup")
+
+@app.route("/settings/preferences", methods =["POST"])
+@flask_login.login_required
+def settings_preference(): 
+    selected_preferences = request.form.get("theme") 
+    return redirect("/", selected_preferences = selected_preferences)
+
+
+
+
+
+
+
+@app.route("/profile")
+def profile_page(): 
+    return render_template("profile.html.jinja") 
+
+@app.route("/addingredient")
+def addingredient_page():
+    return render_template("addingredient.html.jinja")
+
+
 @app.route("/mexican")
 def mexican_recipes():
     conn = connect_db()
@@ -511,6 +636,11 @@ def swiper_page():
     conn=connect_db()
     cursor= conn.cursor()
 
+
+
+    #flash a message when the  the recipe is succesfully  saved
+   
+
     customer_id = flask_login.current_user.user_id
     cursor.execute(f"""
                 SELECT * FROM `Recipe`
@@ -521,6 +651,7 @@ def swiper_page():
                 AND `CustomerIngredients`.`customer_id` = {customer_id};
         """)
     
+
     results = cursor.fetchall()
     """if not results:
         flash("No recipes found for the selected ingredients.")
