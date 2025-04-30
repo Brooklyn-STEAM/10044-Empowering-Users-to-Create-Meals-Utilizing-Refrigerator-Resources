@@ -42,7 +42,7 @@
 
 </head>
 
-<body class="bg-dark text-white">
+<body class=" ">
     {% include "components/navbar.html.jinja" %}
 
 
@@ -171,58 +171,44 @@
     <br> <br> <br>
     <h3 class="card-title text-center mb-4">Customer Reviews</h3>
 
-    <div class="row">
-        {% for review in reviews %}
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2">
-
-                   <!--    <div class="me-3">
-                         <img src="https://via.placeholder.com/50" alt="User" class="rounded-circle">
-                        </div> 
-                        --> 
-                        <div>
-                            <h5 class="mb-0">{{ reviews_stuff[0]['username'] }}</h5>
-
-                        <div class="me-3">
-                            <img src="{{review_stuff[0]['picture']}}" alt="User profile picture" class="img-fluid img-thumbnail rounded-5" style="width: 70px; height: 7 0px">
-                        </div>
-                        <div>
-                            <h5 class="mb-0">{{review_stuff[0]['username']}}</h5>
-
-                            <small class="text-muted">{{ review['timestamp'] }}</small>
-                        </div>
+   <div class="row">
+    {% for review in reviews %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-2">
+                    {% if review_stuff and review_stuff[0] is defined %}
+                    <div class="me-3">
+                        <img src="{{ review_stuff[0]['picture'] }}" alt="User profile picture" class="img-fluid img-thumbnail rounded-5" style="width: 70px; height: 70px">
                     </div>
-
-                      <div class="stars" style="display: inline-block; position: relative;">
-                        <div style="
-              background: linear-gradient(90deg, gold {{ review['rating'] / 5 * 100 }}%, lightgray {{ review['rating'] / 5 * 100 }}%);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              font-size: 24px;
-              letter-spacing: 2px;
-            ">
-                   
-                          
-                        </div>
+                    <div>
+                        <h5 class="mb-0">{{ review_stuff[0]['username'] }}</h5>
+                        <small class="text-muted">{{ review['timestamp'] }}</small>
                     </div>
+                    {% else %}
+                    <div>
+                        <h5 class="mb-0">Anonymous</h5>
+                        <small class="text-muted">{{ review['timestamp'] }}</small>
+                    </div>
+                    {% endif %}
+                </div>
 
-                    <p class="card-text text-muted mt-2">{{ review['review'] }}</p>
+                <div class="stars" style="display: inline-block; position: relative;">
+                    <div style="
+                        background: linear-gradient(90deg, gold {{ review['rating'] / 5 * 100 }}%, lightgray {{ review['rating'] / 5 * 100 }}%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        font-size: 24px;
+                        letter-spacing: 2px;
+                    ">
+                        ★★★★★
+                    </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
-
-         {% if current_user.user_id  == customer_id %}
-<form action="/deletereview/{{recipe['id']}} "  method="POST">
-    <button type="submit" class="btn btn-danger">Delete Review</button>
-</form>
-{% endif %}
- <script src="/static/darkmode.js"></script> 
     </div>
-
-    </div>
+    {% endfor %}
+</div>
 
     </div>
 
@@ -262,7 +248,7 @@
         return;
       }
 
-       <script src="/static/darkmode.js"></script> 
+      
   </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -275,7 +261,7 @@
                 return;
             }
     </script>
-
+ <script src="/static/darkmode.js"></script> 
 </body>
 
 </html>
