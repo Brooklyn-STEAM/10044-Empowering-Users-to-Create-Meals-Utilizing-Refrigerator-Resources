@@ -66,7 +66,6 @@ def connect_db ():
 
 
 
-
         password = conf.password, 
         autocommit= True,   
         cursorclass= pymysql.cursors.DictCursor, 
@@ -161,36 +160,6 @@ def signup():
 def recipe_detail(recipe_id):
 
     conn = connect_db() 
-    cursor = conn.cursor() 
-
-
-    database_connection = connect_db() 
-    database_cursor = database_connection.cursor()     
-
-    # Fetch recipe details
-    database_cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
-    recipe_details = database_cursor.fetchone()    
-
-    # Fetch ingredients with amounts
-    database_cursor.execute(f""" 
-        SELECT `Ingredients`.`name`, `RecipeIngredients`.`amount`
-        FROM `RecipeIngredients` 
-        JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
-        WHERE `RecipeIngredients`.`recipe_id` = %s;
-    """, (recipe_id,))
-    recipe_ingredients = database_cursor.fetchall()
-
-    # Fetch all reviews for the recipe
-    database_cursor.execute(f""" 
-        SELECT * 
-        FROM `Review` 
-        WHERE `recipe_id` = {recipe_id};
-    """)  
-    
-    reviews = cursor.fetchall()        
-
-
-    conn = connect_db() 
     cursor = conn.cursor()     
     
 
@@ -273,7 +242,7 @@ def recipe_detail(recipe_id):
     cursor.close()
     conn.close() 
 
-    # print(recipe) 
+    print(recipe) 
 
 
 
@@ -281,18 +250,6 @@ def recipe_detail(recipe_id):
 
     
 
-
-    # database_cursor.close()
-    # database_connection.close()
-
-    return render_template(
-        "individual_recipe.html.jinja", 
-        recipe=recipe_details, 
-        ingredients=recipe_ingredients,
-        review_stuff= review_stuff,
-        reviews=reviews 
-        
-    )
 
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
@@ -466,7 +423,7 @@ def update_pass():
     new_username = request.form.get("new_username")
     new_password = request.form.get("new_password")
 
-
+    
     if new_username and new_password:
         cursor.execute(
             "UPDATE Customer SET username = %s, password = %s WHERE id = %s",
@@ -501,12 +458,12 @@ def delete_account():
 
     customer_id = flask_login.current_user.user_id
 
-
+   
     cursor.execute("DELETE FROM Review WHERE customer_id = %s;", (customer_id,))
     cursor.execute("DELETE FROM SavedRecipe WHERE customer_id = %s;", (customer_id,))
     cursor.execute("DELETE FROM CustomerIngredients WHERE customer_id = %s;", (customer_id,))
 
-
+   
     cursor.execute("DELETE FROM Customer WHERE id = %s;", (customer_id,))
 
 
@@ -514,12 +471,16 @@ def delete_account():
     cursor.close()
     conn.close()
 
-
+   
     logout_user()
 
     return redirect("/signup")
 
 
+
+@app.route("/profile")
+def profile_page(): 
+    return render_template("profile.html.jinja") 
 
 @app.route("/add_ingredient", methods = ["GET","POST"])
 @flask_login.login_required
@@ -869,7 +830,3 @@ def delete_all_ingredients():
         flash("All ingredients deleted successfully!")
 
     return redirect(url_for('catolog_page'))
-
-
-
-
