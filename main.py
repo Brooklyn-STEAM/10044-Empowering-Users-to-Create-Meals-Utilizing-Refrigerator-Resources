@@ -62,7 +62,7 @@ def connect_db ():
         host= "db.steamcenter.tech",
         database= "pantryfy",
 
-        user = "rbarry", 
+        user = conf.username, 
 
 
 
@@ -414,7 +414,7 @@ def setting_page():
 
 @app.route("/update_settings", methods=["POST", "GET"])
 @flask_login.login_required
-def update_settings():
+def update_pass():
     conn = connect_db()
     cursor = conn.cursor()
 
@@ -449,7 +449,7 @@ def update_settings():
     return redirect("/signin") 
 
 
-
+# this is  duplicate code
 @app.route("/settings/delete", methods=["POST", "GET"])
 @flask_login.login_required
 def delete_account():
@@ -552,30 +552,7 @@ def update_settings():
 
 
 
-@app.route("/settings/delete", methods=["POST", "GET"])
-@flask_login.login_required
-def delete_account():
-    conn = connect_db()
-    cursor = conn.cursor()
 
-    customer_id = flask_login.current_user.user_id
-
-   
-    cursor.execute("DELETE FROM Review WHERE customer_id = %s;", (customer_id,))
-    cursor.execute("DELETE FROM SavedRecipe WHERE customer_id = %s;", (customer_id,))
-    cursor.execute("DELETE FROM CustomerIngredients WHERE customer_id = %s;", (customer_id,))
-
-   
-    cursor.execute("DELETE FROM Customer WHERE id = %s;", (customer_id,))
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-   
-    logout_user()
-
-    return redirect("/signup")
 
 @app.route("/settings/preferences", methods =["POST"])
 @flask_login.login_required
@@ -589,9 +566,7 @@ def settings_preference():
 
 
 
-@app.route("/profile")
-def profile_page(): 
-    return render_template("profile.html.jinja") 
+
 
 @app.route("/addingredient")
 def addingredient_page():
