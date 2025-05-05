@@ -3,6 +3,7 @@
 
 <head>
 
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pantryfy</title>
@@ -21,9 +22,33 @@
 
 <body >
 
-   
+
+   <style>
+       .navbar-purple {
+           background-color: #6f42c1; 
+       }
+
+       .navbar-purple .nav-link, .navbar-purple .navbar-brand {
+           color: white;
+       }
+
+       .navbar-purple .nav-link:hover {
+           color: #d0bfff; 
+       }
+
+      
+       body {
+           transition: background-color 0.3s, color 0.3s;
+       }
+   </style>
+</head>
+
+<body class="bg-dark text-white">
+
+   <nav class="navbar navbar-expand-lg navbar-purple">
        {% include "components/navbar.html.jinja" %}
-   
+   </nav>
+
 
    <div class="container mt-5">
        <h2 class="mb-4">Settings</h2>
@@ -99,12 +124,14 @@
 
        </div>
    </div>
+
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
    
       <script src="/static/darkmode.js"></script>
      
+
 
 
 </body>

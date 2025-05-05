@@ -498,12 +498,14 @@ def add_ingredient_page():
     if request.method == "POST":
         is_checked = request.form.getlist('ing_check')
 
+        
+
 
         for ing_id in is_checked:
             cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
 
             
-            return redirect ("/swiper")
+        return redirect ("/swiper")
             
 
     cursor.close()
@@ -779,20 +781,20 @@ def delete_ingredient(ingredient_id):
     return redirect(url_for('catolog_page'))
 
 
-"""@app.route("/fake")
-def fake_page():
-    customer_id = flask_login.current_user.user_id
-    conn = connect_db()
-    cursor = conn.cursor()
+# @app.route("/fake")
+# def fake_page():
+#     customer_id = flask_login.current_user.user_id
+#     conn = connect_db()
+#     cursor = conn.cursor()
 
 
-    cursor.execute("SELECT * FROM `Ingredients`")
-    ingredients = cursor.fetchall()
+#     cursor.execute("SELECT * FROM `Ingredients`")
+#     ingredients = cursor.fetchall()
 
 
 
-    if request.method == 'POST':
-        is_checked = request.form.getlist('ing_check')
+#     if request.method == 'POST':
+#         is_checked = request.form.getlist('ing_check')
 #         cursor.close()
 #         conn.close
 #     else:
@@ -800,14 +802,14 @@ def fake_page():
 #         flash("Please log in to add ingredients.")
 
 
-        for ing_id in is_checked:
-            cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
-            return redirect ("/swiper")
+#         for ing_id in is_checked:
+#             cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
+#             return redirect ("/swiper")
 
-    cursor.close()
-    conn.close
-    return render_template("fake.html.jinja", ingredients = ingredients  )
-"""
+#     cursor.close()
+#     conn.close
+#     return render_template("fake.html.jinja", ingredients = ingredients)
+
 
 
 
