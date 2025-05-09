@@ -37,7 +37,12 @@
   <h1 class="title"> Check off the Ingredients You Have</h1>
 
 
-
+  <!--remove previous ingredients-->
+  <div class="text-center">
+    <form action="/ingredient/delete_all" method="post">
+      <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove All  Previous Ingredients ?</button>
+    </form>
+  </div>
 
   <form class="container" method="post" action="/add_ingredient">
 

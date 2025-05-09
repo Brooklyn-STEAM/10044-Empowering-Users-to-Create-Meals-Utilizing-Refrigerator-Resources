@@ -603,6 +603,24 @@ def italian_recipes():
     cursor.close()
     conn.close()
     return render_template("italian_recipes.html.jinja", recipe = results)  
+@app.route("/japanese")
+def japanese_recipes():
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Japanese';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("japanese_recipes.html.jinja", recipe = results)
+@app.route("/indian")
+def indian_recipes():
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM `Recipe` WHERE `cuisine` = 'Indian';")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("indian_recipes.html.jinja", recipe = results)
 
 @app.route("/individual_ingrediant")
 def individual_ingrediant_page():
@@ -832,3 +850,24 @@ def delete_all_ingredients():
         flash("All ingredients deleted successfully!")
 
     return redirect(url_for('catolog_page'))
+
+
+@app.route("/recipe/delete_all", methods=['POST'])
+@flask_login.login_required
+def delete_all_recipes():
+    if request.method == "POST":
+        customer_id = flask_login.current_user.user_id
+
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        cursor.execute(f"""
+            DELETE FROM `SavedRecipe`
+            WHERE `customer_id` = {customer_id}
+        """)
+        cursor.close()
+        conn.close()
+
+        flash("All recipes removed successfully!")
+
+    return redirect(url_for('savedrecipes_page'))
