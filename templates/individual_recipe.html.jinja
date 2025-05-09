@@ -26,14 +26,14 @@
         
         }
 
-    </style> 
+
 
         @media (max-width: 375px) {
            .rounded-pill {
                 font-size: 50%;
             }
         }
-        .roun
+        
     </style>
 
 
@@ -81,6 +81,11 @@
             <p class="card-text">
                 {{recipe['description']}}
             </p>
+            <!--save recipe button-->]
+            <form action="/individual/recipe/{{recipe['id']}}/save" method="post">
+                <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-heart"></i>Save Recipe</button>
+            </form>
+            
             <hr>
             <h3>Ingredients</h3>
 

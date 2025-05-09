@@ -15,20 +15,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
   <style>
     .iluv{
-        height: 200px;
+        height: 400px;
     }
 
-    <!-- iphone -->
-    @ media (max-width: 375px) {
+   .lopic{
+        width: 100%;
+    }
+    @media (max-width: 375px) {
         .iluv {
-            height: 40%;
+            height: 200px;
             width: 100%;
         }
      
       }
     }
+    
     
     </style>
 
@@ -47,19 +51,10 @@
 
             <div class="carousel-item active">
 
-                <img src="static/images/carousel_logo.png" class="d-block w-100" alt="..."
-                    style="height:500px; width:100%;">
+                <img src="static/images/carousel_logo.png" class="d-block w-10 iluv lopic" alt="..."
+                    >
             </div>
-            <div class="carousel-item">
-                <img src="static/images/mexican_cuisine.png" class="d-block w-100" alt="..."
-                    style="height:500px; width:100%;">
-            </div>
-            <div class="carousel-item">
-                <img src="static/images/italian_cuisine.png" class="d-block w-100" alt="..."
-                    style="height:500px; width:100%;">
-                <img src="static/images/carousel_logo.png" class="d-block w-100 iluv" alt="..."
-                  >
-            </div>
+
             <div class="carousel-item">
                 <img src="static/images/mexican_cuisine.png" class="d-block w-100 iluv" alt="..."
                     >
@@ -67,15 +62,19 @@
             <div class="carousel-item">
                 <img src="static/images/italian_cuisine.png" class="d-block w-100 iluv" alt="..."
                     >
+             
+            </div>
+           
 
 
             </div>
-        </div>
+        
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
             data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
+
         <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
             data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -161,7 +160,7 @@
                 <div class="card">
                     <img src="static/images/japenese_cuisine.png" class="card-img-top" alt="Japanese Cuisine">
                     <div class="card-body">
-                        <p class="card-text">Japanese</p>
+                        <a href="/japanese" class="card-text">Japanese</a>
                     </div>
                 </div>
             </div>
@@ -171,7 +170,7 @@
                 <div class="card">
                     <img src="static/images/indian_cuisine.png" class="card-img-top" alt="Indian Cuisine">
                     <div class="card-body">
-                        <p class="card-text">Indian</p>
+                        <a href="/indian" class="card-text">Indian</a>
                     </div>
                 </div>
             </div>
@@ -184,13 +183,8 @@
         <p>© 2025 Pantryfy</p>
     </footer>
 
-     <script src="/static/darkmode.js"></script> 
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="/static/darkmode.js"></script> 
 </body>
 
 </html>
