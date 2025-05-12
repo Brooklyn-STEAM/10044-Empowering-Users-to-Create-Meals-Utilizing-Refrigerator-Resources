@@ -871,3 +871,7 @@ def delete_all_recipes():
         flash("All recipes removed successfully!")
 
     return redirect(url_for('savedrecipes_page'))
+
+@app.route("/credits")
+def credits_page():
+    return render_template("credits.html.jinja")
