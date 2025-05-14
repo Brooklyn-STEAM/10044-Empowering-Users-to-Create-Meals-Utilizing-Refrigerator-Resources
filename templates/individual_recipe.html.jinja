@@ -23,8 +23,19 @@
     <style>
         .checked {
             color: orange;
+        
         }
+
+
+
+        @media (max-width: 375px) {
+           .rounded-pill {
+                font-size: 50%;
+            }
+        }
+        
     </style>
+
 
 
 
@@ -42,7 +53,7 @@
 
 </head>
 
-<body class=" ">
+<body class="bg-dark text-white">
     {% include "components/navbar.html.jinja" %}
 
 
@@ -70,6 +81,14 @@
             <p class="card-text">
                 {{recipe['description']}}
             </p>
+            <!--save recipe button-->
+        
+
+            <form action="/individual/recipe/{{recipe['id']}}/save" method="post">
+                <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-heart"></i>Save Recipe</button>
+            </form>
+       
+            
             <hr>
             <h3>Ingredients</h3>
 
@@ -77,15 +96,15 @@
  
             <div class="d-flex flex-wrap justify-content-center">
                 {% for ingredient in ingredients %}
-                 <p class="rounded-pill border" style="margin-left: 2%;"> {{ ingredient['name'] }}: {{ ingredient['amount'] }}</p>
+                 <p class="rounded-pill border" style="margin-left: 2%;"> {{ ingredient['name'] }}: {{ ingredient['amount']| replace('\/','/')}}</p>
                 {% endfor %}
             </div>
 
                 <hr>
                 <h3>Instructions</h3>
                 <div class="card-text text-wrap" style="font-size:40px;">{{recipe['directions'] | replace('\n', '<br>')
-                    |
-                    safe}}
+                    |replace('\/','/')
+                    }}
                 </div>
 
             </div>
@@ -171,44 +190,51 @@
     <br> <br> <br>
     <h3 class="card-title text-center mb-4">Customer Reviews</h3>
 
-   <div class="row">
-    {% for review in reviews %}
-    <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-2">
-                    {% if review_stuff and review_stuff[0] is defined %}
-                    <div class="me-3">
-                        <img src="{{ review_stuff[0]['picture'] }}" alt="User profile picture" class="img-fluid img-thumbnail rounded-5" style="width: 70px; height: 70px">
-                    </div>
-                    <div>
-                        <h5 class="mb-0">{{ review_stuff[0]['username'] }}</h5>
-                        <small class="text-muted">{{ review['timestamp'] }}</small>
-                    </div>
-                    {% else %}
-                    <div>
-                        <h5 class="mb-0">Anonymous</h5>
-                        <small class="text-muted">{{ review['timestamp'] }}</small>
-                    </div>
-                    {% endif %}
-                </div>
+    <div class="row">
+        {% for review in reviews %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
 
-                <div class="stars" style="display: inline-block; position: relative;">
-                    <div style="
-                        background: linear-gradient(90deg, gold {{ review['rating'] / 5 * 100 }}%, lightgray {{ review['rating'] / 5 * 100 }}%);
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
-                        font-size: 24px;
-                        letter-spacing: 2px;
-                    ">
-                        ★★★★★
+                   <!--    <div class="me-3">
+                         <img src="https://via.placeholder.com/50" alt="User" class="rounded-circle">
+                        </div> 
+                        --> 
+                        <div>
+                            <h5 class="mb-0">{{ review_stuff['username'] }}</h5>
+                        <div>
+                            <h5 class="mb-0">{{review_stuff['username']}}</h5>
+
+                            <small class="text-muted">{{ review_stuff['timestamp'] }}</small>
+                        </div>
                     </div>
+
+                      <div class="stars" style="display: inline-block; position: relative;">
+                        <div style="
+              background: linear-gradient(90deg, gold {{ review['rating'] / 5 * 100 }}%, lightgray {{ review['rating'] / 5 * 100 }}%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              font-size: 24px;
+              letter-spacing: 2px;
+            ">
+                   
+                          
+                        </div>
+                    </div>
+
+                    <p class="card-text text-muted mt-2">{{ review['review'] }}</p>
                 </div>
             </div>
         </div>
+        {% endfor %}
+
+
+
+ <script src="/static/darkmode.js"></script> 
     </div>
-    {% endfor %}
-</div>
+
+    </div>
 
     </div>
 
@@ -233,8 +259,6 @@
         <p>© 2025 Pantryfy</p>
     </footer>
 
-    {% include "components/java.html.jinja" %} 
-
     <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -244,9 +268,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
 
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <script src="/static/darkmode.js"></script> 
+
 </body>
 
 </html>
