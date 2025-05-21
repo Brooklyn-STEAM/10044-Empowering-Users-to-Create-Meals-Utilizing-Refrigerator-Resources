@@ -553,32 +553,16 @@ body {
   margin: 5px;
   border-radius: 8px;
   cursor: pointer;
-  background-color: #707070;
+  background-color: #eee8f3;
   transition: background-color 0.3s ease;
 }
 
 .tab.active {
   font-weight: bold;
-  border: 2px solid #000;
-  background-color: #4b3b59;
+  border: 2px solid rgb(67, 33, 123) ;
+  background-color: var(--grape);
   color: white;
 }
-
-/* Tags (Pills)
-/* .tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 30px;
-} */
-
-
-
-
-
-
-
 
 .PillList-item {
   cursor: pointer;
@@ -601,6 +585,8 @@ body {
   text-decoration: none;
 }
 
+
+/* Colors for the ingredients */
 .fruit-pill {
   border-radius: 20px;
   color:#370f08;
@@ -634,21 +620,21 @@ body {
 
 .baking-pill {
   border-radius: 20px;
-  background-color: #fff0f0;
+  background-color: #ecb6d7;
   color:#370f08;
 }
 .baking-pill input[type="checkbox"]:checked + .PillList-label {
-  background-color: #ebda7a;
+  background-color: #c779a9;
   color: #f9f9f9;
 
 }
 .alternative-pill {
   border-radius: 20px;
-  background-color: #91521b;
-  color:#602f4c;
+  background-color: #cb9de5;
+  color:#3e1b52;
 }
 .alternative-pill input[type="checkbox"]:checked + .PillList-label {
-  background-color: #dc9f63 ;
+  background-color: #9e6fba ;
   color: #f9f9f9;
 }
 .dairy-pill {
@@ -662,6 +648,140 @@ body {
   color: #f9f9f9;
 }
 
+.liquor-pill {
+  border-radius: 20px;
+  background-color: #d1c1ac;
+  color:#382b22;
+}
+
+.liquor-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #605c56a5 ;
+  color: #f9f9f9;
+}
+
+.legume-pill {
+  border-radius: 20px;
+  background-color: #bdd6b8;
+  color:#2a3228;
+}
+
+.legume-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #71926b ;
+  color: #f9f9f9;
+}
+
+.meat-pill {
+  border-radius: 20px;
+  background-color: #d6bdb8;
+  color:#271f1b;
+}
+
+.meat-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: rgb(153, 125, 112) ;
+  color: #f9f9f9;
+}
+
+.nut-pill {
+  border-radius: 20px;
+  background-color: #ceb39c;
+  color:#362e25;
+}
+
+.nut-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #a7917d ;
+  color: #f9f9f9;
+}
+
+.oil-pill {
+  border-radius: 20px;
+  background-color: #f3edc1;
+  color:#4c4a3c;
+}
+
+.oil-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #bdb577 ;
+  color: #f9f9f9;
+}
+
+
+/* redo noodles */
+.noodles-pill {
+  border-radius: 20px;
+  background-color: #d3c99c;
+  color:#4c4a3c;
+}
+
+.noodles-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #d0d198 ;
+  color: #f9f9f9;
+}
+/* redo^^ */
+
+.root-pill {
+  border-radius: 20px;
+  background-color: #d5e4ac;
+  color:#3a3e28;
+}
+
+.root-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #a4b278 ;
+  color: #f9f9f9;
+}
+
+.sauce-pill {
+  border-radius: 20px;
+  background-color: #b98bad;
+  color:#2f1e2a;
+}
+
+.sauce-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #74536d ;
+  color: #f9f9f9;
+}
+
+.seafood-pill {
+  border-radius: 20px;
+  background-color: #d28075a5;
+  color:#52312d;
+}
+
+.seafood-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #c6786e ;
+  color: #f9f9f9;
+}
+
+.spice-pill {
+  border-radius: 20px;
+  background-color: #e9e1e1;
+  color:#2d2b2b;
+}
+
+.spice-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #afabaa ;
+  color: #f9f9f9;
+}
+
+.vegetable-pill {
+  border-radius: 20px;
+  background-color: #a3ba9a;
+  color:#273129;
+}
+
+.vegetable-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #487538 ;
+  color: #f9f9f9;
+}
+.vinegar-pill {
+  border-radius: 20px;
+  background-color: #a374669b;
+  color:#2b2320;
+}
+
+.vinegar-pill input[type="checkbox"]:checked + .PillList-label {
+  background-color: #5f4a43 ;
+  color: #f9f9f9;
+}
+/* End of Colors for the ingredients ^^ */
 
 .hidden {
   display: none;

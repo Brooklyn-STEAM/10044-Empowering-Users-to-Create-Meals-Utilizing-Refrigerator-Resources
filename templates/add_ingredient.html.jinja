@@ -30,18 +30,20 @@
     <!-- Form for Submitting Ingredients -->
     <form class="container" method="POST" action="/add_ingredient">
       <!-- Tabs for Categories -->
-      <div class="tabs">
-        {% for category in ['Fruit', 'Herb', 'Grain', 'Alternative', 'Baking', 'Dairy', 'Liquor'] %}
+      <div class="row tabs">
+        <div class="col-12 justify-content-ceter">
+        {% for category in ['Fruit', 'Herb', 'Grain', 'Alternative', 'Baking', 'Dairy', 'Liquor','Legume','Meat','Nut','Oil','Noodles','Root','Sauce','Seafood','Spice','Vegetable','Vinegar'] %}
         <div class="tab {% if loop.first %}active{% endif %} " onclick="switchTab('{{ category }}')"
           id="tab-{{ category }}">
           {{ category }}
         </div>
         {% endfor %}
+        </div>
       </div>
 
       <!-- Tags for Ingredients -->
       <div class="tags">
-        {% for category in ['Fruit', 'Herb', 'Grain', 'Alternative', 'Baking', 'Dairy', 'Liquor'] %}
+        {% for category in ['Fruit', 'Herb', 'Grain', 'Alternative', 'Baking', 'Dairy', 'Liquor','Legume','Meat','Nut','Oil','Noodles','Root','Sauce','Seafood','Spice','Vegetable','Vinegar'] %}
         <div class="tag-list {% if not loop.first %}hidden{% endif %}" id="tags-{{ category }}">
           <h3> {{ category }} </h3>
           {% for ingredient in ingredients %}

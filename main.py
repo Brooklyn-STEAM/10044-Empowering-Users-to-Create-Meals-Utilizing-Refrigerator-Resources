@@ -807,8 +807,6 @@ def add_ingredient():
     cursor.execute("SELECT * FROM `Ingredients`")
     ingredients = cursor.fetchall()
 
-
-
     if request.method == "POST":
         is_checked = request.form.getlist('ing_check')
         print(is_checked)
