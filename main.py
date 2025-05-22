@@ -97,6 +97,7 @@ def signin():
         else:
             user = User(result["id"], result["username"], result["email"], result["first_name"], result["last_name"], result["phone"])  
             flask_login.login_user(user)
+            return redirect("/") 
 
 
             conn.close() 
