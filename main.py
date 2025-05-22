@@ -97,6 +97,7 @@ def signin():
         else:
             user = User(result["id"], result["username"], result["email"], result["first_name"], result["last_name"], result["phone"])  
             flask_login.login_user(user)
+            return redirect("/") 
 
 
             conn.close() 
@@ -807,8 +808,6 @@ def add_ingredient():
 
     cursor.execute("SELECT * FROM `Ingredients`")
     ingredients = cursor.fetchall()
-
-
 
     if request.method == "POST":
         is_checked = request.form.getlist('ing_check')
