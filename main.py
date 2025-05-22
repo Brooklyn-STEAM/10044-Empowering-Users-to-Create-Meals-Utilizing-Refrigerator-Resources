@@ -764,9 +764,10 @@ def delete_ingredient(ingredient_id):
         cursor.close()
         conn.close()
 
+        
         flash("Ingredient deleted successfully!")
-
     return redirect(url_for('catolog_page'))
+ 
 
 
 # @app.route("/fake", methods=["POST", "GET"])
