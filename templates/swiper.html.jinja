@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Swiper Demo</title>
+  <title> Pantryfy Swiper</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="/static/styles.css">
   
@@ -26,12 +26,8 @@ body {
   overflow: hidden;
 }
 
-footer {
-  margin-top: auto;
-  text-align: center;        
-  padding: 10px 0;
-  background-color: #f8f9fa;         
-  color: #6c757d;
+img {
+  pointer-events: none
 }
 </style>        
 </head>                    
@@ -71,6 +67,7 @@ footer {
   <h1 class="text-center title">Find New Recipes For You !!!</h1>
 
   <div class="tinder">
+  
     <div class="tinder--cards">
       {% for recipe in recipe %}
       <div class="tinder--card" data-id="{{ recipe['id'] }}">
@@ -79,6 +76,9 @@ footer {
         <p>{{ recipe['description'] }}</p>
       </div>
       {% endfor %}
+      <div class="tinder--card" data-id="{{ recipe['id'] }}">
+      <p class="text-center">no more recipes to show</p>
+      </div>
     </div>
     <div class="tinder--buttons">
       <button id="nope"><i class="fa fa-remove"></i></button>

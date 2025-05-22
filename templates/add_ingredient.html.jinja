@@ -30,6 +30,7 @@
     <!-- Form for Submitting Ingredients -->
     <form class="container" method="POST" action="/add_ingredient">
       <!-- Tabs for Categories -->
+       <div class="scrollmenu">
       <div class="row tabs">
         <div class="col-12 justify-content-ceter">
         {% for category in ['Fruit', 'Herb', 'Grain', 'Alternative', 'Baking', 'Dairy', 'Liquor','Legume','Meat','Nut','Oil','Noodles','Root','Sauce','Seafood','Spice','Vegetable','Vinegar'] %}
@@ -40,7 +41,7 @@
         {% endfor %}
         </div>
       </div>
-
+</div>
       <!-- Tags for Ingredients -->
       <div class="tags">
         {% for category in ['Fruit', 'Herb', 'Grain', 'Alternative', 'Baking', 'Dairy', 'Liquor','Legume','Meat','Nut','Oil','Noodles','Root','Sauce','Seafood','Spice','Vegetable','Vinegar'] %}
