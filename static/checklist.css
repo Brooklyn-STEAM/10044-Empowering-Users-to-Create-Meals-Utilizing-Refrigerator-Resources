@@ -1,0 +1,175 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+}
+
+.tab.active {
+    font-weight: bold;
+    border: 2px solid #000;
+    background-color: #4b3b59;
+    color: white;
+}
+
+/* Tags (Pills)
+/* .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 30px;
+} */
+
+
+
+
+
+
+
+
+.PillList-item {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+    margin: 0 12px 12px 0;
+    text-transform: capitalize;
+  }
+  
+  .PillList-item input[type="checkbox"] {
+    display: none;
+  }
+
+  .PillList-label {
+    border-radius: 20px;
+    display: block;
+    padding: 7px 28px;
+    text-decoration: none;
+  }
+
+  .fruit-pill {
+    border-radius: 20px;
+    color:#370f08;
+    background-color: #ffe4e1;
+}
+.fruit-pill input[type="checkbox"]:checked + .PillList-label {
+    background-color: #d46268;
+    color: #f9f9f9;
+}
+
+.herb-pill {
+    background-color: #e0f5e0;
+    border-radius: 20px;
+    color:#124312;
+}
+
+.herb-pill input[type="checkbox"]:checked + .PillList-label {
+    background-color: #7bbf7b;
+    color: #f9f9f9;
+}
+
+.grain-pill {
+    border-radius: 20px;
+    background-color: #f8f3d7;
+    color:#60522f;
+}
+.grain-pill input[type="checkbox"]:checked + .PillList-label {
+    background-color: #e1d172;
+    color: #f9f9f9;
+}
+
+.baking-pill {
+    border-radius: 20px;
+    background-color: #fff0f0;
+    color:#370f08;
+}
+.baking-pill input[type="checkbox"]:checked + .PillList-label {
+    background-color: #ebda7a;
+    color: #f9f9f9;
+
+}
+.alternative-pill {
+    border-radius: 20px;
+    background-color: #91521b;
+    color:#602f4c;
+}
+.alternative-pill input[type="checkbox"]:checked + .PillList-label {
+    background-color: #dc9f63 ;
+    color: #f9f9f9;
+}
+.dairy-pill {
+    border-radius: 20px;
+    background-color: #beeafa6f;
+    color:#39545d;
+}
+
+.dairy-pill input[type="checkbox"]:checked + .PillList-label {
+    background-color: #81b4c5 ;
+    color: #f9f9f9;
+}
+
+
+
+
+
+
+
+.hidden {
+    display: none;
+}
+
+/* Footer */
+.footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer .btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+}
