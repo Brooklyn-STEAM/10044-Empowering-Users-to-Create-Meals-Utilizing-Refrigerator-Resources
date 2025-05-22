@@ -12,6 +12,7 @@
   --alice-blue: #eef4fbff;
   --maya-blue: #54beffff;
 }
+
 /* Global Styles */
 html, body {
   height: 100%;
@@ -463,12 +464,57 @@ input:checked ~ form{
   background: #1b1b1b;
 
 } 
+.post {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+} 
 
-/* this is css code for the light mode and dark mode */
+.bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0; 
+}
+/* this is the code for the like and dislike feature  */
+
+
+.like-button, .dislike-button {
+  background-color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+
+}
+.like-button.active, .dislike-button.active {
+  background-color: #ffffff;
+  color: #54beff;
+}
+.count {
+  margin-left: 5px;
+} 
 
 
 
-/* Media Queries (Only Override Necessary Styles) */
+.review-form {
+  padding: 1rem;
+  margin-top: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+  background-color: var(--form-bg); /* uses CSS variable */
+}
+
+
+body.light-mode {
+  --form-bg: #fff;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  --form-bg: #1e1e1e;
+  
+}
+
+
+
+
 @media (max-width: 600px) {
   .dot { max-width: 300px; }
 }
@@ -477,7 +523,7 @@ input:checked ~ form{
   .dot { max-width: 400px; }
 }
 
-/* Media Queries (Only Override Necessary Styles) */
+
 @media (max-width: 600px) {
   .dot { max-width: 300px; }
 }

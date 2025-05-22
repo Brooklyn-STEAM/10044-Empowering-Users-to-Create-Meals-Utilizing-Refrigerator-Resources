@@ -154,15 +154,14 @@ def signup():
 
     return render_template("signup.html.jinja")  
 
-    return render_template("signup.html.jinja")  
 
 @app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
 @flask_login.login_required
 def recipe_detail(recipe_id):
-
+    
     conn = connect_db() 
     cursor = conn.cursor()     
-    
+     
 
 
     cursor.execute(f"SELECT * FROM `Recipe` WHERE `id` = {recipe_id};")
@@ -176,20 +175,25 @@ def recipe_detail(recipe_id):
     """, (recipe_id,))
     ingredients = cursor.fetchall()
 
-  #  cursor.execute(f""" SELECT * FROM 	`RecipeIngredients` JOIN `Recipe` ON`Recipe`.`id`= `RecipeIngredients`.`recipe_id`
-   #                 JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
-    #                WHERE `recipe_id` = {recipe_id}
-   #                ;""")
-    #ingredients = cursor.fetchall()
+    cursor.execute(f""" SELECT * FROM 	`RecipeIngredients` JOIN `Recipe` ON`Recipe`.`id`= `RecipeIngredients`.`recipe_id`
+                   JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
+                   WHERE `recipe_id` = {recipe_id}
+                  ;""")
+    ingredients = cursor.fetchall()
 
-    
+   
 
     cursor.execute(f""" 
         SELECT * FROM Review WHERE `recipe_id` = {recipe_id};
     """)  
 
-    reviews = cursor.fetchall()          
 
+    
+
+    
+
+    reviews = cursor.fetchall()          
+    
 
     cursor.execute(f"""
         SELECT r.rating, r.review, r.timestamp, c.username, c.picture
@@ -199,7 +203,7 @@ def recipe_detail(recipe_id):
         ORDER BY r.timestamp DESC;      
     """)   
     
-    reviews_stuff = cursor.fetchall()                       
+                      
 
     review_stuff = cursor.fetchall()
 
@@ -250,7 +254,15 @@ def recipe_detail(recipe_id):
     return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients, average_rating = average_rating, recipe_id = recipe_id, review_stuff = review_stuff) 
 
     
+@app.route('/comment/<recipe_id>', methods=['POST', 'GET'])
+@flask_login.login_required
+def add_comment(recipe_id):
+    
 
+
+    return redirect(url_for('view_recipe', recipe_id=recipe_id))
+
+      
 
 
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
@@ -268,10 +280,26 @@ def addreview(recipe_id):
                         ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
                         ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
                 """,)  
+        
+        cursor.execute(f"""
+        SELECT r.rating, r.review, r.timestamp, c.username
+        FROM Review r 
+        JOIN Customer c ON r.customer_id = c.id
+        WHERE r.recipe_id = {recipe_id}  
+        ORDER BY r.timestamp DESC;      
+    """)    
+        
+    
 
         
 
-        return redirect(f"/recipe/{recipe_id}")
+        return redirect(f"/recipe/{recipe_id}") 
+    
+
+   
+    
+    
+
         
 @app.route('/deletereview/<recipe_id>', methods=['POST', "GET"])
 def delete_review(recipe_id):
@@ -293,7 +321,7 @@ def delete_review(recipe_id):
       
 
 
-@app.route          
+        
 
 @app.route("/")
 def index():

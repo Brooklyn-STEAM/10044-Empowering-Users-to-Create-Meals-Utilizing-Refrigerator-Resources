@@ -19,9 +19,14 @@ function setTheme(theme) {
         document.body.classList.add('bg-dark', 'text-white');
         document.querySelectorAll('.card, .form-control, .form-select, .tab-pane')
             .forEach(el => el.classList.add('bg-dark', 'text-white'));
+
     } else {
         document.body.classList.remove('bg-dark', 'text-white');
         document.querySelectorAll('.card, .form-control, .form-select, .tab-pane')
             .forEach(el => el.classList.remove( 'bg-dark' ,'text-white'));
     }
 }
+
+
+
+
