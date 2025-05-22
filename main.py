@@ -253,14 +253,14 @@ def recipe_detail(recipe_id):
     return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients, average_rating = average_rating, recipe_id = recipe_id, review_stuff = review_stuff) 
 
     
-@app.route("/comments/<recipe_id>", methods = ["GET", "POST"]) 
-def comments(recipe_id): 
-    conn = connect_db() 
-    cursor = conn.cursor() 
-    if request.method == "POST": 
-        comments = request.form["comment"]
-        customer_id = flask_login.current_user.user_id
-        cursor.execute(f"" )
+@app.route('/comment/<recipe_id>', methods=['POST', 'GET'])
+@flask_login.login_required
+def add_comment(recipe_id):
+    
+
+
+    return redirect(url_for('view_recipe', recipe_id=recipe_id))
+
       
 
 

@@ -13,12 +13,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
         .checked {
@@ -56,13 +59,13 @@
             <h1>{{recipe['name']}}</h1>
             <!-- Average rating display -->
             <div class="average-rating">
-        {% if average_rating > 0 %}
-        <h3>Average Rating: {{ average_rating | round(1) }}</h3>
-        {% else %}
-        <h3>Average Rating: No ratings yet</h3>
-        {% endif %}
-        </div>
-            
+                {% if average_rating > 0 %}
+                <h3>Average Rating: {{ average_rating | round(1) }}</h3>
+                {% else %}
+                <h3>Average Rating: No ratings yet</h3>
+                {% endif %}
+            </div>
+
             <img src="{{recipe['image']}}" class="card-img-top ingred-pics" alt="{{recipe['name']}}"
                 style="height: 200px; width: 200px;">
         </div>
@@ -74,12 +77,13 @@
             <h3>Ingredients</h3>
 
             <div class="card-text text-wrap" style="font-size:40px;">
- 
-            <div class="d-flex flex-wrap justify-content-center">
-                {% for ingredient in ingredients %}
-                 <p class="rounded-pill border" style="margin-left: 2%;"> {{ ingredient['name'] }}: {{ ingredient['amount'] }}</p>
-                {% endfor %}
-            </div>
+
+                <div class="d-flex flex-wrap justify-content-center">
+                    {% for ingredient in ingredients %}
+                    <p class="rounded-pill border" style="margin-left: 2%;"> {{ ingredient['name'] }}: {{
+                        ingredient['amount'] }}</p>
+                    {% endfor %}
+                </div>
 
                 <hr>
                 <h3>Instructions</h3>
@@ -96,7 +100,7 @@
 
 
 
- http://127.0.0.1:5000        <form action="/addreview/{{recipe['id']}} " method="POST,GET" class="my-form my-container">
+        <form action="/addreview/{{recipe['id']}} " method="POST,GET" class="my-form my-container">
             <div class=" my-form">
                 <h2 class="form-header">Rating</h2>
                 <div class="post my-form"></div>
@@ -145,7 +149,7 @@
                             d="M7.948.779a.5.5 0 00-.896 0L5.005 4.926l-4.577.665a.5.5 0 00-.277.853l3.312 3.228-.782 4.559a.5.5 0 00.725.527L7.5 12.605l4.094 2.153a.5.5 0 00.725-.527l-.782-4.56 3.312-3.227a.5.5 0 00-.277-.853l-4.577-.665L7.948.78z"
                             fill="currentColor"></path>
                     </svg></label>
-                <header></header> 
+                <header></header>
             </div>
 
             <div class="textarea">
@@ -159,56 +163,49 @@
 
         </form>
 
-
-
-
     </div>
-
-
-
-
-
     <br> <br> <br>
-    <h3 class="card-title text-center mb-4">Customer Reviews</h3>
 
-     <div class="row">
-   {% for review in reviews %}
-   <div class="col-md-6 col-lg-4 mb-4">
-       <div class="card shadow-sm border-0">
-           <div class="card-body">
-               <div class="d-flex align-items-center mb-2">
-                   {% if review_stuff and review_stuff[0] is defined %}
-           
-                   <div>
-                       <h5 class="mb-0">{{ review['username'] }}</h5>
-                       <small class="text-muted">{{ review['timestamp'] }}</small>
-                        <p class="mb-0">{{ review['review'] }}</p> 
-                   </div>
-                   {% else %}
-                   <div>
-                       <h5 class="mb-0">{{ review['username'] }}</h5>
-                        <h5 class="mb-0">{{ review['review'] }}</h5>
-                       <small class="text-muted">{{ review['timestamp'] }}</small>
-                   </div>
-                   {% endif %}
-               </div>
-               </div>
-                <div class="stars" class="mb-0" style="display: inline-block; position: relative;">
-                    <div style="
+    <div class="row">
+        {% for review in reviews %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="mb-1">{{ review['username'] }}</h5>
+                    <small class="text-muted">{{ review['timestamp'] }}</small>
+
+                  
+                    <div class="stars mt-2 mb-2" style="font-size: 20px;">
+                        <div style="
                         background: linear-gradient(90deg, gold {{ review['rating'] / 5 * 100 }}%, lightgray {{ review['rating'] / 5 * 100 }}%);
                         -webkit-background-clip: text;
                         -webkit-text-fill-color: transparent;
                         font-size: 24px;
                         letter-spacing: 2px;
-                    ">
-                        ★★★★★
+                        display: inline-block;">
+                            ★★★★★
+                        </div>
+                    </div>
+
+                    <p class="card-text">{{ review['review'] }}</p>
+
+                    <!-- Like and Dislike buttons -->
+                    <div class="d-flex align-items-center justify-content-between mt-3">
+                        <button class="like-button btn btn-outline-success btn-sm" onclick="like(this)" data-count="0">
+                            <i class="fa fa-thumbs-up"></i> <span class="count">0</span>
+                        </button>
+                        <button class="dislike-button btn btn-outline-danger btn-sm" onclick="dislike(this)"
+                            data-count="1">
+                            <i class="fa fa-thumbs-down"></i> <span class="count">0</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
+
+    </div>
 
     </div>
 
@@ -233,14 +230,38 @@
         <p>© 2025 Pantryfy</p>
     </footer>
 
-     
+
 
     <!-- Bootstrap JavaScript -->
+   
+  <script>
+ 
+    let likes = localStorage.getItem("likes") || 0;
+    let dislikes = localStorage.getItem("dislikes") || 0;
+
+    document.getElementById("like-count").innerText = likes;
+    document.getElementById("dislike-count").innerText = dislikes;
+
+    function like() {
+      likes++;
+      localStorage.setItem("likes", likes);
+      document.getElementById("like-count").innerText = likes;
+    }
+
+    function dislike() {
+      dislikes++;
+      localStorage.setItem("dislikes", dislikes);
+      document.getElementById("dislike-count").innerText = dislikes;
+    }
+  </script>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
- <script src="/static/darkmode.js"></script> 
+    <script src="/static/darkmode.js"></script>
 </body>
 
 </html>
