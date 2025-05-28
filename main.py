@@ -828,6 +828,7 @@ def delete_ingredient(ingredient_id):
 #     return render_template("fake.html.jinja", ingredients = ingredients)
 
 @app.route("/add_ingredient", methods=["POST", "GET"])
+@flask_login.login_required
 def add_ingredient():
     customer_id = flask_login.current_user.user_id
     conn = connect_db()
