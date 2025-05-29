@@ -845,4 +845,6 @@ body {
   padding: 10px 20px;
 }
 
-/* nd add_ingredient pg */
+.card-hi{
+  min-height: 200px;
+}

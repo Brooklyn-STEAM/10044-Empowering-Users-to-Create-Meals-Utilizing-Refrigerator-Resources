@@ -798,35 +798,6 @@ def delete_ingredient(ingredient_id):
     return redirect(url_for('catolog_page'))
  
 
-
-# @app.route("/fake", methods=["POST", "GET"])
-# def fake_page():
-#     customer_id = flask_login.current_user.user_id
-#     conn = connect_db()
-#     cursor = conn.cursor()
-
-
-#     cursor.execute("SELECT * FROM `Ingredients`")
-#     ingredients = cursor.fetchall()
-
-
-
-#     if request.method == "POST":
-#         is_checked = request.form.getlist('ing_check')
-#         print(is_checked)
-
-#         for ing_id in is_checked:
-#             cursor.execute(f"INSERT INTO `CustomerIngredients` (`customer_id`, `ingredient_id`) VALUES ('{customer_id}','{ing_id}');")
-
-            
-#         return redirect ("/swiper")
-            
-
-#     cursor.close()
-#     conn.close
-
-#     return render_template("fake.html.jinja", ingredients = ingredients)
-
 @app.route("/add_ingredient", methods=["POST", "GET"])
 def add_ingredient():
     customer_id = flask_login.current_user.user_id
@@ -837,7 +808,13 @@ def add_ingredient():
     cursor.execute("SELECT * FROM `Ingredients`")
     ingredients = cursor.fetchall()
 
+    cursor.execute(f"SELECT * FROM `CustomerIngredients` WHERE `customer_id` = '{customer_id}'")
+    past_checked  = cursor.fetchall()
+
     if request.method == "POST":
+        
+        cursor.execute(f"DELETE FROM `CustomerIngredients` WHERE `customer_id` = '{customer_id}'")
+
         is_checked = request.form.getlist('ing_check')
         print(is_checked)
 
@@ -851,7 +828,7 @@ def add_ingredient():
     cursor.close()
     conn.close
 
-    return render_template("add_ingredient.html.jinja", ingredients = ingredients)
+    return render_template("add_ingredient.html.jinja", ingredients = ingredients, past_checked = past_checked)
     
 
 
