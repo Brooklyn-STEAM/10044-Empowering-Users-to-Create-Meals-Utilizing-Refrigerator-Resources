@@ -19,13 +19,16 @@
 
 
 
-<body class="">
+<body>
+
 {% include "components/navbar.html.jinja" %}
   <div class="add-ing-container">
     <div class="header">
       <h2>Select Your Ingredients</h2>
       <p>Choose Ingredients In Your Kitchen Right Now!</p>
     </div>
+
+
 
     <!-- Form for Submitting Ingredients -->
     <form class="container" method="POST" action="/add_ingredient">
@@ -86,7 +89,20 @@
       // Show the tag list for the selected category
       document.getElementById(`tags-${category}`).classList.remove('hidden');
     }
-  </script>
+    </script>
+
+
+<script>
+  
+  window.onload = onPageLoad();
+
+  function onPageLoad() {
+    {% for ingredient in past_checked %}
+    document.getElementById("{{ingredient['ingredient_id']}}").checked = true;
+    {% endfor %}
+  }
+  
+</script>
   <script src="/static/darkmode.js"></script> 
 </body>
 
