@@ -175,11 +175,6 @@ def recipe_detail(recipe_id):
     """, (recipe_id,))
     ingredients = cursor.fetchall()
 
-    cursor.execute(f""" SELECT * FROM 	`RecipeIngredients` JOIN `Recipe` ON`Recipe`.`id`= `RecipeIngredients`.`recipe_id`
-                   JOIN `Ingredients` ON `Ingredients`.`id` = `RecipeIngredients`.`ingredient_id`
-                   WHERE `recipe_id` = {recipe_id}
-                  ;""")
-    ingredients = cursor.fetchall()
 
    
 
