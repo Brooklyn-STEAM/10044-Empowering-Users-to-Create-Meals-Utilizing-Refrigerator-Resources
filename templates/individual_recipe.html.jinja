@@ -103,10 +103,10 @@
  
             <div class="d-flex flex-wrap justify-content-center">
                 {% for ingredient in ingredients %}
-                 <p class="rounded-pill border" style="margin-left: 2%;"> {{ ingredient['name'] }}: {{ ingredient['amount']| replace('\/','/')}}</p>
+                 <p class="rounded-pill border" style="margin-left: 2%;"> {{ingredient['name']}}: {{ ingredient['amount']| replace('\/','/')}}</p>
                 {% endfor %}
             </div>
-
+{{ingredients[0]["name"]}}
                 <hr>
                 <h3>Instructions</h3>
                 <div class="card-text text-wrap" style="font-size:40px;">{{recipe['directions'] | replace('\n', '<br>')
