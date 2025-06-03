@@ -36,6 +36,35 @@
                 font-size: 50%;
             }
         }
+
+       
+        /* Ensure the review section stays white and black in dark mode */
+        .review-section {
+        background-color: white !important; /* Force white background */
+        color: black !important; /* Force black text */
+        padding: 10px;
+        border-radius: 5px;
+        display: inline-block;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for better visibility */
+    }
+
+    .review-section button {
+        color: white; /* Button text color */
+    }
+
+    .review-section #green {
+        background-color: green; /* Green for like button */
+    }
+
+         .review-section #red {
+        background-color: red; /* Red for dislike button */
+    }
+
+    .review-section span {
+        margin-left: 5px;
+        font-weight: bold;
+    }
+    
         
     </style>
 
@@ -117,11 +146,13 @@
 
         </div>
         <br> <br> <br> <br>
+<hr>
+<h1 class="text-center">
+Reviews</h1>
 
+ {% if current_user.is_authenticated %}
 
-
-
-        <form action="/addreview/{{recipe['id']}} " method="POST,GET" class="my-form my-container">
+        <form action="/addreview/{{recipe['id']}} " method="POST" class="my-form my-container">
             <div class=" my-form">
                 <h2 class="form-header">Rating</h2>
                 <div class="post my-form"></div>
@@ -177,7 +208,7 @@
                 <textarea name="review" id="review" cols="30" rows="4" placeholder="Did you like the recipe..."
                     required></textarea>
             </div>
-
+            
             <div class="btn">
                 <button type="submit">Post</button>
             </div>
@@ -186,16 +217,23 @@
 
     </div>
     <br> <br> <br>
+{%else%}
+        <div class="alert alert-warning" role="alert">
+            Please <a href="/login" class="alert-link">log in</a> to post a review.
+        </div>
+        {% endif %}
 
 
     <div class="row">
-        {% for review in reviews %}
+        {% for review in review_stuff %}  
+        
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card shadow-sm border-0">
+            <div class="review-section">
                 <div class="card-body">
                     <h5 class="mb-1">{{ review['username'] }}</h5>
                     <small class="text-muted">{{ review['timestamp'] }}</small>
-
+            
                   
                     <div class="stars mt-2 mb-2" style="font-size: 20px;">
                         <div style="
@@ -207,26 +245,37 @@
                         display: inline-block;">
                             ★★★★★
                         </div>
+                        
                     </div>
-
+                   
                     <p class="card-text">{{ review['review'] }}</p>
 
                     <!-- Like and Dislike buttons -->
-                    <div class="d-flex align-items-center justify-content-between mt-3">
-                        <button class="like-button btn btn-outline-success btn-sm" onclick="like(this)" data-count="0">
-                            <i class="fa fa-thumbs-up"></i> <span class="count">0</span>
-                        </button>
-                        <button class="dislike-button btn btn-outline-danger btn-sm" onclick="dislike(this)"
-                            data-count="1">
-                            <i class="fa fa-thumbs-down"></i> <span class="count">0</span>
-                        </button>
+                 <div class="d-flex align-items-center justify-content-between mt-3">
+                    
+                    <button class="btn" id="green"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
+                    <button class="btn" id="red"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
+                    </div>
+                    <p>Likes: <span id="likeCountDisplay">0</span></p>
+                    <p>Dislikes: <span id="dislikeCountDisplay">0</span></p>
+                    </div>
+              <!--     <div id="post-1" class = "post"></div>
+                       <button onclick="likePost('post-1')" id="like-post-1"><i class="fa fa-thumbs-up"></i> <span id="like-count-post-1">0</span></button>
+                       <button onclick="dislikePost('post-1')" id = "dislike-post-1"><i class="fa fa-thumbs-down"></i> <span id="dislike-count-post-1">0</span></button>
 
                     </div>
+                    </div> 
+                    --> 
+                   
 
-                    <p class="card-text text-muted mt-2">{{ review['review'] }}</p>
+                   
+
                 </div>
             </div>
         </div>
+        </div>
+        
+    
         {% endfor %}
 
 
@@ -242,11 +291,65 @@
 
     </div>
 
+<script>
+var btn1 = document.querySelector('#green'); // Like button
+var btn2 = document.querySelector('#red');   // Dislike button
 
+// Initialize counts from localStorage or set to 0 if not present
+let likeCount = parseInt(localStorage.getItem("likeCount")) || 0;
+let dislikeCount = parseInt(localStorage.getItem("dislikeCount")) || 0;
 
+// Update the displayed counts
+function updateCounts() {
+    document.getElementById('likeCountDisplay').textContent = likeCount;
+    document.getElementById('dislikeCountDisplay').textContent = dislikeCount;
+}
 
+// Add event listeners for buttons
+btn1.addEventListener('click', function() {
+    if (localStorage.getItem("reviewed") === "dislike") {
+        // If previously disliked, remove dislike and increment like
+        btn2.classList.remove('red');
+        dislikeCount--;
+        localStorage.setItem("dislikeCount", dislikeCount);
+    }
+    if (localStorage.getItem("reviewed") !== "like") {
+        // If not already liked, increment like
+        this.classList.add('green');
+        likeCount++;
+        localStorage.setItem("likeCount", likeCount);
+        localStorage.setItem("reviewed", "like"); // Mark as reviewed
+        updateCounts();
+    }
+});
+btn2.addEventListener('click', function() {
+    if (localStorage.getItem("reviewed") === "like") {
+        // If previously liked, remove like and increment dislike
+        btn1.classList.remove('green');
+        likeCount--;
+        localStorage.setItem("likeCount", likeCount);
+    }
+    if (localStorage.getItem("reviewed") !== "dislike") {
+        // If not already disliked, increment dislike
+        this.classList.add('red');
+        dislikeCount++;
+        localStorage.setItem("dislikeCount", dislikeCount);
+        localStorage.setItem("reviewed", "dislike"); // Mark as reviewed
+        updateCounts();
+    }
+});
 
-
+// Restore button state and counts on page load
+window.onload = function () {
+    if (localStorage.getItem("reviewed") === "like") {
+        btn1.classList.add('green');
+    } else if (localStorage.getItem("reviewed") === "dislike") {
+        btn2.classList.add('red');
+    }
+    updateCounts();
+};
+</script>
+     <script src="/static/darkmode.js"></script> 
 
     <br> <br>
 
@@ -259,49 +362,7 @@
         <p>© 2025 Pantryfy</p>
     </footer>
 
-    <!-- Bootstrap JavaScript -->
-   
-  <script>
- 
-    let likes = localStorage.getItem("likes") || 0;
-    let dislikes = localStorage.getItem("dislikes") || 0;
-
-    document.getElementById("like-count").innerText = likes;
-    document.getElementById("dislike-count").innerText = dislikes;
-
-    function like() {
-      likes++;
-      localStorage.setItem("likes", likes);
-      document.getElementById("like-count").innerText = likes;
-    }
-
-    function dislike() {
-      dislikes++;
-      localStorage.setItem("dislikes", dislikes);
-      document.getElementById("dislike-count").innerText = dislikes;
-    }
-  </script>
-
-
-
+    <!-- Bootstrap JavaScript-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-    <script src="/static/darkmode.js"></script> 
-
-
-</body>
-
-</html>
-</body>
-
-</html>
