@@ -225,12 +225,14 @@ Reviews</h1>
 
 
     <div class="row">
+    <!-- Make the review section responsive -->
         {% for review in review_stuff %}  
         
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card shadow-sm border-0">
             <div class="review-section">
                 <div class="card-body">
+
                     <h5 class="mb-1">{{ review['username'] }}</h5>
                     <small class="text-muted">{{ review['timestamp'] }}</small>
             
@@ -256,6 +258,7 @@ Reviews</h1>
                     <button class="btn" id="green"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
                     <button class="btn" id="red"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
                     </div>
+                    <!-- Display like and dislike counts -->
                     <p>Likes: <span id="likeCountDisplay">0</span></p>
                     <p>Dislikes: <span id="dislikeCountDisplay">0</span></p>
                     </div>
