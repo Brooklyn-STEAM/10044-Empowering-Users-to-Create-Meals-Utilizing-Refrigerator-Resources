@@ -513,6 +513,35 @@ body.dark-mode {
 }
 
 
+.liked {
+    color: blue;
+}
+
+.disliked{
+    color: red;
+}
+
+button{
+  cursor: pointer;
+  outline: 0;
+  color: #AAA;
+
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.green{
+  color: green;
+}
+
+.red{
+  color: red;
+}
+
+
+
 
 
 @media (max-width: 600px) {
