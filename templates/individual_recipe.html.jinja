@@ -117,9 +117,11 @@
 
         </div>
         <br> <br> <br> <br>
+<hr>
+<h1 class="text-center">
+Reviews</h1>
 
-
-
+ {% if current_user.is_authenticated %}
 
         <form action="/addreview/{{recipe['id']}} " method="POST,GET" class="my-form my-container">
             <div class=" my-form">
@@ -186,6 +188,11 @@
 
     </div>
     <br> <br> <br>
+{%else%}
+        <div class="alert alert-warning" role="alert">
+            Please <a href="/login" class="alert-link">log in</a> to post a review.
+        </div>
+        {% endif %}
 
 
     <div class="row">

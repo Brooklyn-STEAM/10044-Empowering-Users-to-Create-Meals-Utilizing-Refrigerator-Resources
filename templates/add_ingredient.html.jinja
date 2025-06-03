@@ -26,7 +26,13 @@
     <div class="header">
       <h2>Select Your Ingredients</h2>
       <p>Choose Ingredients In Your Kitchen Right Now!</p>
-    </div>
+      
+    </div>  <!--remove previous ingredients-->
+  <div class="text-center">
+    <form action="/ingredient/delete_all" method="post">
+      <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-trash"></i>Remove All  Previous Ingredients ?</button>
+    </form>
+  </div>
 
 
 
