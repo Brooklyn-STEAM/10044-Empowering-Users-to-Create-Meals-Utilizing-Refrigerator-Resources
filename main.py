@@ -203,29 +203,6 @@ def recipe_detail(recipe_id):
     review_stuff = cursor.fetchall()
     for x in review_stuff:
         print(x)
-
-
-    if request.method == "POST":      
-       # Check if the user has already submitted a review
-        customer_id = flask_login.current_user.user_id
-        cursor.execute(f"""SELECT * FROM Review WHERE recipe_id = '{recipe_id}' AND customer_id = '{customer_id}';""")
-        existing_review = cursor.fetchone()            
-
-        if existing_review:
-            flash("You have already submitted a review for this product.", "error")
-        else:
-            rating = request.form["rating"]
-            review = request.form["review"] 
-            timestamp = datetime.now() 
-            
-            cursor.execute(f"""       
-                INSERT INTO Review (recipe_id, customer_id, rating, review, timestamp)
-                VALUES ('{recipe_id}', '{customer_id}', '{rating}', '{review}', '{timestamp}');
-            """)         
-            conn.commit()      
-            
-            flash("Your review has been submitted!", "success")
-            return redirect(f"/recipe/{recipe_id}")
         
     cursor.execute(f"""
         SELECT rating 
@@ -245,7 +222,6 @@ def recipe_detail(recipe_id):
     cursor.close()
     conn.close() 
 
-    print(recipe) 
 
 
 
@@ -266,34 +242,20 @@ def addreview(recipe_id):
         review = request.form["review"] 
         timestamp = datetime.now() 
         customer_id = flask_login.current_user.user_id 
-        # makes sure that these aspects are displayed on the review page. 
-        cursor.execute(f""" 
-                    INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`)
-                    VALUES 
-                        ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')    
-                        ON DUPLICATE KEY UPDATE `review`= '{review}', rating = '{rating}';   
-                """,)  
-        
-        
-    # Commit the changes to the database
-    cursor.execute("""
-    SELECT r.rating, r.review, r.timestamp, c.username
-    FROM Review r
-    JOIN Customer c ON r.customer_id = c.username
-    WHERE r.recipe_id = %s
-    ORDER BY r.timestamp DESC;
-""", (recipe_id,)) 
 
+        cursor.execute(f"""
+                       INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`) 
+                       VALUES ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')     
+                       ON DUPLICATE KEY UPDATE `review`= '{review}', `rating` = '{rating}'; 
+                       """)
         
-    
 
-        
+        cursor.close()
+        conn.close() 
 
     return redirect(f"/recipe/{recipe_id}") 
     
 
-   
-    
     
 
 # Delete a review from a recipe 
