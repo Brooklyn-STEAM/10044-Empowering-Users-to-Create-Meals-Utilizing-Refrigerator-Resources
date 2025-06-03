@@ -189,7 +189,7 @@ def recipe_detail(recipe_id):
 
     reviews = cursor.fetchall()          
     
-
+# Get reviews for the recipe 
     cursor.execute(f"""
         SELECT r.rating, r.review, r.timestamp, c.username, c.picture
         FROM Review r 
@@ -199,20 +199,22 @@ def recipe_detail(recipe_id):
     """)   
     
                       
-
+     # Get reviews for the recipe 
     review_stuff = cursor.fetchall()
-
+    for x in review_stuff:
+        print(x)
         
     cursor.execute(f"""
         SELECT rating 
          FROM `Review` 
         WHERE `recipe_id` = {recipe_id};
      """)
+    
     ratings = cursor.fetchall()        
-
+    # Calculate the average rating
     if ratings:
         total_ratings = sum(rating['rating'] for rating in ratings)
-        average_rating = total_ratings / len(ratings)
+        average_rating = total_ratings / len(ratings) 
     else:
         average_rating = 0  # No ratings yet     
 
@@ -226,17 +228,11 @@ def recipe_detail(recipe_id):
     return render_template("individual_recipe.html.jinja", recipe = recipe, reviews = reviews, ingredients = ingredients, average_rating = average_rating, recipe_id = recipe_id, review_stuff = review_stuff) 
 
     
-@app.route('/comment/<recipe_id>', methods=['POST', 'GET'])
-@flask_login.login_required
-def add_comment(recipe_id):
-    
 
-
-    return redirect(url_for('view_recipe', recipe_id=recipe_id))
 
       
 
-
+# Add a review to a recipe
 @app.route("/addreview/<recipe_id>", methods =["GET", "POST"])
 def addreview(recipe_id): 
     conn = connect_db() 
@@ -246,6 +242,7 @@ def addreview(recipe_id):
         review = request.form["review"] 
         timestamp = datetime.now() 
         customer_id = flask_login.current_user.user_id 
+
         cursor.execute(f"""
                        INSERT INTO `Review` (`recipe_id`, `customer_id`, `rating`, `review`, `timestamp`) 
                        VALUES ('{recipe_id}', '{customer_id}', '{rating}', '{review}','{timestamp}')     
@@ -261,7 +258,7 @@ def addreview(recipe_id):
 
     
 
-        
+# Delete a review from a recipe 
 @app.route('/deletereview/<recipe_id>', methods=['POST', "GET"])
 def delete_review(recipe_id):
     conn = connect_db()
@@ -277,6 +274,7 @@ def delete_review(recipe_id):
     cursor.close() 
 
     return redirect(f'/recipe/{recipe_id}')
+
 
         
       
