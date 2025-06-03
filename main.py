@@ -156,7 +156,7 @@ def signup():
 
 
 @app.route("/recipe/<recipe_id>", methods=["GET", "POST"])
-@flask_login.login_required
+
 def recipe_detail(recipe_id):
     
     conn = connect_db() 
