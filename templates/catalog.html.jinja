@@ -40,7 +40,13 @@
 <h1 class="text-center title"  style="text-align:center">User Ingredient Catalog</h1>
 
 {%if ingredients|length == 0%}
-  <p class="title">You have no saved ingredients</p>
+  <!--large icon -->
+ <p class="title display-3">You have no saved ingredients</p> 
+ <p class="text-center display-1 title" > ¯\_(ツ)_/¯ </p> 
+
+  <br>
+  <p class="text-center display-6">You can add recipes to your ingredients by filling out the form on the "Add Ingredient" page. Fill it out <a href="/add_ingredient">here</a></p>
+  <br><br><br> <br><br><br> <br><br><br>
 {%else%}
 <div class="text-center">
 <form action="/ingredient/delete_all" method="post">
