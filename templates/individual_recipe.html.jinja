@@ -26,46 +26,50 @@
     <style>
         .checked {
             color: orange;
-        
+
         }
 
 
 
         @media (max-width: 375px) {
-           .rounded-pill {
+            .rounded-pill {
                 font-size: 50%;
             }
         }
 
-       
+
         /* Ensure the review section stays white and black in dark mode */
         .review-section {
-        background-color: white !important; /* Force white background */
-        color: black !important; /* Force black text */
-        padding: 10px;
-        border-radius: 5px;
-        display: inline-block;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for better visibility */
-    }
+            background-color: white !important;
+            /* Force white background */
+            color: black !important;
+            /* Force black text */
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            /* Optional: Add a subtle shadow for better visibility */
+        }
 
-    .review-section button {
-        color: white; /* Button text color */
-    }
+        .review-section button {
+            color: white;
+            /* Button text color */
+        }
 
-    .review-section #green {
-        background-color: green; /* Green for like button */
-    }
+        .review-section #green {
+            background-color: green;
+            /* Green for like button */
+        }
 
-         .review-section #red {
-        background-color: red; /* Red for dislike button */
-    }
+        .review-section #red {
+            background-color: red;
+            /* Red for dislike button */
+        }
 
-    .review-section span {
-        margin-left: 5px;
-        font-weight: bold;
-    }
-    
-        
+        .review-section span {
+            margin-left: 5px;
+            font-weight: bold;
+        }
     </style>
 
 
@@ -116,25 +120,26 @@
                 {{recipe['description']}}
             </p>
             <!--save recipe button-->
-        
+
 
             <form action="/individual/recipe/{{recipe['id']}}/save" method="post">
                 <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-heart"></i>Save Recipe</button>
             </form>
-       
-            
+
+
             <hr>
             <h3>Ingredients</h3>
 
             <div class="card-text text-wrap" style="font-size:40px;">
 
 
- 
-            <div class="d-flex flex-wrap justify-content-center">
-                {% for ingredient in ingredients %}
-                 <p class="rounded-pill border" style="margin-left: 2%;"> {{ingredient['name']}}: {{ ingredient['amount']| replace('\/','/')}}</p>
-                {% endfor %}
-            </div>
+
+                <div class="d-flex flex-wrap justify-content-center">
+                    {% for ingredient in ingredients %}
+                    <p class="rounded-pill border" style="margin-left: 2%;"> {{ingredient['name']}}: {{
+                        ingredient['amount']| replace('\/','/')}}</p>
+                    {% endfor %}
+                </div>
                 <hr>
                 <h3>Instructions</h3>
                 <div class="card-text text-wrap" style="font-size:40px;">{{recipe['directions'] | replace('\n', '<br>')
@@ -146,11 +151,11 @@
 
         </div>
         <br> <br> <br> <br>
-<hr>
-<h1 class="text-center">
-Reviews</h1>
+        <hr>
+        <h1 class="text-center">
+            Reviews</h1>
 
- {% if current_user.is_authenticated %}
+        {% if current_user.is_authenticated %}
 
         <form action="/addreview/{{recipe['id']}} " method="POST" class="my-form my-container">
             <div class=" my-form">
@@ -208,7 +213,7 @@ Reviews</h1>
                 <textarea name="review" id="review" cols="30" rows="4" placeholder="Did you like the recipe..."
                     required></textarea>
             </div>
-            
+
             <div class="btn">
                 <button type="submit">Post</button>
             </div>
@@ -217,66 +222,71 @@ Reviews</h1>
 
     </div>
     <br> <br> <br>
-{%else%}
-        <div class="alert alert-warning" role="alert">
-            Please <a href="/login" class="alert-link">log in</a> to post a review.
-        </div>
-        {% endif %}
+    {%else%}
+    <div class="alert alert-warning" role="alert">
+        Please <a href="/login" class="alert-link">log in</a> to post a review.
+    </div>
+    {% endif %}
 
 
     <div class="row">
-        {% for review in review_stuff %}  
-        
+        {% for review in review_stuff %}
+
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card shadow-sm border-0">
-            <div class="review-section">
-                <div class="card-body">
-                    <h5 class="mb-1">{{ review['username'] }}</h5>
-                    <small class="text-muted">{{ review['timestamp'] }}</small>
-            
-                  
-                    <div class="stars mt-2 mb-2" style="font-size: 20px;">
-                        <div style="
+                <div class="review-section">
+                    <div class="card-body">
+                        <h5 class="mb-1">{{ review['username'] }}</h5>
+                        <small class="text-muted">{{ review['timestamp'] }}</small>
+
+
+                        <div class="stars mt-2 mb-2">
+                            <div style="
                         background: linear-gradient(90deg, gold {{ review['rating'] / 5 * 100 }}%, lightgray {{ review['rating'] / 5 * 100 }}%);
                         -webkit-background-clip: text;
                         -webkit-text-fill-color: transparent;
                         font-size: 24px;
                         letter-spacing: 2px;
                         display: inline-block;">
-                            ★★★★★
-                        </div>
-                        
-                    </div>
-                   
-                    <p class="card-text">{{ review['review'] }}</p>
+                                ★★★★★
+                            </div>
 
-                    <!-- Like and Dislike buttons -->
-                 <div class="d-flex align-items-center justify-content-between mt-3">
-                    
-                    <button class="btn" id="green"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
-                    <button class="btn" id="red"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
+                        </div>
+
+                        <p class="card-text">{{ review['review'] }}</p>
+
+                        <!-- Like and Dislike buttons -->
+                        <div class="d-flex align-items-center justify-content-between mt-3">
+
+                            <button class="btn" id="green"><i class="fa fa-thumbs-up fa-lg"
+                                    aria-hidden="true"></i></button>
+                            <p>Likes: <span id="likeCountDisplay">0</span></p>
+                            <button class="btn" id="red"><i class="fa fa-thumbs-down fa-lg"
+                                    aria-hidden="true"></i></button>
+                            <p>Dislikes: <span id="dislikeCountDisplay">0</span></p>
+
+
+
+                        </div>
                     </div>
-                    <p>Likes: <span id="likeCountDisplay">0</span></p>
-                    <p>Dislikes: <span id="dislikeCountDisplay">0</span></p>
-                    </div>
-              <!--     <div id="post-1" class = "post"></div>
+                    <!--     <div id="post-1" class = "post"></div>
                        <button onclick="likePost('post-1')" id="like-post-1"><i class="fa fa-thumbs-up"></i> <span id="like-count-post-1">0</span></button>
                        <button onclick="dislikePost('post-1')" id = "dislike-post-1"><i class="fa fa-thumbs-down"></i> <span id="dislike-count-post-1">0</span></button>
 
                     </div>
                     </div> 
-                    --> 
-                   
+                    -->
 
-                   
+
+
 
                 </div>
             </div>
         </div>
-        </div>
-        
-    
         {% endfor %}
+    </div>
+
+
 
 
 
@@ -291,65 +301,65 @@ Reviews</h1>
 
     </div>
 
-<script>
-var btn1 = document.querySelector('#green'); // Like button
-var btn2 = document.querySelector('#red');   // Dislike button
+    <script>
+        var btn1 = document.querySelector('#green'); // Like button
+        var btn2 = document.querySelector('#red');   // Dislike button
 
-// Initialize counts from localStorage or set to 0 if not present
-let likeCount = parseInt(localStorage.getItem("likeCount")) || 0;
-let dislikeCount = parseInt(localStorage.getItem("dislikeCount")) || 0;
+        // Initialize counts from localStorage or set to 0 if not present
+        let likeCount = parseInt(localStorage.getItem("likeCount")) || 0;
+        let dislikeCount = parseInt(localStorage.getItem("dislikeCount")) || 0;
 
-// Update the displayed counts
-function updateCounts() {
-    document.getElementById('likeCountDisplay').textContent = likeCount;
-    document.getElementById('dislikeCountDisplay').textContent = dislikeCount;
-}
+        // Update the displayed counts
+        function updateCounts() {
+            document.getElementById('likeCountDisplay').textContent = likeCount;
+            document.getElementById('dislikeCountDisplay').textContent = dislikeCount;
+        }
 
-// Add event listeners for buttons
-btn1.addEventListener('click', function() {
-    if (localStorage.getItem("reviewed") === "dislike") {
-        // If previously disliked, remove dislike and increment like
-        btn2.classList.remove('red');
-        dislikeCount--;
-        localStorage.setItem("dislikeCount", dislikeCount);
-    }
-    if (localStorage.getItem("reviewed") !== "like") {
-        // If not already liked, increment like
-        this.classList.add('green');
-        likeCount++;
-        localStorage.setItem("likeCount", likeCount);
-        localStorage.setItem("reviewed", "like"); // Mark as reviewed
-        updateCounts();
-    }
-});
-btn2.addEventListener('click', function() {
-    if (localStorage.getItem("reviewed") === "like") {
-        // If previously liked, remove like and increment dislike
-        btn1.classList.remove('green');
-        likeCount--;
-        localStorage.setItem("likeCount", likeCount);
-    }
-    if (localStorage.getItem("reviewed") !== "dislike") {
-        // If not already disliked, increment dislike
-        this.classList.add('red');
-        dislikeCount++;
-        localStorage.setItem("dislikeCount", dislikeCount);
-        localStorage.setItem("reviewed", "dislike"); // Mark as reviewed
-        updateCounts();
-    }
-});
+        // Add event listeners for buttons
+        btn1.addEventListener('click', function () {
+            if (localStorage.getItem("reviewed") === "dislike") {
+                // If previously disliked, remove dislike and increment like
+                btn2.classList.remove('red');
+                dislikeCount--;
+                localStorage.setItem("dislikeCount", dislikeCount);
+            }
+            if (localStorage.getItem("reviewed") !== "like") {
+                // If not already liked, increment like
+                this.classList.add('green');
+                likeCount++;
+                localStorage.setItem("likeCount", likeCount);
+                localStorage.setItem("reviewed", "like"); // Mark as reviewed
+                updateCounts();
+            }
+        });
+        btn2.addEventListener('click', function () {
+            if (localStorage.getItem("reviewed") === "like") {
+                // If previously liked, remove like and increment dislike
+                btn1.classList.remove('green');
+                likeCount--;
+                localStorage.setItem("likeCount", likeCount);
+            }
+            if (localStorage.getItem("reviewed") !== "dislike") {
+                // If not already disliked, increment dislike
+                this.classList.add('red');
+                dislikeCount++;
+                localStorage.setItem("dislikeCount", dislikeCount);
+                localStorage.setItem("reviewed", "dislike"); // Mark as reviewed
+                updateCounts();
+            }
+        });
 
-// Restore button state and counts on page load
-window.onload = function () {
-    if (localStorage.getItem("reviewed") === "like") {
-        btn1.classList.add('green');
-    } else if (localStorage.getItem("reviewed") === "dislike") {
-        btn2.classList.add('red');
-    }
-    updateCounts();
-};
-</script>
-     <script src="/static/darkmode.js"></script> 
+        // Restore button state and counts on page load
+        window.onload = function () {
+            if (localStorage.getItem("reviewed") === "like") {
+                btn1.classList.add('green');
+            } else if (localStorage.getItem("reviewed") === "dislike") {
+                btn2.classList.add('red');
+            }
+            updateCounts();
+        };
+    </script>
+    <script src="/static/darkmode.js"></script>
 
     <br> <br>
 
