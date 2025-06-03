@@ -128,7 +128,7 @@ def signup():
         confirm_password = request.form["confirm_password"]
         
 
-
+        # Validate the form data 
         if password != confirm_password:
             flash("Password does not match the confirmation.")
             return render_template("signup.html.jinja")
@@ -137,6 +137,7 @@ def signup():
         cursor = conn.cursor() 
         
         try:
+            # Insert the new user into the database
             cursor.execute(f"""
                 INSERT INTO `Customer` (`username`, `phone`, `password`, `first_name`, `last_name`, `email`)
                 VALUES ('{username}', '{phone}', '{password}', '{first_name}','{last_name}', '{email}', );
@@ -264,6 +265,7 @@ def delete_review(recipe_id):
     conn = connect_db()
     cursor = conn.cursor()
     customer_id = flask_login.current_user.user_id  
+    # Check if the user is authenticated
     cursor.execute("""
         DELETE FROM Review
         WHERE recipe_id = %s AND customer_id = %s
@@ -411,18 +413,21 @@ def update_pass():
     new_username = request.form.get("new_username")
     new_password = request.form.get("new_password")
 
-    
+    # Check if both new_username and new_password are provided
     if new_username and new_password:
+        # Update both username and password
         cursor.execute(
             "UPDATE Customer SET username = %s, password = %s WHERE id = %s",
             (new_username, new_password, customer_id)
         )
     elif new_username:
+        # Update only username
         cursor.execute(
             "UPDATE Customer SET username = %s WHERE id = %s",
             (new_username, customer_id)
         )
     elif new_password:
+        # Update only password
         cursor.execute(
             "UPDATE Customer SET password = %s WHERE id = %s",
             (new_password, customer_id)
@@ -446,7 +451,7 @@ def delete_account():
 
     customer_id = flask_login.current_user.user_id
 
-   
+   # Delete all related data for the customer
     cursor.execute("DELETE FROM Review WHERE customer_id = %s;", (customer_id,))
     cursor.execute("DELETE FROM SavedRecipe WHERE customer_id = %s;", (customer_id,))
     cursor.execute("DELETE FROM CustomerIngredients WHERE customer_id = %s;", (customer_id,))
@@ -487,6 +492,8 @@ def update_settings():
 
     
     if new_username and new_password:
+        # Update both username and password
+         # Ensure that the new_password is hashed if necessary
         cursor.execute(
             "UPDATE Customer SET username = %s, password = %s WHERE id = %s",
             (new_username, new_password, customer_id)
@@ -517,6 +524,7 @@ def update_settings():
 @app.route("/settings/preferences", methods =["POST"])
 @flask_login.login_required
 def settings_preference(): 
+    # This function handles the theme preference selection
     selected_preferences = request.form.get("theme") 
     return redirect("/", selected_preferences = selected_preferences)
 
