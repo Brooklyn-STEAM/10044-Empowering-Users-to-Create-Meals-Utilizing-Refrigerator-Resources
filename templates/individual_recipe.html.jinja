@@ -40,29 +40,30 @@
        
         /* Ensure the review section stays white and black in dark mode */
         .review-section {
-            background-color: white; /* White background */
-            color: rgb(27, 24, 24); /* Black text */
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
+        background-color: white !important; /* Force white background */
+        color: black !important; /* Force black text */
+        padding: 10px;
+        border-radius: 5px;
+        display: inline-block;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for better visibility */
+    }
 
-        .review-section button {
-            color: white; /* Button text color */
-        }
+    .review-section button {
+        color: white; /* Button text color */
+    }
 
-        .review-section #green {
-            background-color: green; /* Green for like button */
-        }
+    .review-section #green {
+        background-color: green; /* Green for like button */
+    }
 
-        .review-section #red {
-            background-color: red; /* Red for dislike button */
-        }
+         .review-section #red {
+        background-color: red; /* Red for dislike button */
+    }
 
-        .review-section span {
-            margin-left: 5px;
-            font-weight: bold;
-        }
+    .review-section span {
+        margin-left: 5px;
+        font-weight: bold;
+    }
     
         
     </style>
@@ -207,7 +208,7 @@ Reviews</h1>
                 <textarea name="review" id="review" cols="30" rows="4" placeholder="Did you like the recipe..."
                     required></textarea>
             </div>
-
+            
             <div class="btn">
                 <button type="submit">Post</button>
             </div>
@@ -228,6 +229,7 @@ Reviews</h1>
         
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card shadow-sm border-0">
+            <div class="review-section">
                 <div class="card-body">
                     <h5 class="mb-1">{{ review['username'] }}</h5>
                     <small class="text-muted">{{ review['timestamp'] }}</small>
@@ -245,12 +247,12 @@ Reviews</h1>
                         </div>
                         
                     </div>
-
+                   
                     <p class="card-text">{{ review['review'] }}</p>
 
                     <!-- Like and Dislike buttons -->
                  <div class="d-flex align-items-center justify-content-between mt-3">
-                    <div class="review-section">
+                    
                     <button class="btn" id="green"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
                     <button class="btn" id="red"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
                     </div>
@@ -272,6 +274,8 @@ Reviews</h1>
             </div>
         </div>
         </div>
+        
+    
         {% endfor %}
 
 
