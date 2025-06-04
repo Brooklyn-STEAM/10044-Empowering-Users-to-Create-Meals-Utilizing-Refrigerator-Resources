@@ -26,46 +26,50 @@
     <style>
         .checked {
             color: orange;
-        
+
         }
 
 
 
         @media (max-width: 375px) {
-           .rounded-pill {
+            .rounded-pill {
                 font-size: 50%;
             }
         }
 
-       
+
         /* Ensure the review section stays white and black in dark mode */
         .review-section {
-        background-color: white !important; /* Force white background */
-        color: black !important; /* Force black text */
-        padding: 10px;
-        border-radius: 5px;
-        display: inline-block;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for better visibility */
-    }
+            background-color: white !important;
+            /* Force white background */
+            color: black !important;
+            /* Force black text */
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            /* Optional: Add a subtle shadow for better visibility */
+        }
 
-    .review-section button {
-        color: white; /* Button text color */
-    }
+        .review-section button {
+            color: white;
+            /* Button text color */
+        }
 
-    .review-section #green {
-        background-color: green; /* Green for like button */
-    }
+        .review-section #green {
+            background-color: green;
+            /* Green for like button */
+        }
 
-         .review-section #red {
-        background-color: red; /* Red for dislike button */
-    }
+        .review-section #red {
+            background-color: red;
+            /* Red for dislike button */
+        }
 
-    .review-section span {
-        margin-left: 5px;
-        font-weight: bold;
-    }
-    
-        
+        .review-section span {
+            margin-left: 5px;
+            font-weight: bold;
+        }
     </style>
 
 
@@ -116,25 +120,26 @@
                 {{recipe['description']}}
             </p>
             <!--save recipe button-->
-        
+
 
             <form action="/individual/recipe/{{recipe['id']}}/save" method="post">
                 <button type="submit" id="nope" class="btn btn-danger"> <i class="fa fa-heart"></i>Save Recipe</button>
             </form>
-       
-            
+
+
             <hr>
             <h3>Ingredients</h3>
 
             <div class="card-text text-wrap" style="font-size:40px;">
 
 
- 
-            <div class="d-flex flex-wrap justify-content-center">
-                {% for ingredient in ingredients %}
-                 <p class="rounded-pill border" style="margin-left: 2%;"> {{ingredient['name']}}: {{ ingredient['amount']| replace('\/','/')}}</p>
-                {% endfor %}
-            </div>
+
+                <div class="d-flex flex-wrap justify-content-center">
+                    {% for ingredient in ingredients %}
+                    <p class="rounded-pill border" style="margin-left: 2%;"> {{ingredient['name']}}: {{
+                        ingredient['amount']| replace('\/','/')}}</p>
+                    {% endfor %}
+                </div>
                 <hr>
                 <h3>Instructions</h3>
                 <div class="card-text text-wrap" style="font-size:40px;">{{recipe['directions'] | replace('\n', '<br>')
@@ -146,11 +151,11 @@
 
         </div>
         <br> <br> <br> <br>
-<hr>
-<h1 class="text-center">
-Reviews</h1>
+        <hr>
+        <h1 class="text-center">
+            Reviews</h1>
 
- {% if current_user.is_authenticated %}
+        {% if current_user.is_authenticated %}
 
         <form action="/addreview/{{recipe['id']}} " method="POST" class="my-form my-container">
             <div class=" my-form">
@@ -217,38 +222,40 @@ Reviews</h1>
 
     </div>
     <br> <br> <br>
-{%else%}
-        <div class="alert alert-warning" role="alert">
-            Please <a href="/login" class="alert-link">log in</a> to post a review.
-        </div>
-        {% endif %}
+    {%else%}
+    <div class="alert alert-warning" role="alert">
+        Please <a href="/login" class="alert-link">log in</a> to post a review.
+    </div>
+    {% endif %}
 
 
     <div class="row">
-        {% for review in review_stuff %}  
-        
+
+        {% for review in review_stuff %}
+
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card shadow-sm border-0">
-            <div class="review-section">
-                <div class="card-body">
-                    <h5 class="mb-1">{{ review['username'] }}</h5>
-                    <small class="text-muted">{{ review['timestamp'] }}</small>
-            
-                  
-                    <div class="stars mt-2 mb-2" style="font-size: 20px;">
-                        <div style="
+                <div class="review-section">
+                    <div class="card-body">
+                        <h5 class="mb-1">{{ review['username'] }}</h5>
+                        <small class="text-muted">{{ review['timestamp'] }}</small>
+
+
+                        <div class="stars mt-2 mb-2">
+                            <div style="
+
                         background: linear-gradient(90deg, gold {{ review['rating'] / 5 * 100 }}%, lightgray {{ review['rating'] / 5 * 100 }}%);
                         -webkit-background-clip: text;
                         -webkit-text-fill-color: transparent;
                         font-size: 24px;
                         letter-spacing: 2px;
                         display: inline-block;">
-                            ★★★★★
+                                ★★★★★
+                            </div>
+
                         </div>
-                        
-                    </div>
-                   
-                    <p class="card-text">{{ review['review'] }}</p>
+
+                        <p class="card-text">{{ review['review'] }}</p>
 
                     <!-- Like and Dislike buttons -->
                  <div class="d-flex align-items-center justify-content-between mt-3">
@@ -277,6 +284,9 @@ Reviews</h1>
         
     
         {% endfor %}
+    </div>
+
+
 
 
 
