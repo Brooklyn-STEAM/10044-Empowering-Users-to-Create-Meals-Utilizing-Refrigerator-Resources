@@ -99,9 +99,9 @@ def signin():
             flask_login.login_user(user)
             return redirect("/") 
 
-
-            conn.close() 
-            cursor.close() 
+        cursor.close() 
+        conn.close() 
+        
        
         
     return render_template("signin.html.jinja")
@@ -109,6 +109,7 @@ def signin():
 
 @app.route('/logout') 
 def logout():
+    # logs out the user
     flask_login.logout_user()  
     return redirect('/')           
 
@@ -117,7 +118,7 @@ def logout():
 def signup(): 
     if flask_login.current_user.is_authenticated:
         return redirect("/")
-
+    # gets these vslues from the sign up form
     if request.method == "POST": 
         first_name = request.form["first_name"]
         last_name = request.form["last_name"] 
@@ -177,16 +178,10 @@ def recipe_detail(recipe_id):
     ingredients = cursor.fetchall()
 
 
-   
-
     cursor.execute(f""" 
         SELECT * FROM Review WHERE `recipe_id` = {recipe_id};
     """)  
 
-
-    
-
-    
 
     reviews = cursor.fetchall()          
     
@@ -349,7 +344,7 @@ def search_page():
 
 
 
-
+#catlog of users current ingredients
 @app.route("/catalog")
 def catolog_page():
     
@@ -518,27 +513,12 @@ def update_settings():
     return redirect("/signin") 
 
 
-
-
-
 @app.route("/settings/preferences", methods =["POST"])
 @flask_login.login_required
 def settings_preference(): 
     # This function handles the theme preference selection
     selected_preferences = request.form.get("theme") 
     return redirect("/", selected_preferences = selected_preferences)
-
-
-
-
-
-
-
-
-
-@app.route("/addingredient")
-def addingredient_page():
-    return render_template("addingredient.html.jinja")
 
 
 @app.route("/mexican")

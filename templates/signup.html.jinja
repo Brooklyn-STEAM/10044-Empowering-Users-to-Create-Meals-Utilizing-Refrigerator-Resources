@@ -79,6 +79,7 @@ form {
   {% include "components/navbar.html.jinja" %}
   <h1 style="text-align: center;">Sign up</h1>   
   
+  <!--Flash messages-->
     {% for message in get_flashed_messages() %} 
        <div class="alert alert-danger" role="alert">
          {{message}} 
