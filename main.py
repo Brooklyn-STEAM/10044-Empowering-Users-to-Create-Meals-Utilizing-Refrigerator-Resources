@@ -235,7 +235,7 @@ def addreview(recipe_id):
     cursor = conn.cursor()
     if request.method == "POST":
         rating = request.form["rating"]
-        review = request.form["review"] 
+        review = request.form["review"].replace("'", "''")
         timestamp = datetime.now() 
         customer_id = flask_login.current_user.user_id 
 
